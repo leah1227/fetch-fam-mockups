@@ -260,10 +260,11 @@ body {
   color: var(--foreground);
 }
 .back-btn {
-  background: none; border: none; cursor: pointer;
+  background: var(--surface-muted); border: 1px solid var(--border-subtle); cursor: pointer;
   color: var(--foreground);
   display: flex; align-items: center;
-  padding: 4px; border-radius: var(--r-f);
+  padding: 7px; border-radius: var(--r-f);
+  box-shadow: 0 1px 2px rgba(5,5,5,.06);
   transition: background var(--fast);
 }
 .back-btn:hover { background: var(--surface-muted); }

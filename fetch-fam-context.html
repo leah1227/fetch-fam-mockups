@@ -478,10 +478,12 @@ body {
 }
 .sub-hdr h1 { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
 .back-btn {
-  background: none; border: none; cursor: pointer;
-  color: var(--ink); display: flex; align-items: center; padding: 4px;
-  border-radius: var(--r-f);
+  background: var(--surface-2); border: 1px solid var(--border-sub); cursor: pointer;
+  color: var(--ink); display: flex; align-items: center; padding: 7px;
+  border-radius: var(--r-f); box-shadow: var(--sh-sm);
+  transition: background 0.12s;
 }
+.back-btn:active { background: var(--border-sub); }
 .sub-act {
   margin-left: auto; background: var(--ink); color: #fff;
   border: none; border-radius: var(--r-f);
