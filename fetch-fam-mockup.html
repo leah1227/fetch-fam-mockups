@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fetch Fam — Community Mockup</title>
+<style>
+/* ── Circular Std (Fetch brand font) ───────────────────────────── */
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Book.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Medium.otf') format('opentype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Exact Fetch Design System tokens ──────────────────────────── */
+:root {
+  /* Primitives */
+  --ink-0:         #050505;
+  --ink-1:         #1b1b1c;
+  --ink-2:         #3a3a3c;
+  --ink-muted:     #5e5e5e;
+  --ink-faint:     #9a9a9c;
+  --neutral-0:     #ffffff;
+  --neutral-50:    #fdf2fb;
+  --neutral-100:   #fbeff6;
+  --neutral-150:   #f3e3ec;
+  --neutral-200:   #e6d2dd;
+  --neutral-300:   #ccb4c1;
+  --neutral-400:   #8a7a82;
+  --pink:          #fda9ff;
+  --pink-soft:     #fec9ff;
+  --pink-ink:      #b7468d;
+  --green:         #a0eb8d;
+  --green-soft:    #dff3da;
+  --green-ink:     #008a20;
+  --blue-soft:     #d6deff;
+  --blue-ink:      #4a5dd4;
+  --red:           #ff7b7b;
+  --red-ink:       #dc3030;
+  --orange-soft:   #ffe7c2;
+  --orange-ink:    #c45500;
+
+  /* Semantics */
+  --background:    #fdf2fb;
+  --surface:       #ffffff;
+  --surface-muted: #fbeff6;
+  --foreground:    #1b1b1c;
+  --muted:         #5e5e5e;
+  --muted-strong:  #3a3a3c;
+  --border:        #ccb4c1;
+  --border-subtle: rgba(230, 210, 221, 0.5);
+  --interactive:   #1b1b1c;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 0 rgba(5,5,5,.04);
+  --shadow-sm: 0 1px 2px rgba(5,5,5,.05), 0 1px 0 rgba(5,5,5,.02);
+  --shadow-md: 0 4px 12px -4px rgba(5,5,5,.10), 0 1px 3px rgba(5,5,5,.05);
+  --shadow-lg: 0 20px 48px -20px rgba(5,5,5,.16);
+
+  /* Radii (Fetch DS) */
+  --r-sm:  0.5rem;
+  --r-md:  0.625rem;
+  --r-lg:  0.875rem;
+  --r-xl:  1.25rem;
+  --r-2xl: 1.5rem;
+  --r-f:   9999px;
+
+  /* Motion */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --fast:  120ms;
+  --base:  200ms;
+  --slow:  400ms;
+}
+
+body {
+  font-family: "Circular Std", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: #d8ccd8;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 36px 16px;
+  gap: 40px;
+}
+
+/* ── Phone Frame ─────────────────────────────────────────────── */
+.phone {
+  position: relative;
+  width: 390px;
+  height: 844px;
+  background: var(--background);
+  border-radius: 50px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 0 0 9px #111,
+    0 0 0 11px #2a2a2a,
+    0 40px 100px rgba(0,0,0,0.5),
+    0 20px 40px rgba(0,0,0,0.25);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+/* Dynamic island */
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 34px;
+  background: #111;
+  border-radius: 20px;
+  z-index: 100;
+}
+/* Side buttons */
+.phone::after {
+  content: '';
+  position: absolute;
+  right: -12px; top: 140px;
+  width: 4px; height: 64px;
+  background: #222; border-radius: 2px;
+  box-shadow: 0 80px 0 #222, 0 144px 0 #222;
+}
+
+/* ── Status Bar ──────────────────────────────────────────────── */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+  position: relative;
+  z-index: 50;
+  letter-spacing: -0.2px;
+}
+.status-icons { display: flex; align-items: center; gap: 6px; }
+
+/* ── Screen System ───────────────────────────────────────────── */
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--background);
+  transform: translateX(105%);
+  transition: transform var(--slow) var(--ease-out);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 88px;
+  scrollbar-width: none;
+}
+.screen::-webkit-scrollbar { display: none; }
+.screen.active   { transform: translateX(0); }
+.screen.slide-out { transform: translateX(-28%); }
+#screen-feed { transform: translateX(0); }
+
+/* ── App Header ──────────────────────────────────────────────── */
+.app-header {
+  position: sticky;
+  top: 0; z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  box-shadow: var(--shadow-xs);
+}
+.app-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fetch-mark {
+  width: 30px; height: 30px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--pink-soft);
+  display: flex; align-items: center; justify-content: center;
+}
+.fetch-mark img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+.fetch-mark-fallback {
+  font-size: 18px; line-height: 1;
+}
+.header-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.4px;
+}
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.icon-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--foreground); padding: 5px;
+  display: flex; align-items: center;
+  position: relative; border-radius: var(--r-f);
+  transition: background var(--fast) var(--ease-out);
+}
+.icon-btn:hover { background: var(--surface-muted); }
+.notif-dot {
+  position: absolute;
+  top: 3px; right: 3px;
+  width: 6px; height: 6px;
+  background: var(--red-ink);
+  border-radius: 50%;
+  border: 1.5px solid var(--surface);
+}
+.pet-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--pink-soft);
+  color: var(--pink-ink);
+  border-radius: var(--r-f);
+  padding: 4px 10px 4px 4px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer; border: none;
+  font-family: inherit;
+  transition: opacity var(--fast);
+}
+.pet-chip:hover { opacity: 0.8; }
+.pet-chip-avatar {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--pink);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+
+/* ── Sub-header (back nav) ───────────────────────────────────── */
+.sub-header {
+  position: sticky;
+  top: 0; z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  box-shadow: var(--shadow-xs);
+}
+.sub-header h1 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--foreground);
+}
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--foreground);
+  display: flex; align-items: center;
+  padding: 4px; border-radius: var(--r-f);
+  transition: background var(--fast);
+}
+.back-btn:hover { background: var(--surface-muted); }
+.sub-action {
+  margin-left: auto;
+  background: var(--interactive); color: #fff;
+  border: none; border-radius: var(--r-f);
+  padding: 7px 16px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: opacity var(--fast);
+}
+.sub-action:disabled { opacity: 0.3; cursor: not-allowed; }
+.sub-action-ghost {
+  margin-left: auto;
+  background: transparent; color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--r-f);
+  padding: 7px 16px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+
+/* ── Welcome / Onboarding Card ───────────────────────────────── */
+.welcome-card {
+  margin: 12px;
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.welcome-card-top {
+  background: linear-gradient(135deg, var(--pink-soft) 0%, #f0d8ff 100%);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.welcome-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--pink-ink);
+  margin-bottom: 3px;
+}
+.welcome-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+}
+.welcome-sub {
+  font-size: 12.5px;
+  color: var(--muted-strong);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.welcome-badge {
+  margin-left: auto; flex-shrink: 0;
+  background: var(--pink-ink); color: #fff;
+  font-size: 10px; font-weight: 700;
+  border-radius: var(--r-f);
+  padding: 3px 9px;
+}
+/* To-do checklist (matching screenshot style) */
+.welcome-checklist {
+  padding: 10px 14px 4px;
+}
+.checklist-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.checklist-item:last-child { border-bottom: none; }
+.check-circle {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--pink-ink);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--base);
+}
+.check-circle.done {
+  background: var(--green-soft);
+  border-color: var(--green-ink);
+}
+.check-circle.done::after {
+  content: '';
+  width: 5px; height: 9px;
+  border: 2px solid var(--green-ink);
+  border-top: none; border-left: none;
+  transform: rotate(45deg) translate(-1px, -1px);
+  display: block;
+}
+.checklist-text {
+  font-size: 13px; color: var(--foreground);
+  font-weight: 500;
+}
+.checklist-text.done { color: var(--muted); text-decoration: line-through; }
+.welcome-actions {
+  padding: 10px 14px 14px;
+  display: flex; gap: 8px;
+}
+.btn-primary {
+  flex: 1;
+  background: var(--interactive); color: #fff;
+  border: none; border-radius: var(--r-f);
+  padding: 11px;
+  font-size: 13.5px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: opacity var(--fast);
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-outline {
+  flex: 1;
+  background: transparent; color: var(--pink-ink);
+  border: 1.5px solid var(--pink-ink);
+  border-radius: var(--r-f);
+  padding: 11px;
+  font-size: 13.5px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: background var(--fast);
+}
+.btn-outline:hover { background: var(--pink-soft); }
+
+/* ── Story Strip ─────────────────────────────────────────────── */
+.story-strip {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+.story-scroll {
+  display: flex; gap: 16px;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 10px 14px 12px;
+}
+.story-scroll::-webkit-scrollbar { display: none; }
+.story-item {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+  flex-shrink: 0; cursor: pointer;
+  text-decoration: none;
+}
+.story-ring {
+  padding: 2.5px;
+  border-radius: 50%;
+  background: conic-gradient(var(--pink) 0%, #e879f9 40%, #c084fc 70%, var(--pink) 100%);
+}
+.story-ring.seen { background: var(--border); }
+.story-ring-inner {
+  background: var(--surface);
+  border-radius: 50%;
+  padding: 2px;
+}
+.story-avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+.story-mine-wrap { position: relative; }
+.story-add-badge {
+  position: absolute;
+  bottom: 2px; right: 2px;
+  width: 18px; height: 18px;
+  background: var(--interactive);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--surface);
+}
+.story-label {
+  font-size: 11px; font-weight: 600;
+  color: var(--foreground);
+  max-width: 60px;
+  text-align: center;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ── Section Header ──────────────────────────────────────────── */
+.section-head {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 6px;
+}
+.section-head span:first-child {
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--muted);
+}
+.section-head span:last-child { font-size: 11px; color: var(--muted); }
+
+/* ── Post Card ───────────────────────────────────────────────── */
+.post-card {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 6px;
+}
+.post-header {
+  display: flex; align-items: center;
+  gap: 10px; padding: 10px 12px;
+}
+.post-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+  cursor: pointer;
+  outline: 2px solid var(--pink-soft);
+  outline-offset: 1.5px;
+}
+.post-pet-name {
+  font-size: 13.5px; font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+}
+.you-tag {
+  font-size: 9.5px; font-weight: 700;
+  background: var(--pink-soft); color: var(--pink-ink);
+  border-radius: var(--r-f); padding: 1.5px 6px;
+}
+.post-owner {
+  font-size: 11.5px; color: var(--muted); margin-top: 1px;
+}
+.post-more {
+  background: none; border: none;
+  color: var(--muted); cursor: pointer;
+  padding: 4px; margin-left: auto; font-size: 18px;
+}
+.post-image-wrap {
+  width: 100%; aspect-ratio: 1 / 1;
+  overflow: hidden; cursor: pointer;
+}
+.post-img {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 90px;
+  transition: opacity var(--fast);
+}
+.post-img:hover { opacity: 0.94; }
+.post-actions {
+  display: flex; align-items: center;
+  padding: 6px 8px 2px;
+}
+.act-btn {
+  background: none; border: none;
+  color: var(--foreground); cursor: pointer;
+  padding: 7px; border-radius: 50%;
+  display: flex; align-items: center;
+  transition: transform var(--fast) var(--ease-spring);
+}
+.act-btn:active { transform: scale(0.82); }
+.act-btn.liked svg { fill: var(--red-ink); stroke: var(--red-ink); }
+.post-likes {
+  padding: 2px 14px;
+  font-size: 13px; font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.2px;
+}
+.post-caption {
+  padding: 1px 14px 5px;
+  font-size: 13px; color: var(--foreground);
+  line-height: 1.5;
+}
+.post-caption strong {
+  font-weight: 700; cursor: pointer;
+}
+.post-caption strong:hover { text-decoration: underline; }
+.post-caption .hashtags { color: var(--blue-ink); }
+.view-comments {
+  background: none; border: none;
+  display: block; padding: 0 14px 10px;
+  font-size: 12.5px; color: var(--muted);
+  cursor: pointer; font-family: inherit;
+  text-align: left;
+  transition: color var(--fast);
+}
+.view-comments:hover { color: var(--foreground); }
+
+/* ── Feed Footer ─────────────────────────────────────────────── */
+.feed-footer {
+  text-align: center; padding: 24px 16px 8px;
+}
+.feed-footer p { font-size: 13px; color: var(--muted); }
+.feed-cta {
+  display: inline-block; margin-top: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-f);
+  padding: 9px 20px;
+  font-size: 13px; font-weight: 700;
+  color: var(--foreground); cursor: pointer;
+  font-family: inherit;
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--fast), border-color var(--fast);
+}
+.feed-cta:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--neutral-400);
+}
+
+/* ── Bottom Nav ──────────────────────────────────────────────── */
+.bottom-nav {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border-subtle);
+  display: flex; align-items: flex-end;
+  justify-content: space-around;
+  padding: 8px 0 18px;
+  z-index: 30;
+  box-shadow: 0 -1px 0 var(--border-subtle);
+}
+.nav-tab {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+  background: none; border: none;
+  cursor: pointer; padding: 2px 8px;
+  color: var(--muted);
+  font-size: 10px; font-weight: 700;
+  font-family: inherit;
+  transition: color var(--fast);
+  letter-spacing: -0.1px;
+}
+.nav-tab.active { color: var(--foreground); }
+.nav-fab {
+  background: var(--interactive); color: white;
+  border: none; border-radius: 50%;
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; margin-bottom: 4px;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--fast) var(--ease-spring), box-shadow var(--fast);
+  flex-shrink: 0;
+}
+.nav-fab:hover { transform: scale(1.06); box-shadow: var(--shadow-lg); }
+.nav-fab:active { transform: scale(0.94); }
+
+/* ── New Post Screen ─────────────────────────────────────────── */
+.photo-zone {
+  aspect-ratio: 1 / 1; width: 100%;
+  background: var(--surface-muted);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px; cursor: pointer;
+  position: relative; overflow: hidden;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.photo-icon-wrap {
+  width: 68px; height: 68px;
+  background: var(--surface);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-md);
+  font-size: 30px;
+}
+.photo-zone-label { font-size: 14px; font-weight: 700; color: var(--muted-strong); }
+.photo-zone-sub   { font-size: 12px; color: var(--muted); }
+.photo-preview {
+  width: 100%; height: 100%;
+  display: none;
+  align-items: center; justify-content: center;
+  font-size: 110px;
+}
+/* Pet selector (matches screenshot tab-pill style) */
+.pet-selector {
+  display: flex; gap: 6px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow-x: auto; scrollbar-width: none;
+}
+.pet-selector::-webkit-scrollbar { display: none; }
+.pet-pill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px 5px 6px;
+  border-radius: var(--r-f);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-size: 12.5px; font-weight: 700;
+  color: var(--muted); cursor: pointer;
+  white-space: nowrap; font-family: inherit;
+  transition: all var(--fast);
+  flex-shrink: 0;
+}
+.pet-pill .p-avi {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+.pet-pill.active {
+  background: var(--surface-muted);
+  border-color: var(--foreground);
+  color: var(--foreground);
+}
+.caption-area {
+  display: flex; gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface);
+}
+.caption-avi {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0; margin-top: 2px;
+  background: var(--pink-soft);
+  outline: 2px solid var(--pink-soft);
+  outline-offset: 1px;
+}
+.caption-input {
+  flex: 1; background: transparent; border: none;
+  font-size: 14px; color: var(--foreground);
+  resize: none; outline: none; font-family: inherit;
+  line-height: 1.5;
+}
+.tags-row {
+  padding: 12px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.row-label {
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.7px;
+  color: var(--muted); margin-bottom: 8px;
+}
+.tag-pills {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.tag-pill {
+  padding: 5px 12px;
+  border-radius: var(--r-f);
+  font-size: 12px; font-weight: 700;
+  cursor: pointer; border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--muted);
+  font-family: inherit;
+  transition: all var(--fast);
+}
+.tag-pill.on {
+  background: var(--interactive); color: #fff;
+  border-color: var(--interactive);
+}
+.share-opts {
+  padding: 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
+}
+/* Toggle component */
+.toggle-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 7px 0;
+}
+.t-icon { font-size: 18px; margin-top: 2px; }
+.t-body { flex: 1; }
+.t-label { font-size: 13.5px; font-weight: 700; color: var(--foreground); }
+.t-desc { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+.toggle-sw { position: relative; flex-shrink: 0; margin-top: 2px; cursor: pointer; }
+.toggle-sw input { position: absolute; opacity: 0; width: 0; height: 0; }
+.t-track {
+  display: block;
+  width: 44px; height: 26px;
+  background: var(--neutral-300); border-radius: 13px;
+  transition: background var(--base);
+  position: relative;
+}
+.t-track::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 20px; height: 20px;
+  background: white; border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transition: transform var(--base) var(--ease-spring);
+}
+.toggle-sw input:checked + .t-track { background: var(--interactive); }
+.toggle-sw input:checked + .t-track::after { transform: translateX(18px); }
+.share-cta {
+  padding: 14px;
+  background: var(--surface);
+}
+
+/* ── Post Detail Screen ──────────────────────────────────────── */
+.detail-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 120px;
+}
+.detail-caption {
+  padding: 10px 14px 4px;
+  font-size: 13.5px; line-height: 1.5; color: var(--foreground);
+}
+.detail-caption strong { font-weight: 700; cursor: pointer; }
+.detail-caption strong:hover { text-decoration: underline; }
+.detail-time {
+  padding: 0 14px 10px;
+  font-size: 11px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.6px;
+}
+.detail-tags {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  padding: 0 14px 12px;
+}
+.d-tag {
+  background: var(--blue-soft); color: var(--blue-ink);
+  border-radius: var(--r-f);
+  padding: 3px 10px; font-size: 11px; font-weight: 700;
+}
+.divider-line { border: none; border-top: 1px solid var(--border-subtle); }
+.comments-list { padding: 4px 0; }
+.cmt-item {
+  display: flex; gap: 10px;
+  padding: 8px 14px;
+}
+.cmt-avi {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+  background: var(--pink-soft);
+}
+.cmt-body { flex: 1; min-width: 0; }
+.cmt-text { font-size: 12.5px; color: var(--foreground); line-height: 1.45; }
+.cmt-text strong { font-weight: 700; }
+.cmt-time { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+.cmt-like {
+  background: none; border: none;
+  color: var(--muted); cursor: pointer;
+  padding: 4px; align-self: center; flex-shrink: 0;
+}
+.cmt-input-bar {
+  position: sticky; bottom: 88px;
+  background: var(--surface);
+  border-top: 1px solid var(--border-subtle);
+  display: flex; align-items: center;
+  gap: 10px; padding: 10px 14px;
+  box-shadow: 0 -1px 0 var(--border-subtle);
+}
+.cmt-avi-sm {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--pink-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.cmt-field-wrap {
+  flex: 1;
+  display: flex; align-items: center;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--r-f);
+  padding: 6px 14px; gap: 8px;
+}
+.cmt-field {
+  flex: 1; background: transparent; border: none;
+  font-size: 13px; color: var(--foreground); outline: none;
+  font-family: inherit;
+}
+.cmt-post-btn {
+  background: none; border: none;
+  font-size: 13px; font-weight: 700;
+  color: var(--blue-ink); cursor: pointer;
+  opacity: 0; transition: opacity var(--fast); font-family: inherit;
+}
+.cmt-post-btn.show { opacity: 1; }
+
+/* ── Profile Screen ──────────────────────────────────────────── */
+.profile-cover {
+  height: 96px;
+  background: linear-gradient(135deg, var(--pink-soft) 0%, #ede0ff 100%);
+}
+.profile-avi-row {
+  display: flex; align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 14px 14px;
+}
+.profile-avi {
+  width: 80px; height: 80px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--pink-soft), var(--pink));
+  border: 4px solid var(--surface);
+  margin-top: -36px;
+  box-shadow: var(--shadow-sm);
+}
+.profile-info { padding: 0 14px 14px; }
+.profile-name {
+  font-size: 21px; font-weight: 700;
+  letter-spacing: -0.5px; color: var(--foreground);
+  display: flex; align-items: center; gap: 7px;
+}
+.fam-tag {
+  background: var(--pink-soft); color: var(--pink-ink);
+  font-size: 9.5px; font-weight: 700;
+  border-radius: var(--r-f); padding: 2px 8px;
+}
+.profile-breed { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.profile-bio   { font-size: 13.5px; color: var(--foreground); margin-top: 8px; line-height: 1.5; }
+.profile-joined { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.profile-stats {
+  display: flex;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  margin: 0 14px 14px;
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.p-stat {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; padding: 12px 4px;
+  border-right: 1px solid var(--border-subtle);
+}
+.p-stat:last-child { border-right: none; }
+.stat-val { font-size: 20px; font-weight: 700; color: var(--foreground); letter-spacing: -0.5px; }
+.stat-lbl { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+.settings-card {
+  margin: 0 14px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.settings-card-label {
+  padding: 10px 14px 4px;
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.7px;
+  color: var(--muted);
+}
+.settings-card-body { padding: 0 12px 10px; }
+.s-divider { border: none; border-top: 1px solid var(--border-subtle); margin: 6px 0; }
+.grid-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 13px; font-weight: 700; color: var(--foreground);
+}
+.posts-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+.grid-cell {
+  aspect-ratio: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px; cursor: pointer; position: relative;
+  overflow: hidden; background: var(--surface-muted);
+  transition: opacity var(--fast);
+}
+.grid-cell:hover { opacity: 0.88; }
+.grid-overlay {
+  position: absolute; bottom: 4px; left: 4px;
+  display: flex; align-items: center; gap: 3px;
+  background: rgba(0,0,0,0.42);
+  border-radius: 100px; padding: 2px 6px;
+  font-size: 10px; font-weight: 700; color: white;
+}
+
+/* ── Success state ───────────────────────────────────────────── */
+.success-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 60vh; gap: 14px;
+  padding: 28px; text-align: center;
+}
+.success-icon { font-size: 64px; line-height: 1; }
+.success-h { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--foreground); }
+.success-p { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+.success-pill {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--green-soft); color: var(--green-ink);
+  border-radius: var(--r-f); padding: 9px 18px;
+  font-size: 13px; font-weight: 700; margin-top: 4px;
+}
+
+/* ── Sidebar (desktop context) ───────────────────────────────── */
+.sidebar {
+  display: flex; flex-direction: column; gap: 28px;
+  padding-top: 56px; max-width: 200px;
+}
+.s-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #9b7aaa; margin-bottom: 4px; }
+.s-title { font-size: 15px; font-weight: 700; color: #1f1228; margin-bottom: 4px; letter-spacing: -0.3px; }
+.s-desc  { font-size: 12.5px; color: #5e4a6b; line-height: 1.5; }
+.s-dot   { width: 5px; height: 5px; border-radius: 50%; background: var(--pink-ink); display: inline-block; margin-right: 7px; }
+.s-hint  { font-size: 11px; color: #9b7aaa; display: flex; align-items: center; gap: 4px; margin-top: 8px; }
+.s-screens { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+.s-screen-item { font-size: 12.5px; color: #1f1228; }
+
+@media (max-width: 660px) {
+  .sidebar { display: none; }
+  body { padding: 14px; }
+}
+
+/* Feedback screen */
+.fb-intro { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border-radius: var(--r-xl); border: 1px solid var(--border-subtle); margin: 12px 12px 10px; box-shadow: var(--shadow-sm); }
+.fb-emoji-wrap { width: 46px; height: 46px; background: linear-gradient(135deg, var(--pink-soft), #ede0ff); border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.fb-intro-title { font-size: 14px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+.fb-intro-sub { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+.fb-card { margin: 0 12px 10px; background: var(--surface); border-radius: var(--r-xl); border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm); padding: 14px; }
+.fb-lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin-bottom: 10px; }
+.star-row { display: flex; gap: 6px; justify-content: center; padding: 4px 0; }
+.star-btn { background: none; border: none; font-size: 32px; cursor: pointer; color: var(--border); transition: color 0.12s; padding: 2px; line-height: 1; }
+.star-btn.on { color: #f59e0b; }
+.fb-cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.fb-cat { background: var(--surface-muted); border: 1.5px solid var(--border); border-radius: var(--r-f); padding: 7px 14px; font-size: 12px; font-weight: 700; color: var(--muted-strong); cursor: pointer; font-family: inherit; transition: all 0.12s; }
+.fb-cat.on { background: var(--interactive); color: #fff; border-color: var(--interactive); }
+.fb-textarea { width: 100%; min-height: 90px; background: var(--surface-muted); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); padding: 10px 12px; font-size: 13px; font-family: inherit; color: var(--foreground); resize: none; outline: none; line-height: 1.5; }
+.fb-textarea:focus { border-color: var(--border); }
+.fb-cta { padding: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ══ Sidebar labels ══════════════════════════════════════════════ -->
+<div class="sidebar">
+  <div>
+    <div class="s-label">Feature</div>
+    <div class="s-title">Fetch Fam Community</div>
+    <div class="s-desc">An in-app community where Fetch customers connect, share pet moments, and celebrate each other's journeys.</div>
+  </div>
+  <div>
+    <div class="s-label">Screens</div>
+    <div class="s-screens">
+      <div class="s-screen-item"><span class="s-dot"></span>Community feed</div>
+      <div class="s-screen-item"><span class="s-dot"></span>Share a moment</div>
+      <div class="s-screen-item"><span class="s-dot"></span>Post detail + comments</div>
+      <div class="s-screen-item"><span class="s-dot"></span>My pet's profile</div>
+    </div>
+  </div>
+  <div>
+    <div class="s-hint">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Tap posts &amp; nav to explore
+    </div>
+  </div>
+</div>
+
+<!-- ══ Phone ═══════════════════════════════════════════════════════ -->
+<div class="phone">
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <!-- Signal bars -->
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor">
+        <rect x="0" y="5" width="3" height="7" rx="1"/>
+        <rect x="4.5" y="3" width="3" height="9" rx="1"/>
+        <rect x="9" y="1" width="3" height="11" rx="1"/>
+        <rect x="13.5" y="0" width="3" height="12" rx="1"/>
+      </svg>
+      <!-- Wifi -->
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M8 10.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor" stroke="none"/>
+        <path d="M5.2 7.8a4 4 0 0 1 5.6 0"/>
+        <path d="M2.6 5.2a7.2 7.2 0 0 1 10.8 0"/>
+      </svg>
+      <!-- Battery -->
+      <svg width="26" height="12" viewBox="0 0 26 12" fill="none">
+        <rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/>
+        <rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/>
+        <path d="M24 4v4a2.5 2.5 0 0 0 0-4z" fill="currentColor" fill-opacity="0.45"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       FEED SCREEN
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen active" id="screen-feed">
+
+    <!-- Header -->
+    <div class="app-header">
+      <div class="app-header-logo">
+        <div class="fetch-mark">
+          <img src="fetch-logo-mark.png" alt="Fetch" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <span class="fetch-mark-fallback" style="display:none">🐾</span>
+        </div>
+        <span class="header-title">Fetch Fam</span>
+      </div>
+      <div class="header-actions">
+        <button class="pet-chip" onclick="navigate('screen-profile')">
+          <div class="pet-chip-avatar">🐕</div>
+          Charlie
+        </button>
+        <button class="icon-btn" aria-label="Notifications">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-dot"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Welcome / onboarding card -->
+    <div class="welcome-card">
+      <div class="welcome-card-top">
+        <div style="flex:1">
+          <div class="welcome-eyebrow">New feature</div>
+          <div class="welcome-title">Welcome to Fetch Fam 🐾</div>
+          <div class="welcome-sub">Connect with pet owners and share your Fetch journey.</div>
+        </div>
+        <div class="welcome-badge">New</div>
+      </div>
+      <div class="welcome-checklist">
+
+      </div>
+      <div class="welcome-actions">
+        <button class="btn-primary" onclick="navigate('screen-new')">Share a moment</button>
+        <button class="btn-outline" onclick="navigate('screen-profile')">Set up profile</button>
+      </div>
+    </div>
+
+
+    <!-- Feed -->
+    <div class="section-head">
+      <span>Fetch Fam posts</span>
+      <span>6 posts</span>
+    </div>
+
+    <!-- Post 1 -->
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-avatar" style="background:var(--pink-soft);" onclick="navigate('screen-profile')">🐶</div>
+        <div style="flex:1;min-width:0;">
+          <div class="post-pet-name" onclick="navigate('screen-profile')">Biscuit</div>
+          <div class="post-owner">Leah · Bondi, NSW · 2h ago</div>
+        </div>
+        <button class="post-more">···</button>
+      </div>
+      <div class="post-image-wrap" onclick="navigate('screen-post','post-1')">
+        <div class="post-img" style="background:linear-gradient(160deg,#fce7f3,var(--pink-soft));">🐶🌊</div>
+      </div>
+      <div class="post-actions">
+        <button class="act-btn" onclick="toggleLike(this)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+        </button>
+        <button class="act-btn" onclick="navigate('screen-post','post-1')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button class="act-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+      <div class="post-likes" data-likes="84">84 likes</div>
+      <div class="post-caption">
+        <strong onclick="navigate('screen-profile')">Biscuit</strong> First beach day post-surgery and he's absolutely thriving 🌊 So grateful Fetch covered his knee treatment — couldn't have done it without them. <span class="hashtags">#FetchFam #BeachDog</span>
+      </div>
+      <button class="view-comments" onclick="navigate('screen-post','post-1')">View all 12 comments</button>
+    </div>
+
+    <!-- Post 2 -->
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-avatar" style="background:#fce7f3;">🦊</div>
+        <div style="flex:1;min-width:0;">
+          <div class="post-pet-name">Mochi</div>
+          <div class="post-owner">James · Melbourne, VIC · 5h ago</div>
+        </div>
+        <button class="post-more">···</button>
+      </div>
+      <div class="post-image-wrap" onclick="navigate('screen-post','post-2')">
+        <div class="post-img" style="background:linear-gradient(160deg,var(--pink-soft),#ede0ff);">🦊🏥</div>
+      </div>
+      <div class="post-actions">
+        <button class="act-btn" onclick="toggleLike(this)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+        </button>
+        <button class="act-btn" onclick="navigate('screen-post','post-2')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button class="act-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+      <div class="post-likes" data-likes="61">61 likes</div>
+      <div class="post-caption">
+        <strong>Mochi</strong> Annual checkup done! The vet pay-direct feature is an absolute game changer — zero out-of-pocket, zero fuss 🐾 <span class="hashtags">#paydirect #FetchFam</span>
+      </div>
+      <button class="view-comments" onclick="navigate('screen-post','post-2')">View all 8 comments</button>
+    </div>
+
+    <!-- Post 3 — mine -->
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-avatar" style="background:linear-gradient(135deg,var(--pink-soft),var(--pink));" onclick="navigate('screen-profile')">🐕</div>
+        <div style="flex:1;min-width:0;">
+          <div class="post-pet-name" onclick="navigate('screen-profile')">Charlie <span class="you-tag">You</span></div>
+          <div class="post-owner">Sarah · Sydney, NSW · 1d ago</div>
+        </div>
+        <button class="post-more">···</button>
+      </div>
+      <div class="post-image-wrap" onclick="navigate('screen-post','post-3')">
+        <div class="post-img" style="background:linear-gradient(160deg,#fef9c3,#fde047,var(--pink-soft));">🎂🐕</div>
+      </div>
+      <div class="post-actions">
+        <button class="act-btn" onclick="toggleLike(this)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+        </button>
+        <button class="act-btn" onclick="navigate('screen-post','post-3')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button class="act-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+      <div class="post-likes" data-likes="147">147 likes</div>
+      <div class="post-caption">
+        <strong onclick="navigate('screen-profile')">Charlie</strong> Our little golden just turned 2! We took him in for a birthday checkup (yes, really 😂) and Fetch had us covered. Here's to many more adventures. <span class="hashtags">#GoldenLife #FetchFam</span>
+      </div>
+      <button class="view-comments" onclick="navigate('screen-post','post-3')">View all 23 comments</button>
+    </div>
+
+    <!-- Post 4 — liked -->
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-avatar" style="background:#ede0ff;">🐕‍🦺</div>
+        <div style="flex:1;min-width:0;">
+          <div class="post-pet-name">Pepper</div>
+          <div class="post-owner">Amelia · Brisbane, QLD · 2d ago</div>
+        </div>
+        <button class="post-more">···</button>
+      </div>
+      <div class="post-image-wrap" onclick="navigate('screen-post','post-4')">
+        <div class="post-img" style="background:linear-gradient(160deg,#ede0ff,var(--pink-soft));">🐕‍🦺🥹</div>
+      </div>
+      <div class="post-actions">
+        <button class="act-btn liked" onclick="toggleLike(this)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--red-ink)" stroke="var(--red-ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+        </button>
+        <button class="act-btn" onclick="navigate('screen-post','post-4')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
+        <button class="act-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+      <div class="post-likes" data-likes="203">203 likes</div>
+      <div class="post-caption">
+        <strong>Pepper</strong> Ortho claim approved in under 48 hours. Her knee surgery is fully covered and she's already back to zoomies 🥹❤️ Fetch came through when we needed it most. <span class="hashtags">#FetchFam #Grateful</span>
+      </div>
+      <button class="view-comments" onclick="navigate('screen-post','post-4')">View all 31 comments</button>
+    </div>
+
+    <div class="feed-footer">
+      <p>You're all caught up 🐾</p>
+      <button class="feed-cta" onclick="navigate('screen-new')">Share your own moment</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       NEW POST SCREEN
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-new">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </button>
+      <h1>Share a moment</h1>
+      <button class="sub-action" id="hdr-share-btn" disabled onclick="submitPost()">Share</button>
+    </div>
+
+    <!-- Photo zone -->
+    <div class="photo-zone" id="photo-zone" onclick="document.getElementById('file-in').click()">
+      <div id="photo-placeholder">
+        <div class="photo-icon-wrap">📷</div>
+        <div class="photo-zone-label">Tap to add photo or video</div>
+        <div class="photo-zone-sub">Share your pet's best moments</div>
+      </div>
+      <div class="photo-preview" id="photo-prev">🐕</div>
+      <input type="file" id="file-in" accept="image/*,video/*" style="display:none" onchange="handleFile(this)">
+    </div>
+    <button id="rm-photo" style="display:none;width:100%;background:none;border:none;padding:7px;font-size:12px;color:var(--muted);cursor:pointer;font-family:inherit;" onclick="removePhoto()">Remove photo</button>
+
+    <!-- Pet selector (tab pill style matching Fetch app) -->
+    <div class="pet-selector">
+      <button class="pet-pill active" onclick="selectPet(this)">
+        <div class="p-avi" style="background:linear-gradient(135deg,var(--pink-soft),var(--pink))">🐕</div>
+        Charlie
+      </button>
+      <button class="pet-pill" onclick="selectPet(this)">
+        <div class="p-avi" style="background:var(--pink-soft)">🐈</div>
+        Suzzy
+      </button>
+    </div>
+
+    <!-- Caption -->
+    <div class="caption-area">
+      <div class="caption-avi">🐕</div>
+      <textarea class="caption-input" id="cap-in" placeholder="Write a caption… What's Charlie been up to?" rows="3" oninput="updateBtn()"></textarea>
+    </div>
+
+    <!-- Tags -->
+    <div class="tags-row">
+      <div class="row-label">Add tags</div>
+      <div class="tag-pills">
+        <button class="tag-pill" onclick="this.classList.toggle('on')">#fetchfam</button>
+        <button class="tag-pill" onclick="this.classList.toggle('on')">#petoftheday</button>
+        <button class="tag-pill" onclick="this.classList.toggle('on')">#grateful</button>
+        <button class="tag-pill" onclick="this.classList.toggle('on')">#claimapproved</button>
+        <button class="tag-pill" onclick="this.classList.toggle('on')">#paydirect</button>
+        <button class="tag-pill" onclick="this.classList.toggle('on')">#puppylife</button>
+        <button class="tag-pill" onclick="this.classList.toggle('on')">#rescue</button>
+        <button class="tag-pill" onclick="this.classList.toggle('on')">#beachdog</button>
+      </div>
+    </div>
+
+    <!-- Sharing options -->
+    <div class="share-opts">
+      <div class="row-label" style="margin-bottom:10px;">Sharing options</div>
+      <div class="toggle-row">
+        <div class="t-icon">🐾</div>
+        <div class="t-body">
+          <div class="t-label">Share with Fetch Fam</div>
+          <div class="t-desc">Other Fetch customers can see and react to your post</div>
+        </div>
+        <label class="toggle-sw">
+          <input type="checkbox" checked>
+          <span class="t-track"></span>
+        </label>
+      </div>
+      <div style="border-top:1px solid var(--border-subtle);margin:8px 0;"></div>
+      <div class="toggle-row">
+        <div class="t-icon">📣</div>
+        <div class="t-body">
+          <div class="t-label">Allow Fetch to share on social</div>
+          <div class="t-desc">Fetch may feature your story on Instagram, Facebook, or Product Review</div>
+        </div>
+        <label class="toggle-sw">
+          <input type="checkbox">
+          <span class="t-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="share-cta">
+      <button class="btn-primary" id="main-share-btn" style="width:100%;padding:14px;font-size:15px;" disabled onclick="submitPost()">Share to Fetch Fam</button>
+      <p id="share-hint" style="text-align:center;font-size:12px;color:var(--muted);margin-top:7px;">Add a photo or caption to share</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       POST DETAIL SCREEN
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-post">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </button>
+      <h1>Post</h1>
+    </div>
+    <div id="detail-body"></div>
+    <!-- Comment bar -->
+    <div class="cmt-input-bar">
+      <div class="cmt-avi-sm">🐕</div>
+      <div class="cmt-field-wrap">
+        <input class="cmt-field" type="text" placeholder="Add a comment…" id="cmt-in" oninput="checkCmtBtn(this)">
+        <button class="cmt-post-btn" id="cmt-post" onclick="postCmt()">Post</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       PROFILE SCREEN
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-profile">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </button>
+      <h1>Charlie</h1>
+      <button class="sub-action-ghost">Edit</button>
+    </div>
+    <div class="profile-cover"></div>
+    <div class="profile-avi-row">
+      <div class="profile-avi">🐕</div>
+      <button class="sub-action-ghost" onclick="navigate('screen-new')">+ Add post</button>
+    </div>
+    <div class="profile-info">
+      <div class="profile-name">Charlie <span class="fam-tag">Fetch Fam</span></div>
+      <div class="profile-breed">Sarah · Golden Retriever</div>
+      <div class="profile-bio">Living my best golden life in Sydney 🐾 Obsessed with tennis balls, beach walks, and belly rubs.</div>
+      <div class="profile-joined">Joined January 2025</div>
+    </div>
+    <div class="profile-stats">
+      <div class="p-stat"><div class="stat-val">4</div><div class="stat-lbl">Posts</div></div>
+      <div class="p-stat"><div class="stat-val">147</div><div class="stat-lbl">Likes</div></div>
+      <div class="p-stat"><div class="stat-val">Active</div><div class="stat-lbl">Community</div></div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card-label">Fetch Fam settings</div>
+      <div class="settings-card-body">
+        <div class="toggle-row">
+          <div class="t-icon">🐾</div>
+          <div class="t-body">
+            <div class="t-label">Join the Fetch Fam community</div>
+            <div class="t-desc">Other Fetch customers can see your pet's posts</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" checked>
+            <span class="t-track"></span>
+          </label>
+        </div>
+        <div class="s-divider"></div>
+        <div class="toggle-row">
+          <div class="t-icon">📣</div>
+          <div class="t-body">
+            <div class="t-label">Allow Fetch to share my content</div>
+            <div class="t-desc">Fetch may feature your posts on social media and review platforms</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox">
+            <span class="t-track"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="grid-header">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Posts
+    </div>
+    <div class="posts-grid">
+      <div class="grid-cell" style="background:linear-gradient(160deg,var(--pink-soft),#ede0ff);" onclick="navigate('screen-post','post-3')">🎂🐕<div class="grid-overlay">❤️ 147</div></div>
+      <div class="grid-cell" style="background:linear-gradient(160deg,#fce7f3,var(--pink-soft));" onclick="navigate('screen-post','post-3')">🐕🎾<div class="grid-overlay">❤️ 89</div></div>
+      <div class="grid-cell" style="background:linear-gradient(160deg,#fce7f3,var(--pink-soft));" onclick="navigate('screen-post','post-3')">🌊🐕<div class="grid-overlay">❤️ 64</div></div>
+      <div class="grid-cell" style="background:linear-gradient(160deg,#ede0ff,#fce7f3);" onclick="navigate('screen-post','post-3')">🐕😴<div class="grid-overlay">❤️ 52</div></div>
+    </div>
+  </div>
+
+  <!-- FEEDBACK SCREEN -->
+  <div class="screen" id="screen-feedback">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Share feedback</h1>
+    </div>
+    <div class="fb-intro">
+      <div class="fb-emoji-wrap">💬</div>
+      <div>
+        <div class="fb-intro-title">We'd love to hear from you</div>
+        <div class="fb-intro-sub">Your feedback helps make Fetch better for every pet and owner.</div>
+      </div>
+    </div>
+    <div class="fb-card">
+      <div class="fb-lbl">How would you rate Fetch?</div>
+      <div class="star-row" id="stars">
+        <button class="star-btn" onclick="setRating(1)">★</button>
+        <button class="star-btn" onclick="setRating(2)">★</button>
+        <button class="star-btn" onclick="setRating(3)">★</button>
+        <button class="star-btn" onclick="setRating(4)">★</button>
+        <button class="star-btn" onclick="setRating(5)">★</button>
+      </div>
+    </div>
+    <div class="fb-card">
+      <div class="fb-lbl">What's your feedback about?</div>
+      <div class="fb-cats">
+        <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">Claims</button>
+        <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">App experience</button>
+        <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">Coverage</button>
+        <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">Community</button>
+        <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">General</button>
+      </div>
+    </div>
+    <div class="fb-card">
+      <div class="fb-lbl">Tell us more</div>
+      <textarea class="fb-textarea" placeholder="What's on your mind? We read every message 🐾" id="fb-txt" oninput="upFbBtn()"></textarea>
+    </div>
+    <div class="fb-cta">
+      <button class="btn-primary" id="fb-sub" style="width:100%;padding:14px;font-size:15px;opacity:0.35;cursor:not-allowed;" disabled onclick="submitFb()">Submit feedback</button>
+    </div>
+  </div>
+
+  <!-- ════ Bottom Nav ════ -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" id="nav-home" onclick="navigate('screen-feed')">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Home
+    </button>
+    <button class="nav-tab" id="nav-share" onclick="navigate('screen-new')">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      Share
+    </button>
+    <button class="nav-tab" id="nav-feedback" onclick="navigate('screen-feedback')">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Feedback
+    </button>
+    <button class="nav-tab" id="nav-profile" onclick="navigate('screen-profile')">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+      My Pets
+    </button>
+  </nav>
+
+</div><!-- /phone -->
+
+<script>
+/* ── Navigation ─────────────────────────────────────────────── */
+let navHistory = ['screen-feed'];
+let activePid  = null;
+
+const posts = {
+  'post-1': {
+    pet:'Biscuit', owner:'Leah', loc:'Bondi, NSW', time:'2 hours ago',
+    emoji:'🐶🌊', bg:'linear-gradient(160deg,#fce7f3,var(--pink-soft))',
+    avi:'var(--pink-soft)',
+    caption:"First beach day post-surgery and he's absolutely thriving 🌊 So grateful Fetch covered his knee treatment — couldn't have done it without them. #FetchFam #BeachDog",
+    tags:['beach','labrador','fetchfam','grateful'], likes:84, liked:false,
+    comments:[
+      {e:'🐩',pet:'Ziggy',txt:"Biscuit is such a gorgeous boy! So happy he's back at the beach 🌊",t:'1h ago'},
+      {e:'🌙',pet:'Luna', txt:"Which beach? We'd love to bring Luna!",t:'45m ago'},
+      {e:'🐈',pet:'Coco', txt:"This made my whole day 😭🐾",t:'20m ago'},
+    ]
+  },
+  'post-2': {
+    pet:'Mochi', owner:'James', loc:'Melbourne, VIC', time:'5 hours ago',
+    emoji:'🦊🏥', bg:'linear-gradient(160deg,var(--pink-soft),#ede0ff)',
+    avi:'#fce7f3',
+    caption:"Annual checkup done! The vet pay-direct feature is an absolute game changer — zero out-of-pocket, zero fuss 🐾 #paydirect #FetchFam",
+    tags:['shibainu','vetvisit','paydirect'], likes:61, liked:false,
+    comments:[
+      {e:'🐶',pet:'Biscuit',txt:"The pay-direct feature is SO good!! We love it too 🙌",t:'3h ago'},
+      {e:'🐕',pet:'Charlie',txt:"Mochi is adorable! We need this for Charlie's next visit 🐾",t:'2h ago'},
+    ]
+  },
+  'post-3': {
+    pet:'Charlie', owner:'Sarah', loc:'Sydney, NSW', time:'1 day ago',
+    emoji:'🎂🐕', bg:'linear-gradient(160deg,#fef9c3,#fde047,#fda9ff)',
+    avi:'linear-gradient(135deg,#fec9ff,#fda9ff)',
+    caption:"Our little golden just turned 2! We took him in for a birthday checkup (yes, really 😂) and Fetch had us covered. Here's to many more adventures. #GoldenLife #FetchFam",
+    tags:['goldenretriever','birthday','fetchfam'], likes:147, liked:false,
+    comments:[
+      {e:'🐾',pet:'Max',  txt:"Happy 2nd birthday Charlie!!! 🎂🐶",t:'20h ago'},
+      {e:'🌸',pet:'Rosie',txt:"Two already?! Time flies 😭 He is absolutely adorable",t:'18h ago'},
+      {e:'🐶',pet:'Biscuit',txt:"Happy birthday Charlie! Biscuit sends big lab hugs 🐾",t:'12h ago'},
+      {e:'🦊',pet:'Mochi',txt:"HAPPY BIRTHDAY!! 🎉🎉🎉",t:'8h ago'},
+    ]
+  },
+  'post-4': {
+    pet:'Pepper', owner:'Amelia', loc:'Brisbane, QLD', time:'2 days ago',
+    emoji:'🐕‍🦺🥹', bg:'linear-gradient(160deg,#ede0ff,var(--pink-soft))',
+    avi:'#ede0ff',
+    caption:"Pepper's ortho claim approved in under 48 hours. Her knee surgery is fully covered and she's already back to zoomies 🥹❤️ Fetch came through when we needed it most. #FetchFam #Grateful",
+    tags:['bordercollie','claim','grateful','recovery'], likes:203, liked:true,
+    comments:[
+      {e:'🐕',pet:'Charlie',txt:"So relieved for you and Pepper!! Fetch is truly incredible ❤️",t:'1d ago'},
+      {e:'🌭',pet:'Noodle', txt:"Go Pepper go!! What a trooper 🫶",t:'1d ago'},
+      {e:'🐩',pet:'Ziggy',  txt:"This gives me so much peace of mind about our cover 🥺",t:'22h ago'},
+    ]
+  },
+};
+
+/* live-editable comments */
+const cmts = Object.fromEntries(Object.entries(posts).map(([k,v])=>[k,[...v.comments]]));
+
+function navigate(sid, pid) {
+  const cur = navHistory[navHistory.length-1];
+  if (sid==='screen-post' && pid) { activePid=pid; renderDetail(pid); }
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  if(sid==='screen-feed') document.getElementById('nav-home')?.classList.add('active');
+  if(sid==='screen-new') document.getElementById('nav-share')?.classList.add('active');
+  if(sid==='screen-feedback') document.getElementById('nav-feedback')?.classList.add('active');
+  if(sid==='screen-profile') document.getElementById('nav-profile')?.classList.add('active');
+  const curEl = document.getElementById(cur);
+  const newEl = document.getElementById(sid);
+  curEl?.classList.add('slide-out');
+  newEl?.classList.remove('slide-out');
+  newEl?.classList.add('active');
+  setTimeout(()=>{ curEl?.classList.remove('active','slide-out'); },380);
+  navHistory.push(sid);
+  if(newEl) newEl.scrollTop=0;
+}
+
+function goBack() {
+  if(navHistory.length<=1) return;
+  const cur = navHistory.pop();
+  const prev = navHistory[navHistory.length-1];
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  if(prev==='screen-feed') document.getElementById('nav-home')?.classList.add('active');
+  if(prev==='screen-new') document.getElementById('nav-share')?.classList.add('active');
+  if(prev==='screen-feedback') document.getElementById('nav-feedback')?.classList.add('active');
+  if(prev==='screen-profile') document.getElementById('nav-profile')?.classList.add('active');
+  const curEl = document.getElementById(cur);
+  const prevEl = document.getElementById(prev);
+  curEl?.classList.remove('active'); curEl?.classList.add('slide-out');
+  prevEl?.classList.add('active');   prevEl?.classList.remove('slide-out');
+  setTimeout(()=>{ curEl?.classList.remove('slide-out'); },380);
+}
+
+/* ── Render post detail ──────────────────────────────────────── */
+function renderDetail(pid) {
+  const p = posts[pid];
+  const liked = p.liked;
+  const tags = p.tags.map(t=>`<span class="d-tag">#${t}</span>`).join('');
+  const comments = cmts[pid].map(c=>`
+    <div class="cmt-item">
+      <div class="cmt-avi" style="background:${p.avi}">${c.e}</div>
+      <div class="cmt-body">
+        <div class="cmt-text"><strong>${c.pet}</strong> ${c.txt}</div>
+        <div class="cmt-time">${c.t}</div>
+      </div>
+      <button class="cmt-like"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg></button>
+    </div>`).join('');
+
+  document.getElementById('detail-body').innerHTML = `
+    <div class="post-header">
+      <div class="post-avatar" style="background:${p.avi}">${p.emoji[0]}</div>
+      <div style="flex:1;min-width:0;margin-left:10px;">
+        <div class="post-pet-name">${p.pet}</div>
+        <div class="post-owner">${p.owner} · ${p.loc}</div>
+      </div>
+    </div>
+    <div class="detail-img" style="background:${p.bg}">${p.emoji}</div>
+    <div class="post-actions">
+      <button class="act-btn ${liked?'liked':''}" id="d-like-btn" onclick="dToggleLike('${pid}',this)">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="${liked?'var(--red-ink)':'none'}" stroke="${liked?'var(--red-ink)':'currentColor'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+      </button>
+      <button class="act-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+    <div class="post-likes" id="d-likes">${p.likes} likes</div>
+    <div class="detail-caption"><strong onclick="navigate('screen-profile')">${p.pet}</strong> ${p.caption}</div>
+    <div class="detail-time">${p.time}</div>
+    ${p.tags.length ? `<div class="detail-tags">${tags}</div>` : ''}
+    <hr class="divider-line">
+    <div class="comments-list" id="d-cmts">${comments}</div>
+  `;
+}
+
+function dToggleLike(pid, btn) {
+  posts[pid].liked = !posts[pid].liked;
+  const liked = posts[pid].liked;
+  posts[pid].likes += liked ? 1 : -1;
+  btn.classList.toggle('liked', liked);
+  const svg = btn.querySelector('svg');
+  svg.setAttribute('fill', liked ? 'var(--red-ink)' : 'none');
+  svg.setAttribute('stroke', liked ? 'var(--red-ink)' : 'currentColor');
+  document.getElementById('d-likes').textContent = posts[pid].likes + ' likes';
+}
+
+/* ── Feed like toggle ────────────────────────────────────────── */
+function toggleLike(btn) {
+  btn.classList.toggle('liked');
+  const liked = btn.classList.contains('liked');
+  const svg = btn.querySelector('svg');
+  svg.setAttribute('fill', liked ? 'var(--red-ink)' : 'none');
+  svg.setAttribute('stroke', liked ? 'var(--red-ink)' : 'currentColor');
+  const el = btn.closest('.post-card')?.querySelector('.post-likes');
+  if(el) {
+    const n = parseInt(el.dataset.likes||0) + (liked?1:-1);
+    el.dataset.likes = n; el.textContent = n + ' likes';
+  }
+  btn.style.transform='scale(1.4)';
+  setTimeout(()=>btn.style.transform='', 160);
+}
+
+/* ── Comments ────────────────────────────────────────────────── */
+function checkCmtBtn(inp) {
+  document.getElementById('cmt-post')?.classList.toggle('show', inp.value.trim().length>0);
+}
+function postCmt() {
+  const inp = document.getElementById('cmt-in');
+  const txt = inp?.value.trim();
+  if(!txt || !activePid) return;
+  cmts[activePid].push({e:'🐕',pet:'Charlie',txt,t:'Just now'});
+  const el = document.getElementById('d-cmts');
+  if(el) {
+    el.insertAdjacentHTML('beforeend',`
+      <div class="cmt-item" style="opacity:0;transition:opacity 0.2s;animation:none">
+        <div class="cmt-avi" style="background:linear-gradient(135deg,var(--pink-soft),var(--pink))">🐕</div>
+        <div class="cmt-body">
+          <div class="cmt-text"><strong>Charlie</strong> ${txt}</div>
+          <div class="cmt-time">Just now</div>
+        </div>
+      </div>`);
+    const last = el.lastElementChild;
+    requestAnimationFrame(()=>last.style.opacity='1');
+    last.scrollIntoView({behavior:'smooth'});
+  }
+  inp.value=''; document.getElementById('cmt-post')?.classList.remove('show');
+}
+
+/* ── New post ────────────────────────────────────────────────── */
+let hasPhoto = false;
+function handleFile(inp) {
+  const f = inp.files?.[0]; if(!f) return;
+  hasPhoto = true;
+  const url = URL.createObjectURL(f);
+  const prev = document.getElementById('photo-prev');
+  prev.style.cssText = `display:flex;background:url(${url}) center/cover;font-size:0`;
+  document.getElementById('photo-placeholder').style.display='none';
+  document.getElementById('rm-photo').style.display='block';
+  updateBtn();
+}
+function removePhoto() {
+  hasPhoto=false;
+  document.getElementById('photo-prev').style.cssText='display:none';
+  document.getElementById('photo-placeholder').style.display='';
+  document.getElementById('rm-photo').style.display='none';
+  document.getElementById('file-in').value='';
+  updateBtn();
+}
+function updateBtn() {
+  const cap = document.getElementById('cap-in')?.value.trim()||'';
+  const ok = hasPhoto||cap.length>0;
+  document.getElementById('hdr-share-btn').disabled=!ok;
+  document.getElementById('main-share-btn').disabled=!ok;
+  const h=document.getElementById('share-hint');
+  if(h) h.textContent=ok?'':' Add a photo or caption to share';
+}
+function selectPet(btn) {
+  document.querySelectorAll('.pet-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+}
+function submitPost() {
+  if(document.getElementById('main-share-btn').disabled) return;
+  document.getElementById('screen-new').innerHTML=`
+    <div class="sub-header">
+      <button class="back-btn" onclick="navigate('screen-feed')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </button>
+      <h1>Share a moment</h1>
+    </div>
+    <div class="success-wrap">
+      <div class="success-icon">🐾</div>
+      <div class="success-h">Posted to Fetch Fam!</div>
+      <div class="success-p">Your moment is now live for the community to see and celebrate.</div>
+      <div class="success-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Post shared successfully
+      </div>
+    </div>`;
+  setTimeout(()=>{ navigate('screen-feed'); },1800);
+}
+
+document.getElementById('nav-home').classList.add('active');
+
+/* ── Feedback ───────────────────────────────────────────────── */
+let fbRating = 0;
+function setRating(n) {
+  fbRating = n;
+  document.querySelectorAll('#stars .star-btn').forEach((s,i) => s.classList.toggle('on', i < n));
+  upFbBtn();
+}
+function upFbBtn() {
+  const btn = document.getElementById('fb-sub');
+  const txt = document.getElementById('fb-txt');
+  if (!btn || !txt) return;
+  const active = fbRating > 0 || txt.value.trim().length > 0 || !!document.querySelector('.fb-cat.on');
+  btn.disabled = !active;
+  btn.style.opacity = active ? '1' : '0.35';
+  btn.style.cursor = active ? 'pointer' : 'not-allowed';
+}
+function submitFb() {
+  document.getElementById('screen-feedback').innerHTML = `
+    <div class="sub-header"><button class="back-btn" onclick="navigate('screen-feed')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button><h1>Share feedback</h1></div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 24px;text-align:center;">
+      <div style="font-size:56px;margin-bottom:16px">🐾</div>
+      <div style="font-size:20px;font-weight:700;color:var(--foreground);letter-spacing:-0.3px">Thank you!</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6;max-width:240px">Your feedback helps us make Fetch better for you and your pet. We read every message.</div>
+      <button onclick="navigate('screen-feed')" style="margin-top:24px;background:var(--interactive);color:white;border:none;border-radius:var(--r-f);padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Back to community</button>
+    </div>`;
+}
+</script>
+</body>
+</html>

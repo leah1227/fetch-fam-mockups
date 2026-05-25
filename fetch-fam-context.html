@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fetch App — Fetch Fam in context</title>
+<style>
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Book.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Medium.otf') format('opentype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #fdf2fb;
+  --surface:     #ffffff;
+  --surface-2:   #fbeff6;
+  --ink:         #1b1b1c;
+  --muted:       #5e5e5e;
+  --muted-2:     #3a3a3c;
+  --border:      #ccb4c1;
+  --border-sub:  rgba(230,210,221,0.5);
+  --pink:        #fda9ff;
+  --pink-soft:   #fec9ff;
+  --pink-ink:    #b7468d;
+  --green:       #a0eb8d;
+  --green-soft:  #dff3da;
+  --green-ink:   #008a20;
+  --blue-soft:   #d6deff;
+  --blue-ink:    #4a5dd4;
+  --red-ink:     #dc3030;
+  --r-sm: 8px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-2xl: 24px; --r-f: 9999px;
+  --sh-xs: 0 1px 0 rgba(5,5,5,.04);
+  --sh-sm: 0 1px 2px rgba(5,5,5,.06), 0 1px 0 rgba(5,5,5,.02);
+  --sh-md: 0 4px 12px -4px rgba(5,5,5,.10), 0 1px 3px rgba(5,5,5,.05);
+  --ease:  cubic-bezier(0.16,1,0.3,1);
+  --spring: cubic-bezier(0.34,1.56,0.64,1);
+}
+
+body {
+  font-family: "Circular Std", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: #cfc2cf;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 36px 24px;
+  gap: 0;
+}
+
+/* ════════════════════════════════════════════
+   SHARED PHONE FRAME
+════════════════════════════════════════════ */
+.scene {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: nowrap;
+}
+
+.phone-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.phone-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.55);
+}
+.phone-sublabel {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 4px;
+  text-align: center;
+  max-width: 220px;
+  line-height: 1.4;
+}
+
+.phone {
+  position: relative;
+  width: 390px;
+  height: 844px;
+  background: var(--bg);
+  border-radius: 50px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 0 0 9px #111,
+    0 0 0 11px #2a2a2a,
+    0 40px 100px rgba(0,0,0,0.45),
+    0 16px 40px rgba(0,0,0,0.2);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  width: 120px; height: 34px;
+  background: #111; border-radius: 20px; z-index: 100;
+}
+
+/* Connector between phones */
+.connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 4px;
+  align-self: center;
+  flex-shrink: 0;
+}
+.connector-arrow {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.connector-line {
+  width: 40px; height: 1.5px;
+  background: linear-gradient(90deg, rgba(253,169,255,0.3), rgba(253,169,255,0.8));
+  border-radius: 2px;
+}
+.connector-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.7px;
+  color: rgba(253,169,255,0.7);
+  white-space: nowrap; text-align: center;
+}
+.connector-chevron {
+  color: rgba(253,169,255,0.7);
+}
+
+/* ════════════════════════════════════════════
+   STATUS BAR (shared)
+════════════════════════════════════════════ */
+.status-bar {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px 0;
+  font-size: 13px; font-weight: 700;
+  color: var(--ink); position: relative; z-index: 50;
+  letter-spacing: -0.2px;
+}
+.status-icons { display: flex; align-items: center; gap: 6px; }
+
+/* ════════════════════════════════════════════
+   SHARED BOTTOM NAV
+════════════════════════════════════════════ */
+.bottom-nav {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border-sub);
+  display: flex; align-items: flex-end;
+  justify-content: space-around;
+  padding: 8px 0 20px;
+  z-index: 30; box-shadow: 0 -1px 0 var(--border-sub);
+}
+.nav-tab {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+  background: none; border: none; cursor: pointer;
+  padding: 2px 8px; color: var(--muted);
+  font-size: 10px; font-weight: 700; font-family: inherit;
+  letter-spacing: -0.1px;
+  transition: color 0.15s;
+  position: relative;
+}
+.nav-tab.active { color: var(--ink); }
+.nav-tab.active svg { stroke: var(--ink); }
+.nav-tab.fam-tab { color: var(--pink-ink); }
+.nav-tab.fam-tab svg { stroke: var(--pink-ink); }
+.nav-tab.fam-tab.active { color: var(--pink-ink); }
+#phone-left .nav-tab { padding: 2px 3px; font-size: 9px; }
+#phone-left .nav-tab svg { width: 20px; height: 20px; }
+/* "New" badge on Fetch Fam tab */
+.new-badge {
+  position: absolute;
+  top: -2px; right: 10px;
+  background: var(--pink-ink); color: white;
+  font-size: 8px; font-weight: 700;
+  border-radius: var(--r-f);
+  padding: 1px 5px;
+  letter-spacing: 0.2px;
+  border: 1.5px solid var(--surface);
+}
+
+/* ════════════════════════════════════════════
+   LEFT PHONE — FETCH APP (plan screen)
+════════════════════════════════════════════ */
+.plan-screen {
+  position: absolute; inset: 0;
+  background: var(--bg);
+  overflow-y: auto; overflow-x: hidden;
+  scrollbar-width: none;
+  padding-bottom: 90px;
+}
+.plan-screen::-webkit-scrollbar { display: none; }
+
+/* Fetch logo header */
+.fetch-header {
+  display: flex; align-items: center; justify-content: center;
+  padding: 14px 20px 10px;
+  position: relative;
+}
+.fetch-wordmark {
+  height: 20px;
+  /* Inline the wordmark SVG paths with dark fill */
+  --fill-0: var(--ink);
+}
+.fetch-wordmark svg { height: 20px; width: auto; }
+
+/* Pet tab selector — matches screenshot exactly */
+.pet-tabs {
+  display: flex; gap: 6px;
+  padding: 0 20px 12px;
+  justify-content: center;
+}
+.pet-tab-pill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 14px 6px 8px;
+  border-radius: var(--r-f);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-size: 13px; font-weight: 700; color: var(--muted);
+  cursor: pointer; font-family: inherit;
+  transition: all 0.15s;
+}
+.pet-tab-pill.active {
+  background: var(--surface-2);
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.tab-paw {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+}
+
+/* Plan welcome card */
+.plan-card {
+  margin: 0 16px 14px;
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border-sub);
+  box-shadow: var(--sh-sm);
+  overflow: hidden;
+}
+.plan-card-header {
+  padding: 18px 18px 10px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-sub);
+}
+.plan-card-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink-soft), var(--pink));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; margin: 0 auto 12px;
+  box-shadow: var(--sh-sm);
+}
+.plan-welcome-title {
+  font-size: 22px; font-weight: 700;
+  letter-spacing: -0.5px; color: var(--ink); line-height: 1.15;
+}
+.plan-welcome-sub {
+  font-size: 12.5px; color: var(--muted); margin-top: 5px; line-height: 1.45;
+}
+
+/* Price + plan row */
+.plan-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 12px 18px 4px;
+}
+.plan-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+.plan-price { display: flex; align-items: baseline; gap: 2px; }
+.price-amount { font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; }
+.price-cents { font-size: 14px; font-weight: 700; color: var(--ink); }
+.price-period { font-size: 11px; color: var(--muted); }
+.price-gst { font-size: 10px; color: var(--muted); display: block; text-align: right; margin-top: 1px; }
+
+/* Feature checklist */
+.feature-list {
+  padding: 4px 18px 14px;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.feature-item {
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.feat-check {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--green-soft);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.feat-check svg { display: block; }
+.feat-text { font-size: 12.5px; color: var(--ink); line-height: 1.35; }
+
+/* Mini to-do list — matches screenshot */
+.todo-card {
+  margin: 0 16px 14px;
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border-sub);
+  box-shadow: var(--sh-sm);
+  overflow: hidden;
+}
+.todo-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid var(--border-sub);
+}
+.todo-title {
+  font-size: 14px; font-weight: 700; color: var(--ink);
+  display: flex; align-items: center; gap: 5px;
+  letter-spacing: -0.2px;
+}
+.todo-count {
+  font-size: 12px; font-weight: 700;
+  color: var(--muted);
+  background: var(--surface-2);
+  border-radius: var(--r-f); padding: 2px 8px;
+}
+.todo-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border-sub);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.todo-item:last-child { border-bottom: none; }
+.todo-item:hover { background: var(--surface-2); }
+.todo-circle {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1.5px solid var(--pink-ink);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.todo-circle.done {
+  background: var(--green-soft); border-color: var(--green-ink);
+}
+.todo-circle.done::after {
+  content: '';
+  width: 5px; height: 9px;
+  border: 2px solid var(--green-ink);
+  border-top: none; border-left: none;
+  transform: rotate(45deg) translate(-1px,-1px);
+  display: block;
+}
+.todo-text { font-size: 13px; color: var(--ink); font-weight: 500; }
+.todo-text.done { color: var(--muted); text-decoration: line-through; }
+.todo-chevron { margin-left: auto; color: var(--muted); }
+
+/* Fam callout inside plan */
+.fam-callout {
+  margin: 0 16px 14px;
+  background: linear-gradient(135deg, var(--pink-soft) 0%, #ede0ff 100%);
+  border: 1px solid rgba(183,70,141,0.2);
+  border-radius: var(--r-xl);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.fam-callout:hover { opacity: 0.88; }
+.fam-callout-icon {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: white; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; box-shadow: var(--sh-sm);
+}
+.fam-callout-body { flex: 1; }
+.fam-callout-title { font-size: 13.5px; font-weight: 700; color: var(--pink-ink); }
+.fam-callout-sub { font-size: 11.5px; color: var(--pink-ink); opacity: 0.75; margin-top: 2px; line-height: 1.35; }
+.fam-callout-new {
+  background: var(--pink-ink); color: white;
+  font-size: 9px; font-weight: 700;
+  border-radius: var(--r-f); padding: 3px 8px;
+  flex-shrink: 0;
+}
+
+/* Next button */
+.next-btn-wrap {
+  padding: 0 16px 16px;
+}
+.next-btn {
+  width: 100%; background: var(--ink); color: white;
+  border: none; border-radius: var(--r-f);
+  padding: 16px; font-size: 16px; font-weight: 700;
+  font-family: inherit; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.next-btn:hover { opacity: 0.88; }
+
+/* ════════════════════════════════════════════
+   RIGHT PHONE — FETCH FAM (community)
+   Screens + navigation
+════════════════════════════════════════════ */
+.screen {
+  position: absolute; inset: 0;
+  background: var(--bg);
+  transform: translateX(105%);
+  transition: transform 0.36s var(--ease);
+  overflow-y: auto; overflow-x: hidden;
+  padding-bottom: 90px;
+  scrollbar-width: none;
+}
+.screen::-webkit-scrollbar { display: none; }
+.screen.active   { transform: translateX(0); }
+.screen.out-left { transform: translateX(-28%); }
+#sc-feed { transform: translateX(0); }
+
+/* App header */
+.app-hdr {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-sub);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  box-shadow: var(--sh-xs);
+}
+.hdr-logo { display: flex; align-items: center; gap: 8px; }
+.fetch-mark {
+  width: 30px; height: 30px;
+  border-radius: var(--r-sm);
+  background: var(--pink-soft);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+}
+.fetch-mark img { width: 100%; height: 100%; object-fit: contain; }
+.hdr-title { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: -0.4px; }
+.hdr-actions { display: flex; align-items: center; gap: 10px; }
+.icon-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--ink); padding: 5px;
+  display: flex; align-items: center;
+  border-radius: var(--r-f); position: relative;
+}
+.notif-dot {
+  position: absolute; top: 3px; right: 3px;
+  width: 6px; height: 6px;
+  background: var(--red-ink); border-radius: 50%;
+  border: 1.5px solid var(--surface);
+}
+.pet-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--pink-soft); color: var(--pink-ink);
+  border-radius: var(--r-f); padding: 4px 10px 4px 4px;
+  font-size: 12px; font-weight: 700; cursor: pointer; border: none;
+  font-family: inherit;
+}
+.pet-chip-avi {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--pink); display: flex; align-items: center;
+  justify-content: center; font-size: 12px;
+}
+
+/* Sub header */
+.sub-hdr {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-sub);
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; box-shadow: var(--sh-xs);
+}
+.sub-hdr h1 { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--ink); display: flex; align-items: center; padding: 4px;
+  border-radius: var(--r-f);
+}
+.sub-act {
+  margin-left: auto; background: var(--ink); color: #fff;
+  border: none; border-radius: var(--r-f);
+  padding: 7px 16px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+.sub-act:disabled { opacity: 0.3; cursor: not-allowed; }
+.sub-act-ghost {
+  margin-left: auto; background: transparent; color: var(--ink);
+  border: 1px solid var(--border); border-radius: var(--r-f);
+  padding: 7px 16px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+
+/* Welcome onboarding card */
+.welcome-card {
+  margin: 12px; background: var(--surface);
+  border-radius: var(--r-xl); border: 1px solid var(--border-sub);
+  box-shadow: var(--sh-sm); overflow: hidden;
+}
+.wc-top {
+  background: linear-gradient(135deg, var(--pink-soft), #ede0ff);
+  padding: 16px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.wc-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--pink-ink); margin-bottom: 3px; }
+.wc-title { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.4px; line-height: 1.2; }
+.wc-sub { font-size: 12.5px; color: var(--muted-2); margin-top: 2px; line-height: 1.4; }
+.wc-badge {
+  margin-left: auto; flex-shrink: 0;
+  background: var(--pink-ink); color: #fff;
+  font-size: 10px; font-weight: 700;
+  border-radius: var(--r-f); padding: 3px 9px;
+}
+.wc-checklist { padding: 8px 14px 2px; }
+.wc-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 0; border-bottom: 1px solid var(--border-sub);
+}
+.wc-item:last-child { border-bottom: none; }
+.wc-circle {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1.5px solid var(--pink-ink); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.wc-circle.done { background: var(--green-soft); border-color: var(--green-ink); }
+.wc-circle.done::after {
+  content: ''; width: 5px; height: 9px;
+  border: 2px solid var(--green-ink);
+  border-top: none; border-left: none;
+  transform: rotate(45deg) translate(-1px,-1px); display: block;
+}
+.wc-text { font-size: 13px; color: var(--ink); font-weight: 500; }
+.wc-text.done { color: var(--muted); text-decoration: line-through; }
+.wc-actions { padding: 10px 14px 14px; display: flex; gap: 8px; }
+.btn-primary {
+  flex: 1; background: var(--ink); color: #fff;
+  border: none; border-radius: var(--r-f); padding: 11px;
+  font-size: 13.5px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.btn-outline {
+  flex: 1; background: transparent; color: var(--pink-ink);
+  border: 1.5px solid var(--pink-ink); border-radius: var(--r-f);
+  padding: 11px; font-size: 13.5px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+
+/* Story strip */
+.story-strip { background: var(--surface); border-bottom: 1px solid var(--border-sub); box-shadow: var(--sh-xs); }
+.story-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; padding: 10px 14px 12px; }
+.story-scroll::-webkit-scrollbar { display: none; }
+.story-item { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; cursor: pointer; }
+.s-ring { padding: 2.5px; border-radius: 50%; background: conic-gradient(var(--pink) 0%, #e879f9 40%, #c084fc 70%, var(--pink) 100%); }
+.s-ring.seen { background: var(--border); }
+.s-ring-in { background: var(--surface); border-radius: 50%; padding: 2px; }
+.s-avi { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.s-mine { position: relative; }
+.s-add { position: absolute; bottom: 2px; right: 2px; width: 18px; height: 18px; background: var(--ink); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--surface); }
+.s-label { font-size: 11px; font-weight: 600; color: var(--ink); max-width: 60px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Section head */
+.sec-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 6px; }
+.sec-head span:first-child { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+.sec-head span:last-child { font-size: 11px; color: var(--muted); }
+
+/* Post card */
+.post-card { background: var(--surface); border-bottom: 1px solid var(--border-sub); margin-bottom: 6px; }
+.post-hdr { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+.post-avi { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; cursor: pointer; outline: 2px solid var(--pink-soft); outline-offset: 1.5px; }
+.post-name { font-size: 13.5px; font-weight: 700; color: var(--ink); letter-spacing: -0.2px; display: flex; align-items: center; gap: 5px; }
+.you-tag { font-size: 9.5px; font-weight: 700; background: var(--pink-soft); color: var(--pink-ink); border-radius: var(--r-f); padding: 1.5px 6px; }
+.post-owner { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+.post-more { background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; margin-left: auto; font-size: 18px; }
+.post-img-wrap { width: 100%; aspect-ratio: 1/1; overflow: hidden; cursor: pointer; }
+.post-img { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 90px; transition: opacity 0.12s; }
+.post-img:hover { opacity: 0.94; }
+.post-acts { display: flex; align-items: center; padding: 6px 8px 2px; }
+.act-btn { background: none; border: none; color: var(--ink); cursor: pointer; padding: 7px; border-radius: 50%; display: flex; align-items: center; transition: transform 0.12s var(--spring); }
+.act-btn:active { transform: scale(0.82); }
+.act-btn.liked svg { fill: var(--red-ink); stroke: var(--red-ink); }
+.post-likes { padding: 2px 14px; font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -0.2px; }
+.post-cap { padding: 1px 14px 5px; font-size: 13px; color: var(--ink); line-height: 1.5; }
+.post-cap strong { font-weight: 700; cursor: pointer; }
+.hashtags { color: var(--blue-ink); }
+.view-cmts { background: none; border: none; display: block; padding: 0 14px 10px; font-size: 12.5px; color: var(--muted); cursor: pointer; font-family: inherit; text-align: left; }
+
+/* New post */
+.photo-zone { aspect-ratio: 1/1; width: 100%; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; position: relative; overflow: hidden; border-bottom: 1px solid var(--border-sub); }
+.photo-icon { width: 68px; height: 68px; background: var(--surface); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--sh-md); font-size: 30px; }
+.photo-label { font-size: 14px; font-weight: 700; color: var(--muted-2); }
+.photo-sub { font-size: 12px; color: var(--muted); }
+.photo-prev { width: 100%; height: 100%; display: none; align-items: center; justify-content: center; font-size: 110px; }
+.pet-sel { display: flex; gap: 6px; padding: 10px 14px; background: var(--surface); border-bottom: 1px solid var(--border-sub); overflow-x: auto; scrollbar-width: none; }
+.pet-sel::-webkit-scrollbar { display: none; }
+.p-pill { display: flex; align-items: center; gap: 5px; padding: 5px 12px 5px 6px; border-radius: var(--r-f); border: 1.5px solid var(--border); background: var(--surface); font-size: 12.5px; font-weight: 700; color: var(--muted); cursor: pointer; white-space: nowrap; font-family: inherit; transition: all 0.12s; flex-shrink: 0; }
+.p-pill .p-a { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+.p-pill.active { background: var(--surface-2); border-color: var(--ink); color: var(--ink); }
+.cap-row { display: flex; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--border-sub); background: var(--surface); }
+.cap-avi { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; margin-top: 2px; background: var(--pink-soft); }
+.cap-in { flex: 1; background: transparent; border: none; font-size: 14px; color: var(--ink); resize: none; outline: none; font-family: inherit; line-height: 1.5; }
+.tag-row { padding: 12px 14px; background: var(--surface); border-bottom: 1px solid var(--border-sub); }
+.row-lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin-bottom: 8px; }
+.tag-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.t-pill { padding: 5px 12px; border-radius: var(--r-f); font-size: 12px; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface); color: var(--muted); font-family: inherit; transition: all 0.12s; }
+.t-pill.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.share-opts { padding: 14px; background: var(--surface); border-bottom: 1px solid var(--border-sub); }
+.t-row { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; }
+.t-ico { font-size: 18px; margin-top: 2px; }
+.t-bd { flex: 1; }
+.t-lbl { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+.t-desc { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+.toggle-sw { position: relative; flex-shrink: 0; margin-top: 2px; cursor: pointer; }
+.toggle-sw input { position: absolute; opacity: 0; width: 0; height: 0; }
+.t-track { display: block; width: 44px; height: 26px; background: var(--border); border-radius: 13px; transition: background 0.2s; position: relative; }
+.t-track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: white; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform 0.2s var(--spring); }
+.toggle-sw input:checked + .t-track { background: var(--ink); }
+.toggle-sw input:checked + .t-track::after { transform: translateX(18px); }
+.share-cta { padding: 14px; background: var(--surface); }
+
+/* Post detail */
+.det-img { width: 100%; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; font-size: 120px; }
+.det-cap { padding: 10px 14px 4px; font-size: 13.5px; line-height: 1.5; color: var(--ink); }
+.det-cap strong { font-weight: 700; cursor: pointer; }
+.det-time { padding: 0 14px 10px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; }
+.det-tags { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 14px 12px; }
+.d-tag { background: var(--blue-soft); color: var(--blue-ink); border-radius: var(--r-f); padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.divline { border: none; border-top: 1px solid var(--border-sub); }
+.cmts { padding: 4px 0; }
+.cmt { display: flex; gap: 10px; padding: 8px 14px; }
+.cmt-avi { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; background: var(--pink-soft); }
+.cmt-b { flex: 1; min-width: 0; }
+.cmt-txt { font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+.cmt-txt strong { font-weight: 700; }
+.cmt-t { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+.cmt-like { background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; align-self: center; flex-shrink: 0; }
+.cmt-bar { position: sticky; bottom: 90px; background: var(--surface); border-top: 1px solid var(--border-sub); display: flex; align-items: center; gap: 10px; padding: 10px 14px; }
+.cmt-bar-avi { width: 30px; height: 30px; border-radius: 50%; background: var(--pink-soft); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.cmt-fld-wrap { flex: 1; display: flex; align-items: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-f); padding: 6px 14px; gap: 8px; }
+.cmt-fld { flex: 1; background: transparent; border: none; font-size: 13px; color: var(--ink); outline: none; font-family: inherit; }
+.cmt-post { background: none; border: none; font-size: 13px; font-weight: 700; color: var(--blue-ink); cursor: pointer; opacity: 0; transition: opacity 0.12s; font-family: inherit; }
+.cmt-post.show { opacity: 1; }
+
+/* Profile */
+.prof-cover { height: 96px; background: linear-gradient(135deg, var(--pink-soft), #ede0ff); }
+.prof-avi-row { display: flex; align-items: flex-end; justify-content: space-between; padding: 0 14px 14px; }
+.prof-avi { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; flex-shrink: 0; background: linear-gradient(135deg,var(--pink-soft),var(--pink)); border: 4px solid var(--surface); margin-top: -36px; box-shadow: var(--sh-sm); }
+.prof-info { padding: 0 14px 14px; }
+.prof-name { font-size: 21px; font-weight: 700; letter-spacing: -0.5px; color: var(--ink); display: flex; align-items: center; gap: 7px; }
+.fam-tag { background: var(--pink-soft); color: var(--pink-ink); font-size: 9.5px; font-weight: 700; border-radius: var(--r-f); padding: 2px 8px; }
+.prof-breed { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.prof-bio { font-size: 13.5px; color: var(--ink); margin-top: 8px; line-height: 1.5; }
+.prof-joined { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.prof-stats { display: flex; border: 1px solid var(--border-sub); border-radius: var(--r-xl); background: var(--surface); margin: 0 14px 14px; box-shadow: var(--sh-xs); overflow: hidden; }
+.p-stat { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 12px 4px; border-right: 1px solid var(--border-sub); }
+.p-stat:last-child { border-right: none; }
+.stat-v { font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; }
+.stat-l { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+.sett-card { margin: 0 14px 14px; background: var(--surface); border: 1px solid var(--border-sub); border-radius: var(--r-xl); box-shadow: var(--sh-xs); overflow: hidden; }
+.sett-lbl { padding: 10px 14px 4px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); }
+.sett-bd { padding: 0 12px 10px; }
+.s-div { border: none; border-top: 1px solid var(--border-sub); margin: 6px 0; }
+.grid-hdr { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-top: 1px solid var(--border-sub); font-size: 13px; font-weight: 700; color: var(--ink); }
+.posts-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+.g-cell { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; font-size: 38px; cursor: pointer; position: relative; overflow: hidden; background: var(--surface-2); transition: opacity 0.12s; }
+.g-cell:hover { opacity: 0.88; }
+.g-ov { position: absolute; bottom: 4px; left: 4px; display: flex; align-items: center; gap: 3px; background: rgba(0,0,0,.42); border-radius: 100px; padding: 2px 6px; font-size: 10px; font-weight: 700; color: white; }
+
+/* Success */
+.success-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 14px; padding: 28px; text-align: center; }
+.succ-icon { font-size: 64px; line-height: 1; }
+.succ-h { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--ink); }
+.succ-p { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+.succ-pill { display: flex; align-items: center; gap: 7px; background: var(--green-soft); color: var(--green-ink); border-radius: var(--r-f); padding: 9px 18px; font-size: 13px; font-weight: 700; margin-top: 4px; }
+
+/* Shared divider */
+.hr { border: none; border-top: 6px solid var(--bg); }
+
+/* Pet profile screen (left phone) */
+.pp-screen { display: flex; flex-col; overflow-y: auto; flex: 1; }
+.pp-header { background: linear-gradient(160deg, var(--pink-soft) 0%, #ede0ff 100%); padding: 18px 16px 0; }
+.pp-avatar-row { display: flex; align-items: flex-end; gap: 0; position: relative; padding-bottom: 0; }
+.pp-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--pink-soft), var(--pink)); display: flex; align-items: center; justify-content: center; font-size: 36px; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.10); flex-shrink: 0; }
+.pp-name-block { margin-left: 14px; padding-bottom: 12px; }
+.pp-pet-name { font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; }
+.pp-pet-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.pp-edit-btn { margin-left: auto; align-self: flex-start; padding-top: 2px; background: rgba(255,255,255,0.7); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: var(--ink); cursor: pointer; font-family: inherit; }
+.info-card { margin: 12px 12px 0; background: var(--surface); border-radius: var(--r-xl); border: 1px solid var(--border-sub); overflow: hidden; box-shadow: var(--sh-sm); }
+.info-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-bottom: 1px solid var(--border-sub); }
+.info-row:last-child { border-bottom: none; }
+.info-label { font-size: 12px; color: var(--muted); }
+.info-value { font-size: 13px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+.info-chevron { color: var(--muted); opacity: 0.5; }
+.social-card { margin: 10px 12px 0; background: var(--surface); border-radius: var(--r-xl); border: 1px solid var(--border-sub); overflow: hidden; box-shadow: var(--sh-sm); }
+.social-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--border-sub); }
+.social-row:last-child { border-bottom: none; }
+.social-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.social-text { flex: 1; }
+.social-name { font-size: 12px; font-weight: 700; color: var(--ink); }
+.social-handle { font-size: 11px; color: var(--muted); }
+.social-chevron { color: var(--muted); opacity: 0.5; }
+.add-pet-banner { margin: 10px 12px 16px; background: linear-gradient(135deg, var(--pink-soft) 0%, #ede0ff 100%); border-radius: var(--r-xl); padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.add-pet-icon { font-size: 26px; }
+.add-pet-text { flex: 1; }
+.add-pet-title { font-size: 13px; font-weight: 700; color: var(--ink); }
+.add-pet-sub { font-size: 11px; color: var(--pink-ink); margin-top: 2px; }
+.add-pet-arrow { color: var(--pink-ink); }
+
+/* Feedback screen */
+.fb-intro { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border-radius: var(--r-xl); border: 1px solid var(--border-sub); margin: 12px 12px 10px; box-shadow: var(--sh-sm); }
+.fb-emoji-wrap { width: 46px; height: 46px; background: linear-gradient(135deg, var(--pink-soft), #ede0ff); border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.fb-intro-title { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.2px; }
+.fb-intro-sub { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+.fb-card { margin: 0 12px 10px; background: var(--surface); border-radius: var(--r-xl); border: 1px solid var(--border-sub); box-shadow: var(--sh-sm); padding: 14px; }
+.fb-lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin-bottom: 10px; }
+.star-row { display: flex; gap: 6px; justify-content: center; padding: 4px 0; }
+.star-btn { background: none; border: none; font-size: 32px; cursor: pointer; color: var(--border); transition: color 0.12s, transform 0.1s var(--spring); padding: 2px; line-height: 1; }
+.star-btn.on { color: #f59e0b; }
+.fb-cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.fb-cat { background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--r-f); padding: 7px 14px; font-size: 12px; font-weight: 700; color: var(--muted-2); cursor: pointer; font-family: inherit; transition: all 0.12s; }
+.fb-cat.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.fb-textarea { width: 100%; min-height: 90px; background: var(--surface-2); border: 1px solid var(--border-sub); border-radius: var(--r-lg); padding: 10px 12px; font-size: 13px; font-family: inherit; color: var(--ink); resize: none; outline: none; line-height: 1.5; }
+.fb-textarea:focus { border-color: var(--border); }
+.fb-cta { padding: 12px; }
+</style>
+</head>
+<body>
+
+<div class="scene">
+
+  <!-- ════════════════════════════════════════════
+       LEFT PHONE — Plan & setup
+  ════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label">Plan &amp; setup</div>
+    <div class="phone" id="phone-left">
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="5" width="3" height="7" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 10.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor" stroke="none"/><path d="M5.2 7.8a4 4 0 0 1 5.6 0"/><path d="M2.6 5.2a7.2 7.2 0 0 1 10.8 0"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><path d="M24 4v4a2.5 2.5 0 0 0 0-4z" fill="currentColor" fill-opacity="0.45"/></svg>
+        </div>
+      </div>
+
+      <!-- Plan screen -->
+      <div class="plan-screen">
+
+        <!-- Centered dog avatar + welcome text -->
+        <div style="display:flex;flex-direction:column;align-items:center;padding:28px 24px 18px;text-align:center;">
+          <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--pink-soft),var(--pink));display:flex;align-items:center;justify-content:center;font-size:46px;box-shadow:0 4px 24px rgba(253,169,255,0.45);margin-bottom:16px;">🐕</div>
+          <div style="font-size:22px;font-weight:700;letter-spacing:-0.5px;color:var(--ink);line-height:1.2;">Welcome to Charlie's plan</div>
+          <div style="font-size:14px;color:var(--muted);margin-top:6px;line-height:1.45;max-width:240px;">We'll zip through this faster than Charlie chases treats.</div>
+        </div>
+
+        <!-- Pet tabs -->
+        <div class="pet-tabs">
+          <button class="pet-tab-pill active">
+            <div class="tab-paw" style="background:linear-gradient(135deg,var(--pink-soft),var(--pink))">🐕</div>
+            Charlie
+          </button>
+          <button class="pet-tab-pill">
+            <div class="tab-paw" style="background:linear-gradient(135deg,#d8b4fe,#a855f7)">🐈</div>
+            Suzzy
+          </button>
+        </div>
+
+        <!-- Plan card -->
+        <div class="plan-card">
+          <div class="plan-row">
+            <div class="plan-name">Charlie's plan</div>
+            <div>
+              <div class="plan-price">
+                <span class="price-amount">$27</span>
+                <span class="price-cents">.40</span>
+                <span class="price-period">&thinsp;/mo</span>
+              </div>
+              <div class="price-gst">Inc GST &amp; Taxes ⓘ</div>
+            </div>
+          </div>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feat-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#008a20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="feat-text">$30k per 12mo, no vet sub-limits</span>
+            </div>
+            <div class="feature-item">
+              <div class="feat-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#008a20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="feat-text">Covers all conditions like Cancer &amp; Ortho</span>
+            </div>
+            <div class="feature-item">
+              <div class="feat-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#008a20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="feat-text">Dental, Physio &amp; Behaviour included</span>
+            </div>
+            <div class="feature-item">
+              <div class="feat-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#008a20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="feat-text">Fetch can pay your vet directly</span>
+            </div>
+            <div class="feature-item">
+              <div class="feat-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1 4 4 7 9 1" stroke="#008a20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="feat-text">Aussie-based veterinary team support</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini to-do -->
+        <div class="todo-card">
+          <div class="todo-header">
+            <div class="todo-title">Charlie's mini to-do list 🐾</div>
+            <div class="todo-count">(0/3)</div>
+          </div>
+          <div class="todo-item">
+            <div class="todo-circle"></div>
+            <span class="todo-text">Add a charming profile pic</span>
+            <div class="todo-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></div>
+          </div>
+          <div class="todo-item">
+            <div class="todo-circle"></div>
+            <span class="todo-text">Set up payments so Charlie's covered</span>
+            <div class="todo-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></div>
+          </div>
+          <div class="todo-item">
+            <div class="todo-circle"></div>
+            <span class="todo-text">Skip waiting periods to access cover</span>
+            <div class="todo-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></div>
+          </div>
+        </div>
+
+        <!-- Fetch Fam callout -->
+        <div class="fam-callout" onclick="openFam()">
+          <div class="fam-callout-icon">🐾</div>
+          <div class="fam-callout-body">
+            <div class="fam-callout-title">Join the Fetch Fam community</div>
+            <div class="fam-callout-sub">Connect with other pet owners and share your journey</div>
+          </div>
+          <div class="fam-callout-new">New</div>
+        </div>
+
+        <!-- Next btn -->
+        <div class="next-btn-wrap">
+          <button class="next-btn">Next</button>
+        </div>
+      </div>
+
+      <!-- Bottom nav — 5 tabs -->
+      <nav class="bottom-nav">
+        <button class="nav-tab" id="left-acct">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          My account
+        </button>
+        <button class="nav-tab active" id="left-charlie">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.5C11 4.5 9 2 6.5 2S2 4 2 6.5c0 1.5.7 2.8 1.8 3.7L12 19l8.2-8.8A5 5 0 0 0 22 6.5C22 4 20 2 17.5 2S13 4.5 13 4.5"/><circle cx="6" cy="17" r="2"/><circle cx="18" cy="17" r="2"/></svg>
+          Charlie
+        </button>
+        <button class="nav-tab" id="left-treatment">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8h-4l-2-6-4 16-3-8H3"/></svg>
+          Treatment Plan
+        </button>
+        <button class="nav-tab" id="left-plan">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          My Plan
+        </button>
+        <button class="nav-tab" id="left-support">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Support
+        </button>
+      </nav>
+
+    </div><!-- /phone-left -->
+    <div class="phone-sublabel">Charlie's plan summary and setup to-do list</div>
+  </div>
+
+  <!-- ════ Connector 1 ════ -->
+  <div class="connector">
+    <div class="connector-arrow">
+      <div class="connector-label">Charlie's profile</div>
+      <div class="connector-line"></div>
+      <div class="connector-chevron">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       MIDDLE PHONE — Charlie's profile
+  ════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label">Charlie's profile</div>
+    <div class="phone" id="phone-middle">
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="5" width="3" height="7" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 10.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor" stroke="none"/><path d="M5.2 7.8a4 4 0 0 1 5.6 0"/><path d="M2.6 5.2a7.2 7.2 0 0 1 10.8 0"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><path d="M24 4v4a2.5 2.5 0 0 0 0-4z" fill="currentColor" fill-opacity="0.45"/></svg>
+        </div>
+      </div>
+
+      <!-- Pet profile screen -->
+      <div class="plan-screen">
+
+        <!-- Profile header with gradient + avatar -->
+        <div class="pp-header">
+          <div class="pp-avatar-row">
+            <div class="pp-avatar">🐕</div>
+            <div class="pp-name-block">
+              <div class="pp-pet-name">Charlie</div>
+              <div class="pp-pet-sub">Golden Retriever · Male</div>
+            </div>
+            <button class="pp-edit-btn">Edit</button>
+          </div>
+        </div>
+
+        <!-- Info card -->
+        <div class="info-card">
+          <div class="info-row">
+            <span class="info-label">Name</span>
+            <span class="info-value">Charlie <span class="info-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Breed</span>
+            <span class="info-value">Golden Retriever <span class="info-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Gender</span>
+            <span class="info-value">Male <span class="info-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Date of birth</span>
+            <span class="info-value">12 Mar 2021 <span class="info-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">De-sexed</span>
+            <span class="info-value">Yes <span class="info-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">From</span>
+            <span class="info-value">Breeder <span class="info-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span></span>
+          </div>
+        </div>
+
+        <!-- Fetch Fam callout (above social) -->
+        <div class="fam-callout" style="margin:10px 12px 0;" onclick="openFam()">
+          <div class="fam-callout-icon">🐾</div>
+          <div class="fam-callout-body">
+            <div class="fam-callout-title">Join the Fetch Fam</div>
+            <div class="fam-callout-sub">Share Charlie's moments with the community</div>
+          </div>
+          <div class="fam-callout-new">New</div>
+        </div>
+
+        <!-- Social card -->
+        <div class="social-card">
+          <div class="social-row">
+            <div class="social-icon" style="background:linear-gradient(135deg,#f9a8d4,#e879f9);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="white" stroke-width="2"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="white"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <div class="social-text">
+              <div class="social-name">Instagram</div>
+              <div class="social-handle">@charlie_fetchfam</div>
+            </div>
+            <span class="social-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+          </div>
+          <div class="social-row">
+            <div class="social-icon" style="background:#1b1b1c;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.2 8.2 0 0 0 4.77 1.52V6.75a4.85 4.85 0 0 1-1-.06z"/></svg>
+            </div>
+            <div class="social-text">
+              <div class="social-name">TikTok</div>
+              <div class="social-handle">@charlie_goodboy</div>
+            </div>
+            <span class="social-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+          </div>
+          <div class="social-row">
+            <div class="social-icon" style="background:linear-gradient(135deg,var(--pink-soft),var(--pink));">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </div>
+            <div class="social-text">
+              <div class="social-name">Share on socials &amp; website</div>
+              <div class="social-handle">Spread the Fetch Fam love</div>
+            </div>
+            <span class="social-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Add another pet -->
+        <div class="add-pet-banner">
+          <div class="add-pet-icon">➕</div>
+          <div class="add-pet-text">
+            <div class="add-pet-title">Add another pet</div>
+            <div class="add-pet-sub">Get cover for all your fur family</div>
+          </div>
+          <span class="add-pet-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+        </div>
+      </div>
+
+      <!-- Bottom nav — 5 tabs -->
+      <nav class="bottom-nav">
+        <button class="nav-tab" id="mid-acct">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          My account
+        </button>
+        <button class="nav-tab active" id="mid-charlie">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.5C11 4.5 9 2 6.5 2S2 4 2 6.5c0 1.5.7 2.8 1.8 3.7L12 19l8.2-8.8A5 5 0 0 0 22 6.5C22 4 20 2 17.5 2S13 4.5 13 4.5"/><circle cx="6" cy="17" r="2"/><circle cx="18" cy="17" r="2"/></svg>
+          Charlie
+        </button>
+        <button class="nav-tab" id="mid-treatment">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8h-4l-2-6-4 16-3-8H3"/></svg>
+          Treatment Plan
+        </button>
+        <button class="nav-tab" id="mid-plan">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          My Plan
+        </button>
+        <button class="nav-tab" id="mid-support">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Support
+        </button>
+      </nav>
+
+    </div><!-- /phone-middle -->
+    <div class="phone-sublabel">Charlie's profile, Fetch Fam callout and social links</div>
+  </div>
+
+  <!-- ════ Connector 2 ════ -->
+  <div class="connector">
+    <div class="connector-arrow">
+      <div class="connector-label">Join Fetch Fam</div>
+      <div class="connector-line"></div>
+      <div class="connector-chevron">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       RIGHT PHONE — Fetch Fam community
+  ════════════════════════════════════════════ -->
+  <div class="phone-wrap">
+    <div class="phone-label">Fetch Fam community</div>
+    <div class="phone" id="phone-right">
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="5" width="3" height="7" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 10.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor" stroke="none"/><path d="M5.2 7.8a4 4 0 0 1 5.6 0"/><path d="M2.6 5.2a7.2 7.2 0 0 1 10.8 0"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><path d="M24 4v4a2.5 2.5 0 0 0 0-4z" fill="currentColor" fill-opacity="0.45"/></svg>
+        </div>
+      </div>
+
+      <!-- FEED SCREEN -->
+      <div class="screen active" id="sc-feed">
+        <div class="app-hdr">
+          <div class="hdr-logo">
+            <div class="fetch-mark">
+              <img src="fetch-logo-mark.png" alt="Fetch" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <span style="display:none;font-size:16px">🐾</span>
+            </div>
+            <span class="hdr-title">Fetch Fam</span>
+          </div>
+          <div class="hdr-actions">
+            <button class="pet-chip" onclick="go('sc-profile')">
+              <div class="pet-chip-avi">🐕</div>Charlie
+            </button>
+            <button class="icon-btn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="notif-dot"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Welcome card -->
+        <div class="welcome-card">
+          <div class="wc-top">
+            <div style="flex:1">
+              <div class="wc-eyebrow">New feature</div>
+              <div class="wc-title">Welcome to Fetch Fam 🐾</div>
+              <div class="wc-sub">Connect with pet owners and share your Fetch journey.</div>
+            </div>
+            <div class="wc-badge">New</div>
+          </div>
+
+          <div class="wc-actions">
+            <button class="btn-primary" onclick="go('sc-new')">Share a moment</button>
+            <button class="btn-outline" onclick="go('sc-profile')">Set up profile</button>
+          </div>
+        </div>
+
+        <div class="sec-head"><span>Fetch Fam posts</span><span>6 posts</span></div>
+
+        <!-- Posts -->
+        <div class="post-card">
+          <div class="post-hdr">
+            <div class="post-avi" style="background:var(--pink-soft)">🐶</div>
+            <div style="flex:1;min-width:0"><div class="post-name">Biscuit</div><div class="post-owner">Leah · Bondi, NSW · 2h ago</div></div>
+            <button class="post-more">···</button>
+          </div>
+          <div class="post-img-wrap" onclick="go('sc-post','post-1')"><div class="post-img" style="background:linear-gradient(160deg,#fce7f3,var(--pink-soft))">🐶🌊</div></div>
+          <div class="post-acts">
+            <button class="act-btn" onclick="fLike(this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg></button>
+            <button class="act-btn" onclick="go('sc-post','post-1')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+            <button class="act-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+          </div>
+          <div class="post-likes" data-likes="84">84 likes</div>
+          <div class="post-cap"><strong>Biscuit</strong> First beach day post-surgery and he's absolutely thriving 🌊 So grateful Fetch covered his knee treatment. <span class="hashtags">#FetchFam #BeachDog</span></div>
+          <button class="view-cmts" onclick="go('sc-post','post-1')">View all 12 comments</button>
+        </div>
+
+        <div class="post-card">
+          <div class="post-hdr">
+            <div class="post-avi" style="background:linear-gradient(135deg,var(--pink-soft),var(--pink))">🐕</div>
+            <div style="flex:1;min-width:0"><div class="post-name">Charlie <span class="you-tag">You</span></div><div class="post-owner">Sarah · Sydney, NSW · 1d ago</div></div>
+            <button class="post-more">···</button>
+          </div>
+          <div class="post-img-wrap" onclick="go('sc-post','post-3')"><div class="post-img" style="background:linear-gradient(160deg,var(--pink-soft),#ede0ff)">🎂🐕</div></div>
+          <div class="post-acts">
+            <button class="act-btn" onclick="fLike(this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg></button>
+            <button class="act-btn" onclick="go('sc-post','post-3')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+            <button class="act-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+          </div>
+          <div class="post-likes" data-likes="147">147 likes</div>
+          <div class="post-cap"><strong>Charlie</strong> Our little golden just turned 2! We took him in for a birthday checkup (yes, really 😂) and Fetch had us covered. <span class="hashtags">#GoldenLife #FetchFam</span></div>
+          <button class="view-cmts" onclick="go('sc-post','post-3')">View all 23 comments</button>
+        </div>
+
+        <div class="post-card">
+          <div class="post-hdr">
+            <div class="post-avi" style="background:#ede0ff">🐕‍🦺</div>
+            <div style="flex:1;min-width:0"><div class="post-name">Pepper</div><div class="post-owner">Amelia · Brisbane, QLD · 2d ago</div></div>
+            <button class="post-more">···</button>
+          </div>
+          <div class="post-img-wrap" onclick="go('sc-post','post-4')"><div class="post-img" style="background:linear-gradient(160deg,#ede0ff,var(--pink-soft))">🐕‍🦺🥹</div></div>
+          <div class="post-acts">
+            <button class="act-btn liked" onclick="fLike(this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--red-ink)" stroke="var(--red-ink)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg></button>
+            <button class="act-btn" onclick="go('sc-post','post-4')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+            <button class="act-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+          </div>
+          <div class="post-likes" data-likes="203">203 likes</div>
+          <div class="post-cap"><strong>Pepper</strong> Ortho claim approved in under 48 hours. Fully covered and she's already back to zoomies 🥹❤️ <span class="hashtags">#FetchFam #Grateful</span></div>
+          <button class="view-cmts" onclick="go('sc-post','post-4')">View all 31 comments</button>
+        </div>
+
+        <div style="text-align:center;padding:20px 16px 8px">
+          <p style="font-size:13px;color:var(--muted)">You're all caught up 🐾</p>
+          <button onclick="go('sc-new')" style="display:inline-block;margin-top:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-f);padding:9px 20px;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer;font-family:inherit;">Share your own moment</button>
+        </div>
+      </div>
+
+      <!-- NEW POST SCREEN -->
+      <div class="screen" id="sc-new">
+        <div class="sub-hdr">
+          <button class="back-btn" onclick="back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+          <h1>Share a moment</h1>
+          <button class="sub-act" id="hdr-sh" disabled onclick="submit()">Share</button>
+        </div>
+        <div class="photo-zone" onclick="document.getElementById('f-in').click()">
+          <div id="ph-ph"><div class="photo-icon">📷</div><div class="photo-label">Tap to add photo or video</div><div class="photo-sub">Share your pet's best moments</div></div>
+          <div class="photo-prev" id="ph-pr">🐕</div>
+          <input type="file" id="f-in" accept="image/*,video/*" style="display:none" onchange="handleF(this)">
+        </div>
+        <button id="rm-ph" style="display:none;width:100%;background:none;border:none;padding:7px;font-size:12px;color:var(--muted);cursor:pointer;font-family:inherit;" onclick="rmPhoto()">Remove photo</button>
+        <div class="pet-sel">
+          <button class="p-pill active" onclick="selPet(this)"><div class="p-a" style="background:linear-gradient(135deg,var(--pink-soft),var(--pink))">🐕</div>Charlie</button>
+          <button class="p-pill" onclick="selPet(this)"><div class="p-a" style="background:var(--pink-soft)">🐈</div>Suzzy</button>
+        </div>
+        <div class="cap-row">
+          <div class="cap-avi">🐕</div>
+          <textarea class="cap-in" id="cap" placeholder="Write a caption… What's Charlie been up to?" rows="3" oninput="upBtn()"></textarea>
+        </div>
+        <div class="tag-row">
+          <div class="row-lbl">Add tags</div>
+          <div class="tag-pills">
+            <button class="t-pill" onclick="this.classList.toggle('on')">#fetchfam</button>
+            <button class="t-pill" onclick="this.classList.toggle('on')">#petoftheday</button>
+            <button class="t-pill" onclick="this.classList.toggle('on')">#grateful</button>
+            <button class="t-pill" onclick="this.classList.toggle('on')">#claimapproved</button>
+            <button class="t-pill" onclick="this.classList.toggle('on')">#paydirect</button>
+            <button class="t-pill" onclick="this.classList.toggle('on')">#puppylife</button>
+            <button class="t-pill" onclick="this.classList.toggle('on')">#rescue</button>
+          </div>
+        </div>
+        <div class="share-opts">
+          <div class="row-lbl" style="margin-bottom:10px">Sharing options</div>
+          <div class="t-row"><div class="t-ico">🐾</div><div class="t-bd"><div class="t-lbl">Share with Fetch Fam</div><div class="t-desc">Other Fetch customers can see and react to your post</div></div><label class="toggle-sw"><input type="checkbox" checked><span class="t-track"></span></label></div>
+          <div style="border-top:1px solid var(--border-sub);margin:8px 0;"></div>
+          <div class="t-row"><div class="t-ico">📣</div><div class="t-bd"><div class="t-lbl">Allow Fetch to share on social</div><div class="t-desc">Fetch may feature your story on Instagram, Facebook, or Product Review</div></div><label class="toggle-sw"><input type="checkbox"><span class="t-track"></span></label></div>
+        </div>
+        <div class="share-cta">
+          <button class="btn-primary" id="main-sh" style="width:100%;padding:14px;font-size:15px;border-radius:var(--r-f);opacity:0.35;cursor:not-allowed;" disabled onclick="submit()">Share to Fetch Fam</button>
+          <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:7px;" id="sh-hint">Add a photo or caption to share</p>
+        </div>
+      </div>
+
+      <!-- POST DETAIL SCREEN -->
+      <div class="screen" id="sc-post">
+        <div class="sub-hdr">
+          <button class="back-btn" onclick="back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+          <h1>Post</h1>
+        </div>
+        <div id="det-body"></div>
+        <div class="cmt-bar">
+          <div class="cmt-bar-avi">🐕</div>
+          <div class="cmt-fld-wrap">
+            <input class="cmt-fld" type="text" placeholder="Add a comment…" id="cmt-in" oninput="chkCmt(this)">
+            <button class="cmt-post" id="cmt-post-btn" onclick="postCmt()">Post</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE SCREEN -->
+      <div class="screen" id="sc-profile">
+        <div class="sub-hdr">
+          <button class="back-btn" onclick="back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+          <h1>Charlie</h1>
+          <button class="sub-act-ghost">Edit</button>
+        </div>
+        <div class="prof-cover"></div>
+        <div class="prof-avi-row">
+          <div class="prof-avi">🐕</div>
+          <button class="sub-act-ghost" onclick="go('sc-new')">+ Add post</button>
+        </div>
+        <div class="prof-info">
+          <div class="prof-name">Charlie <span class="fam-tag">Fetch Fam</span></div>
+          <div class="prof-breed">Sarah · Golden Retriever</div>
+          <div class="prof-bio">Living my best golden life in Sydney 🐾 Obsessed with tennis balls, beach walks, and belly rubs.</div>
+          <div class="prof-joined">Joined January 2025</div>
+        </div>
+        <div class="prof-stats">
+          <div class="p-stat"><div class="stat-v">4</div><div class="stat-l">Posts</div></div>
+          <div class="p-stat"><div class="stat-v">147</div><div class="stat-l">Likes</div></div>
+          <div class="p-stat"><div class="stat-v">Active</div><div class="stat-l">Community</div></div>
+        </div>
+        <div class="sett-card">
+          <div class="sett-lbl">Fetch Fam settings</div>
+          <div class="sett-bd">
+            <div class="t-row"><div class="t-ico">🐾</div><div class="t-bd"><div class="t-lbl">Join the Fetch Fam community</div><div class="t-desc">Other Fetch customers can see your pet's posts</div></div><label class="toggle-sw"><input type="checkbox" checked><span class="t-track"></span></label></div>
+            <div class="s-div"></div>
+            <div class="t-row"><div class="t-ico">📣</div><div class="t-bd"><div class="t-lbl">Allow Fetch to share my content</div><div class="t-desc">Fetch may feature your posts on social media and review platforms</div></div><label class="toggle-sw"><input type="checkbox"><span class="t-track"></span></label></div>
+          </div>
+        </div>
+        <div class="grid-hdr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Posts</div>
+        <div class="posts-grid">
+          <div class="g-cell" style="background:linear-gradient(160deg,#fef9c3,#fde047,var(--pink-soft))" onclick="go('sc-post','post-3')">🎂🐕<div class="g-ov">❤️ 147</div></div>
+          <div class="g-cell" style="background:linear-gradient(160deg,#fce7f3,var(--pink-soft))" onclick="go('sc-post','post-3')">🐕🎾<div class="g-ov">❤️ 89</div></div>
+          <div class="g-cell" style="background:linear-gradient(160deg,#fce7f3,var(--pink-soft))" onclick="go('sc-post','post-3')">🌊🐕<div class="g-ov">❤️ 64</div></div>
+          <div class="g-cell" style="background:linear-gradient(160deg,#ede0ff,#fce7f3)" onclick="go('sc-post','post-3')">🐕😴<div class="g-ov">❤️ 52</div></div>
+        </div>
+      </div>
+
+      <!-- FEEDBACK SCREEN -->
+      <div class="screen" id="sc-feedback">
+        <div class="sub-hdr">
+          <button class="back-btn" onclick="back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+          <h1>Share feedback</h1>
+        </div>
+        <div class="fb-intro">
+          <div class="fb-emoji-wrap">💬</div>
+          <div>
+            <div class="fb-intro-title">We'd love to hear from you</div>
+            <div class="fb-intro-sub">Your feedback helps make Fetch better for every pet and owner.</div>
+          </div>
+        </div>
+        <div class="fb-card">
+          <div class="fb-lbl">How would you rate Fetch?</div>
+          <div class="star-row" id="stars">
+            <button class="star-btn" onclick="setRating(1)">★</button>
+            <button class="star-btn" onclick="setRating(2)">★</button>
+            <button class="star-btn" onclick="setRating(3)">★</button>
+            <button class="star-btn" onclick="setRating(4)">★</button>
+            <button class="star-btn" onclick="setRating(5)">★</button>
+          </div>
+        </div>
+        <div class="fb-card">
+          <div class="fb-lbl">What's your feedback about?</div>
+          <div class="fb-cats">
+            <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">Claims</button>
+            <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">History check</button>
+            <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">Charlie's cover</button>
+            <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">App experience</button>
+            <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">Support</button>
+            <button class="fb-cat" onclick="this.classList.toggle('on');upFbBtn()">PIP</button>
+          </div>
+        </div>
+        <div class="fb-card">
+          <div class="fb-lbl">Tell us more</div>
+          <textarea class="fb-textarea" placeholder="What's on your mind? We read every message 🐾" id="fb-txt" oninput="upFbBtn()"></textarea>
+        </div>
+        <div class="fb-cta">
+          <button class="btn-primary" id="fb-sub" style="width:100%;padding:14px;font-size:15px;border-radius:var(--r-f);opacity:0.35;cursor:not-allowed;" disabled onclick="submitFb()">Submit feedback</button>
+        </div>
+      </div>
+
+      <!-- Bottom nav — Fetch Fam -->
+      <nav class="bottom-nav">
+        <button class="nav-tab active" id="rn-home" onclick="go('sc-feed')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5Z"/><path d="M9 21V12h6v9"/></svg>
+          Home
+        </button>
+        <button class="nav-tab" id="rn-share" onclick="go('sc-new')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Share
+        </button>
+        <button class="nav-tab" id="rn-feedback" onclick="go('sc-feedback')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Feedback
+        </button>
+        <button class="nav-tab" id="rn-profile" onclick="go('sc-profile')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </button>
+      </nav>
+
+    </div><!-- /phone-right -->
+    <div class="phone-sublabel">The Fetch Fam community experience</div>
+  </div>
+
+</div><!-- /scene -->
+
+<script>
+/* ─ Left phone: pet tab switch ────────────────────────────────── */
+function switchPet(btn, name, emoji) {
+  document.querySelectorAll('#phone-left .pet-tab-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelector('.plan-welcome-title').textContent = `Welcome to ${name}'s plan`;
+  document.querySelector('.plan-card-icon').textContent = emoji;
+  document.querySelector('.todo-title').textContent = `${name}'s mini to-do list 🐾`;
+}
+
+/* ─ Left phone: open Fam ─────────────────────────────────────── */
+function openFam() {
+  // Navigate the right phone to the feed screen
+  go('sc-feed');
+  // Pulse the right phone to draw attention
+  const rp = document.getElementById('phone-right');
+  rp.style.boxShadow = '0 0 0 3px var(--pink-ink), 0 0 0 5px #2a2a2a, 0 40px 100px rgba(0,0,0,0.45)';
+  setTimeout(()=>{ rp.style.boxShadow=''; },800);
+}
+
+/* ─ Right phone navigation ───────────────────────────────────── */
+let hist = ['sc-feed'];
+let curPid = null;
+
+const pdata = {
+  'post-1':{ pet:'Biscuit',owner:'Leah',loc:'Bondi, NSW',time:'2 hours ago',emoji:'🐶🌊',bg:'linear-gradient(160deg,#fce7f3,var(--pink-soft))',avi:'var(--pink-soft)',
+    cap:"First beach day post-surgery and he's absolutely thriving 🌊 So grateful Fetch covered his knee treatment — couldn't have done it without them. #FetchFam #BeachDog",
+    tags:['beach','labrador','fetchfam'],likes:84,liked:false,
+    cmts:[{e:'🐩',p:'Ziggy',t:"Biscuit is such a gorgeous boy! So happy he's back at the beach 🌊",tm:'1h ago'},{e:'🌙',p:'Luna',t:"Which beach? We'd love to bring Luna!",tm:'45m ago'}]},
+  'post-3':{ pet:'Charlie',owner:'Sarah',loc:'Sydney, NSW',time:'1 day ago',emoji:'🎂🐕',bg:'linear-gradient(160deg,#fef9c3,#fde047,#fda9ff)',avi:'linear-gradient(135deg,#fec9ff,#fda9ff)',
+    cap:"Our little golden just turned 2! We took him in for a birthday checkup (yes, really 😂) and Fetch had us covered. Here's to many more adventures. #GoldenLife #FetchFam",
+    tags:['goldenretriever','birthday'],likes:147,liked:false,
+    cmts:[{e:'🐾',p:'Max',t:"Happy 2nd birthday Charlie!!! 🎂🐶",tm:'20h ago'},{e:'🌸',p:'Rosie',t:"Two already?! Time flies 😭",tm:'18h ago'},{e:'🐶',p:'Biscuit',t:"Happy birthday Charlie! 🐾",tm:'12h ago'}]},
+  'post-4':{ pet:'Pepper',owner:'Amelia',loc:'Brisbane, QLD',time:'2 days ago',emoji:'🐕‍🦺🥹',bg:'linear-gradient(160deg,#ede0ff,var(--pink-soft))',avi:'#ede0ff',
+    cap:"Pepper's ortho claim approved in under 48 hours. Her knee surgery is fully covered and she's already back to zoomies 🥹❤️ #FetchFam #Grateful",
+    tags:['bordercollie','grateful'],likes:203,liked:true,
+    cmts:[{e:'🐕',p:'Charlie',t:"So relieved for you and Pepper!! Fetch is truly incredible ❤️",tm:'1d ago'},{e:'🌭',p:'Noodle',t:"Go Pepper go!! What a trooper 🫶",tm:'1d ago'}]},
+};
+const liveCmts = Object.fromEntries(Object.entries(pdata).map(([k,v])=>[k,[...v.cmts]]));
+
+function go(sid, pid) {
+  const cur = hist[hist.length-1];
+  if(sid==='sc-post'&&pid){ curPid=pid; renderDet(pid); }
+  setNav(sid);
+  const curEl=document.getElementById(cur), newEl=document.getElementById(sid);
+  curEl?.classList.add('out-left');
+  newEl?.classList.remove('out-left');
+  newEl?.classList.add('active');
+  setTimeout(()=>curEl?.classList.remove('active','out-left'),380);
+  hist.push(sid);
+  if(newEl) newEl.scrollTop=0;
+}
+
+function back() {
+  if(hist.length<=1) return;
+  const cur=hist.pop(), prev=hist[hist.length-1];
+  setNav(prev);
+  const curEl=document.getElementById(cur), prevEl=document.getElementById(prev);
+  curEl?.classList.remove('active'); curEl?.classList.add('out-left');
+  prevEl?.classList.add('active');   prevEl?.classList.remove('out-left');
+  setTimeout(()=>curEl?.classList.remove('out-left'),380);
+}
+
+function setNav(sid) {
+  document.querySelectorAll('#phone-right .nav-tab').forEach(t=>t.classList.remove('active'));
+  const map={'sc-feed':'rn-home','sc-new':'rn-share','sc-feedback':'rn-feedback','sc-profile':'rn-profile'};
+  if(map[sid]) document.getElementById(map[sid])?.classList.add('active');
+}
+
+function renderDet(pid) {
+  const p=pdata[pid];
+  const tags=p.tags.map(t=>`<span class="d-tag">#${t}</span>`).join('');
+  const cmts=liveCmts[pid].map(c=>`
+    <div class="cmt"><div class="cmt-avi" style="background:${p.avi}">${c.e}</div>
+    <div class="cmt-b"><div class="cmt-txt"><strong>${c.p}</strong> ${c.t}</div><div class="cmt-t">${c.tm}</div></div>
+    <button class="cmt-like"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg></button></div>`).join('');
+  document.getElementById('det-body').innerHTML=`
+    <div class="post-hdr"><div class="post-avi" style="background:${p.avi}">${p.emoji[0]}</div>
+      <div style="flex:1;min-width:0;margin-left:10px"><div class="post-name">${p.pet}</div><div class="post-owner">${p.owner} · ${p.loc}</div></div></div>
+    <div class="det-img" style="background:${p.bg}">${p.emoji}</div>
+    <div class="post-acts">
+      <button class="act-btn ${p.liked?'liked':''}" id="d-lk" onclick="dLike('${pid}',this)">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="${p.liked?'var(--red-ink)':'none'}" stroke="${p.liked?'var(--red-ink)':'currentColor'}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg></button>
+      <button class="act-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+    <div class="post-likes" id="d-lks">${p.likes} likes</div>
+    <div class="det-cap"><strong>${p.pet}</strong> ${p.cap}</div>
+    <div class="det-time">${p.time}</div>
+    ${p.tags.length?`<div class="det-tags">${tags}</div>`:''}
+    <hr class="divline">
+    <div class="cmts" id="d-cmts">${cmts}</div>`;
+}
+
+function dLike(pid,btn) {
+  pdata[pid].liked=!pdata[pid].liked;
+  const lk=pdata[pid].liked;
+  pdata[pid].likes+=lk?1:-1;
+  btn.classList.toggle('liked',lk);
+  const s=btn.querySelector('svg');
+  s.setAttribute('fill',lk?'var(--red-ink)':'none');
+  s.setAttribute('stroke',lk?'var(--red-ink)':'currentColor');
+  document.getElementById('d-lks').textContent=pdata[pid].likes+' likes';
+}
+
+function fLike(btn) {
+  btn.classList.toggle('liked');
+  const lk=btn.classList.contains('liked');
+  const s=btn.querySelector('svg');
+  s.setAttribute('fill',lk?'var(--red-ink)':'none');
+  s.setAttribute('stroke',lk?'var(--red-ink)':'currentColor');
+  const el=btn.closest('.post-card')?.querySelector('.post-likes');
+  if(el){ const n=parseInt(el.dataset.likes||0)+(lk?1:-1); el.dataset.likes=n; el.textContent=n+' likes'; }
+  btn.style.transform='scale(1.4)';
+  setTimeout(()=>btn.style.transform='',160);
+}
+
+function chkCmt(inp) { document.getElementById('cmt-post-btn')?.classList.toggle('show',inp.value.trim().length>0); }
+function postCmt() {
+  const inp=document.getElementById('cmt-in'), txt=inp?.value.trim();
+  if(!txt||!curPid) return;
+  liveCmts[curPid].push({e:'🐕',p:'Charlie',t:txt,tm:'Just now'});
+  const el=document.getElementById('d-cmts');
+  if(el){ el.insertAdjacentHTML('beforeend',`<div class="cmt" style="opacity:0;transition:opacity 0.2s"><div class="cmt-avi" style="background:linear-gradient(135deg,var(--pink-soft),var(--pink))">🐕</div><div class="cmt-b"><div class="cmt-txt"><strong>Charlie</strong> ${txt}</div><div class="cmt-t">Just now</div></div></div>`);
+    requestAnimationFrame(()=>el.lastElementChild.style.opacity='1');
+    el.lastElementChild.scrollIntoView({behavior:'smooth'}); }
+  inp.value=''; document.getElementById('cmt-post-btn')?.classList.remove('show');
+}
+
+/* New post */
+let hasPh=false;
+function handleF(inp) {
+  const f=inp.files?.[0]; if(!f) return;
+  hasPh=true;
+  const url=URL.createObjectURL(f);
+  const pr=document.getElementById('ph-pr');
+  pr.style.cssText=`display:flex;background:url(${url}) center/cover;font-size:0`;
+  document.getElementById('ph-ph').style.display='none';
+  document.getElementById('rm-ph').style.display='block';
+  upBtn();
+}
+function rmPhoto() {
+  hasPh=false;
+  document.getElementById('ph-pr').style.cssText='display:none';
+  document.getElementById('ph-ph').style.display='';
+  document.getElementById('rm-ph').style.display='none';
+  document.getElementById('f-in').value='';
+  upBtn();
+}
+function upBtn() {
+  const c=document.getElementById('cap')?.value.trim()||'';
+  const ok=hasPh||c.length>0;
+  const hb=document.getElementById('hdr-sh'), mb=document.getElementById('main-sh');
+  if(hb){hb.disabled=!ok;}
+  if(mb){mb.disabled=!ok;mb.style.opacity=ok?'1':'0.35';mb.style.cursor=ok?'pointer':'not-allowed';}
+  const h=document.getElementById('sh-hint');
+  if(h) h.textContent=ok?'':'Add a photo or caption to share';
+}
+function selPet(btn) { document.querySelectorAll('.p-pill').forEach(p=>p.classList.remove('active')); btn.classList.add('active'); }
+function submit() {
+  if(document.getElementById('main-sh').disabled) return;
+  document.getElementById('sc-new').innerHTML=`
+    <div class="sub-hdr"><button class="back-btn" onclick="go('sc-feed')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button><h1>Share a moment</h1></div>
+    <div class="success-wrap"><div class="succ-icon">🐾</div><div class="succ-h">Posted to Fetch Fam!</div><div class="succ-p">Your moment is now live for the community to see and celebrate.</div><div class="succ-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Post shared successfully</div></div>`;
+  setTimeout(()=>go('sc-feed'),1800);
+}
+
+setNav('sc-feed');
+
+/* ─ Feedback ──────────────────────────────────────────────────── */
+let fbRating = 0;
+function setRating(n) {
+  fbRating = n;
+  document.querySelectorAll('#stars .star-btn').forEach((s,i) => s.classList.toggle('on', i < n));
+  upFbBtn();
+}
+function upFbBtn() {
+  const btn = document.getElementById('fb-sub');
+  const txt = document.getElementById('fb-txt');
+  if (!btn || !txt) return;
+  const active = fbRating > 0 || txt.value.trim().length > 0 || !!document.querySelector('.fb-cat.on');
+  btn.disabled = !active;
+  btn.style.opacity = active ? '1' : '0.35';
+  btn.style.cursor = active ? 'pointer' : 'not-allowed';
+}
+function submitFb() {
+  const highRating = fbRating >= 4;
+  document.getElementById('sc-feedback').innerHTML = `
+    <div class="sub-hdr"><button class="back-btn" onclick="go('sc-feed')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button><h1>Share feedback</h1></div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;">
+      <div style="font-size:56px;margin-bottom:16px">${highRating ? '⭐' : '🐾'}</div>
+      <div style="font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-0.3px">${highRating ? 'So glad you love Fetch!' : 'Thank you!'}</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6;max-width:240px">${highRating ? 'Would you mind sharing that love on ProductReview? It takes 2 minutes and helps other pet owners find us.' : 'Your feedback helps us make Fetch better for you and your pet. We read every message.'}</div>
+      ${highRating ? `
+      <a href="https://www.productreview.com.au/listings/fetch-pet-insurance" target="_blank" style="margin-top:20px;display:block;background:var(--ink);color:white;border:none;border-radius:var(--r-f);padding:13px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;">Leave a review ↗</a>
+      <button onclick="go('sc-feed')" style="margin-top:10px;background:none;color:var(--muted);border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:8px;">Maybe later</button>
+      ` : `
+      <button onclick="go('sc-feed')" style="margin-top:24px;background:var(--ink);color:white;border:none;border-radius:var(--r-f);padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Back to community</button>
+      `}
+    </div>`;
+}
+</script>
+</body>
+</html>
