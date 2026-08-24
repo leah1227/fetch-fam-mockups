@@ -1082,7 +1082,7 @@ body {
         <div style="flex:1">
           <div class="welcome-eyebrow">New feature</div>
           <div class="welcome-title">Welcome to Fetch Fam 🐾</div>
-          <div class="welcome-sub">Connect with pet owners and share your Fetch journey.</div>
+          <div class="welcome-sub">Connect with pet owners and share your Fetch journey. This is a place to celebrate all Fetch's Fam pets.</div>
         </div>
         <div class="welcome-badge">New</div>
       </div>
@@ -1766,7 +1766,7 @@ function submitFb() {
 function showMore(btn) {
   const isOwn = !!btn.closest('.post-card')?.querySelector('.you-tag');
   document.getElementById('sheet-items').innerHTML = `
-    <button class="sheet-item" onclick="reportPost()">🚩&nbsp; Report post</button>
+    <button class="sheet-item" onclick="reportPost()">🚩&nbsp; This doesn't feel right</button>
     ${isOwn
       ? '<button class="sheet-item danger" onclick="closeSheet()">🗑&nbsp; Delete post</button>'
       : '<button class="sheet-item" onclick="closeSheet()">🚫&nbsp; Not interested</button>'}

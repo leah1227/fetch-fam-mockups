@@ -1104,7 +1104,7 @@ body {
             <div style="flex:1">
               <div class="wc-eyebrow">New feature</div>
               <div class="wc-title">Welcome to Fetch Fam 🐾</div>
-              <div class="wc-sub">Connect with pet owners and share your Fetch journey.</div>
+              <div class="wc-sub">Meet the owners behind the pets. Share your story, celebrate their wins, and connect with people who just get it.</div>
             </div>
             <div class="wc-badge">New</div>
           </div>
@@ -1224,7 +1224,7 @@ body {
           <h1>Post</h1>
         </div>
         <div id="det-body"></div>
-        <div class="cmt-warn" id="cmt-warn">Keep it kind 🐾 Fetch Fam is a positive space.</div>
+        <div class="cmt-warn" id="cmt-warn">Keep it kind 🐾 Fetch Fam is a positive space. Have feedback? <button onclick="go('sc-feedback')" style="background:none;border:none;padding:0;font-size:12px;color:var(--red-ink);font-weight:700;cursor:pointer;font-family:inherit;text-decoration:underline;">Head to the feedback section</button> — our team are here to help.</div>
         <div class="cmt-bar">
           <div class="cmt-bar-avi">🐕</div>
           <div class="cmt-fld-wrap">
@@ -1471,10 +1471,50 @@ function fLike(btn) {
 }
 
 /* ─ Comment moderation ─────────────────────────────────────── */
-const BAD_WORDS = ['hate','scam','awful','terrible','worst','fraud','disgusting','useless','crap','rubbish','trash','horrible','sucks','suck','stupid','idiot','pathetic','liar','cheat','rip-off','ripoff'];
+const BAD_WORDS = [
+  // Strong negative language
+  'hate','scam','awful','terrible','worst','fraud','disgusting','useless','crap',
+  'rubbish','trash','horrible','sucks','suck','stupid','idiot','pathetic',
+  'liar','cheat','rip-off','ripoff','bullshit','bs',
+
+  // Claims experience
+  'denied','denial','decline','declined','rejected','rejection','refused','refuse',
+  'unpaid','underpaid','shortchanged',
+  'delayed','delays','dragging','dragged out',
+  'excluded','exclusion','exclusions',
+  'loophole','fine print','small print',
+
+  // History check complaints
+  'unfair','unjust','inaccurate','fabricated','made up',
+  'wrong decision','incorrect',
+
+  // Service quality negatives
+  'unacceptable','disgraceful','disgrace','appalling','appalled',
+  'misleading','misled','deceived','deceptive','dishonest',
+  'incompetent','incompetence',
+  'negligent','negligence','neglect','neglected',
+  'outraged','furious','livid','fuming','infuriated',
+  'betrayed','betrayal','let down','letdown',
+  'shocking','unethical','dodgy',
+
+  // Complaint / dispute / legal
+  'complaint','complain','complained','complaining',
+  'afca','ombudsman',
+  'escalate','escalated','escalation',
+  'dispute','disputing','disputed',
+  'legal action','lawsuit','solicitor','take you to',
+
+  // Financial complaint language
+  'refund','overcharged','overcharge','money back','waste of money','wasted money',
+
+  // Frustrated / disappointed sentiment
+  'frustrated','frustrating','frustration',
+  'disappointed','disappointing','disappointment',
+  'disgusted','disgusting',
+];
 function isMean(txt) {
   const l = txt.toLowerCase();
-  return BAD_WORDS.some(w => new RegExp('\\b' + w + '\\b').test(l));
+  return BAD_WORDS.some(w => new RegExp('\\b' + w.replace(/-/g,'\\-') + '\\b').test(l));
 }
 function chkCmt(inp) { document.getElementById('cmt-post-btn')?.classList.toggle('show',inp.value.trim().length>0); }
 function postCmt() {
@@ -1571,7 +1611,7 @@ function submitFb() {
 function showMore(btn) {
   const isOwn = !!btn.closest('.post-card')?.querySelector('.you-tag');
   document.getElementById('sheet-items').innerHTML = `
-    <button class="sheet-item" onclick="reportPost()">🚩&nbsp; Report post</button>
+    <button class="sheet-item" onclick="reportPost()">🚩&nbsp; This doesn't feel right</button>
     ${isOwn
       ? '<button class="sheet-item danger" onclick="closeSheet()">🗑&nbsp; Delete post</button>'
       : '<button class="sheet-item" onclick="closeSheet()">🚫&nbsp; Not interested</button>'}
