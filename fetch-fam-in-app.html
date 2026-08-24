@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fetch Fam — In-app placement</title>
+<style>
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Book.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Medium.otf') format('opentype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #f7f5f0;
+  --surface:     #ffffff;
+  --ink:         #111112;
+  --ink-2:       #3a3a3c;
+  --muted:       #9b9a96;
+  --divider:     rgba(5,5,5,0.07);
+  --pink-cta:    #fb6dd6;
+  --pink-soft:   #fdeef9;
+  --pink-ink:    #b7468d;
+  --green-soft:  #e4f4de;
+  --green-ink:   #1d8a3a;
+  --orange-soft: #ffe9c9;
+  --orange-ink:  #b8620a;
+  --blue-soft:   #dfe4ff;
+  --blue-ink:    #4a5dd4;
+  --nav-off:     #c9c6c0;
+  --r-card:      20px;
+  --r-f:         9999px;
+}
+
+body {
+  font-family: "Circular Std", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: #ddd8d0;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 36px 16px;
+  gap: 40px;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.sidebar { width: 250px; padding-top: 20px; flex-shrink: 0; }
+.s-label {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: #7d7a74; margin-bottom: 6px;
+}
+.s-title {
+  font-size: 21px; font-weight: 700; color: var(--ink);
+  letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px;
+}
+.s-desc { font-size: 13px; color: #55534e; line-height: 1.55; margin-bottom: 26px; }
+.s-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 12.5px; color: #55534e; line-height: 1.5;
+  margin-bottom: 12px;
+}
+.s-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--pink-cta); flex-shrink: 0; margin-top: 5px;
+}
+.s-dot.grey { background: #b9b5ad; }
+.s-item strong { color: var(--ink); font-weight: 700; }
+
+/* ── Phone ───────────────────────────────────────────────────── */
+.phone {
+  position: relative;
+  width: 390px; height: 844px;
+  background: var(--bg);
+  border-radius: 50px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 0 0 9px #111,
+    0 0 0 11px #2a2a2a,
+    0 40px 100px rgba(0,0,0,0.5),
+    0 20px 40px rgba(0,0,0,0.25);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 34px;
+  background: #111; border-radius: 20px; z-index: 100;
+}
+.phone::after {
+  content: '';
+  position: absolute;
+  right: -12px; top: 140px;
+  width: 4px; height: 64px;
+  background: #222; border-radius: 2px;
+  box-shadow: 0 80px 0 #222, 0 144px 0 #222;
+}
+
+/* ── Status bar ──────────────────────────────────────────────── */
+.status-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 28px 0;
+  font-size: 13px; font-weight: 700; color: var(--ink);
+  position: relative; z-index: 50; letter-spacing: -0.2px;
+  background: var(--bg);
+  padding-bottom: 6px;
+}
+.status-icons { display: flex; align-items: center; gap: 6px; }
+.batt {
+  display: flex; align-items: center; justify-content: center;
+  width: 25px; height: 13px; border-radius: 4px;
+  background: #ffd60a; color: #111;
+  font-size: 8.5px; font-weight: 700;
+}
+
+/* ── Screen ──────────────────────────────────────────────────── */
+.screen {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg);
+  overflow-y: auto; overflow-x: hidden;
+  padding-top: 42px; padding-bottom: 96px;
+  scrollbar-width: none;
+}
+.screen::-webkit-scrollbar { display: none; }
+
+/* ── Screen header ───────────────────────────────────────────── */
+.pet-header {
+  display: flex; align-items: center;
+  padding: 18px 20px 22px;
+  position: relative;
+}
+.pet-avi {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--pink-soft);
+  border: 1px solid rgba(5,5,5,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+.pet-header h1 {
+  position: absolute; left: 0; right: 0;
+  text-align: center;
+  font-size: 20px; font-weight: 700;
+  color: var(--ink); letter-spacing: -0.4px;
+  pointer-events: none;
+}
+
+/* ── Card + rows ─────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border-radius: var(--r-card);
+  margin: 0 16px 18px;
+  overflow: hidden;
+}
+.row {
+  position: relative;
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 17px 18px;
+  background: none; border: none;
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.row::after {
+  content: '';
+  position: absolute;
+  left: 18px; right: 0; bottom: 0;
+  height: 1px; background: var(--divider);
+}
+.row:last-child::after { display: none; }
+.row.inset::after { left: 52px; }
+.row:active { background: #fafaf8; }
+.row-label { font-size: 16px; color: var(--ink); font-weight: 400; letter-spacing: -0.2px; }
+.row-value {
+  margin-left: auto;
+  font-size: 16px; color: var(--ink); font-weight: 500;
+  letter-spacing: -0.2px;
+}
+.row-emoji { font-size: 19px; width: 22px; text-align: center; flex-shrink: 0; }
+.chev { flex-shrink: 0; color: var(--ink); display: flex; }
+.row-value + .chev { margin-left: 10px; }
+.row-label + .chev { margin-left: auto; }
+
+/* ── New-section marker ──────────────────────────────────────── */
+.new-pill {
+  background: var(--pink-cta); color: #fff;
+  font-size: 9.5px; font-weight: 700;
+  border-radius: var(--r-f); padding: 3px 8px;
+  letter-spacing: 0.2px;
+}
+
+/* ── Care card ───────────────────────────────────────────────── */
+.card-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 17px 18px 13px;
+}
+.card-head-title {
+  font-size: 16px; font-weight: 700;
+  color: var(--ink); letter-spacing: -0.3px;
+}
+.card-head-meta { margin-left: auto; font-size: 13px; color: var(--muted); }
+.card-foot {
+  display: flex; align-items: center; gap: 9px;
+  width: 100%; padding: 15px 18px;
+  background: #faf9f6; border: none;
+  border-top: 1px solid var(--divider);
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  color: var(--ink); cursor: pointer; text-align: left;
+  letter-spacing: -0.2px;
+}
+.card-foot:active { background: #f4f2ee; }
+
+/* ── Fetch Fam row ───────────────────────────────────────────── */
+.fam-avis { display: flex; margin-left: auto; }
+.fam-avi {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--pink-soft);
+  border: 2px solid var(--surface);
+  margin-left: -9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+.fam-avi:first-child { margin-left: 0; }
+
+/* ── Add another pet ─────────────────────────────────────────── */
+.addpet {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 16px 16px 18px;
+}
+.addpet-title { font-size: 16px; font-weight: 500; color: var(--ink); letter-spacing: -0.2px; }
+.addpet-sub { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+.addpet-btn {
+  margin-left: auto; flex-shrink: 0;
+  display: flex; align-items: center; gap: 5px;
+  background: var(--pink-cta); color: #fff;
+  border: none; border-radius: var(--r-f);
+  padding: 11px 16px;
+  font-size: 14.5px; font-weight: 500;
+  font-family: inherit; cursor: pointer;
+  letter-spacing: -0.2px;
+}
+.addpet-btn:active { opacity: 0.85; }
+
+/* ── Bottom nav (5 icons, no labels) ─────────────────────────── */
+.nav {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: space-around;
+  padding: 14px 0 26px;
+  z-index: 30;
+}
+.nav-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--nav-off); padding: 6px 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-btn.active { color: var(--ink); }
+
+/* ── Toast ───────────────────────────────────────────────────── */
+.toast {
+  position: absolute;
+  bottom: 100px; left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(17,17,18,0.92);
+  backdrop-filter: blur(8px);
+  color: #fff; padding: 11px 18px;
+  border-radius: var(--r-f);
+  font-size: 13px; font-weight: 500;
+  opacity: 0; transition: opacity .2s, transform .2s;
+  pointer-events: none; z-index: 60;
+  max-width: 300px; text-align: center; line-height: 1.45;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="s-label">Placement study</div>
+  <div class="s-title">Fetch Fam inside the current app</div>
+  <div class="s-desc">The live pet profile screen, rebuilt to match — with Care and Fetch Fam slotted in. No new bottom-nav tab.</div>
+
+  <div class="s-item"><span class="s-dot grey"></span><span>Pet details and Add&nbsp;another&nbsp;pet are <strong>as they are today</strong></span></div>
+  <div class="s-item"><span class="s-dot"></span><span><strong>Care</strong> sits directly under the pet's details — same pet-scoped mental model</span></div>
+  <div class="s-item"><span class="s-dot"></span><span><strong>Fetch Fam</strong> replaces the Insta / TikTok / share rows — sharing your pet now has one home</span></div>
+  <div class="s-item"><span class="s-dot grey"></span><span>Bottom nav stays at five tabs, untouched</span></div>
+</div>
+
+<div class="phone">
+
+  <div class="status-bar">
+    <span>17:07</span>
+    <div class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor">
+        <rect x="0" y="5" width="3" height="7" rx="1"/>
+        <rect x="4.5" y="3" width="3" height="9" rx="1" opacity="0.3"/>
+        <rect x="9" y="1" width="3" height="11" rx="1" opacity="0.3"/>
+        <rect x="13.5" y="0" width="3" height="12" rx="1" opacity="0.3"/>
+      </svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M8 10.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="currentColor" stroke="none"/>
+        <path d="M5.2 7.8a4 4 0 0 1 5.6 0"/>
+        <path d="M2.6 5.2a7.2 7.2 0 0 1 10.8 0"/>
+      </svg>
+      <span class="batt">65</span>
+    </div>
+  </div>
+
+  <div class="screen" id="screen">
+
+    <!-- Header -->
+    <div class="pet-header">
+      <div class="pet-avi">🐕</div>
+      <h1>Charlie</h1>
+    </div>
+
+    <!-- ═══ Pet details — as today ═══ -->
+    <div class="card">
+      <button class="row"><span class="row-label">Name</span><span class="row-value">Charlie</span><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button>
+      <button class="row"><span class="row-label">Breed</span><span class="row-value">Golden Retriever</span><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button>
+      <button class="row"><span class="row-label">Gender</span><span class="row-value">Male</span><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button>
+      <button class="row"><span class="row-label">Date of birth</span><span class="row-value">3 Aug 24</span><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button>
+      <button class="row"><span class="row-label">De-sexed</span><span class="row-value">Yes, 4-6 mo</span><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button>
+      <button class="row"><span class="row-label">From</span><span class="row-value">Breeder</span><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button>
+    </div>
+
+    <!-- ═══ NEW: Care ═══ -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-title">Charlie's care</span>
+        <span class="new-pill">NEW</span>
+      </div>
+
+      <button class="card-foot" onclick="openFam('screen-care')">
+        <span>📅</span><span>See all of Charlie's care</span>
+        <span class="chev" style="margin-left:auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>
+    </div>
+
+    <!-- ═══ NEW: Fetch Fam — replaces the Insta / TikTok / share rows ═══ -->
+    <div class="card">
+      <button class="row inset" onclick="openFam('screen-feed')">
+        <span class="row-emoji">🐾</span><span class="row-label">Fetch Fam</span>
+        <span class="new-pill" style="margin-left:8px">NEW</span>
+        <div class="fam-avis">
+          <div class="fam-avi">🐶</div>
+          <div class="fam-avi" style="background:#efe6ff">🦊</div>
+          <div class="fam-avi" style="background:var(--green-soft)">🐕‍🦺</div>
+        </div>
+        <span class="chev" style="margin-left:10px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>
+    </div>
+
+    <!-- ═══ Add another pet — as today ═══ -->
+    <div class="card">
+      <div class="addpet">
+        <span style="font-size:20px">🐾</span>
+        <div style="min-width:0">
+          <div class="addpet-title">Add another pet</div>
+          <div class="addpet-sub">Get an extra 5% off all plans</div>
+        </div>
+        <button class="addpet-btn" onclick="toast('Add another pet')">
+          Add Pet
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom nav — unchanged, five tabs -->
+  <nav class="nav">
+    <button class="nav-btn" aria-label="Account">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+    </button>
+    <button class="nav-btn active" aria-label="Pets">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><ellipse cx="6" cy="9" rx="2" ry="2.6"/><ellipse cx="10.4" cy="6.2" rx="2" ry="2.7"/><ellipse cx="15.1" cy="6.4" rx="2" ry="2.7"/><ellipse cx="19" cy="9.4" rx="2" ry="2.5"/><path d="M12.5 11c2.6 0 5.2 2.3 5.2 4.9 0 2.2-1.7 3.5-3.9 3.5-1 0-1.4-.3-2.4-.3s-1.4.3-2.4.3c-2.2 0-3.7-1.3-3.7-3.5C5.3 13.3 9.9 11 12.5 11z"/></svg>
+    </button>
+    <button class="nav-btn" aria-label="Claims">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="19" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/><path d="M12 11v5M9.5 13.5h5"/></svg>
+    </button>
+    <button class="nav-btn" aria-label="Cover">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.6-3.1 8.2-7.5 9.4C7.6 20.2 4.5 16.6 4.5 12V6z"/><path d="m9.2 12.2 2 2 3.6-3.8"/></svg>
+    </button>
+    <button class="nav-btn" aria-label="Chat">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12.4c0 4.2-3.8 7.6-8.5 7.6-1.2 0-2.4-.2-3.4-.6L3.5 21l1.7-4.2c-.9-1.2-1.4-2.7-1.4-4.4C3.8 8.2 7.6 4.8 12.3 4.8s8.2 3.4 8.2 7.6z"/></svg>
+    </button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* Opens the full Fetch Fam mockup on a specific screen.
+   The hash is the real link; sessionStorage is a fallback for static hosts
+   that redirect away the .html and drop the fragment. */
+function openFam(screen) {
+  try { sessionStorage.setItem('famScreen', screen); } catch (e) {}
+  window.location.href = 'fetch-fam-mockup.html#' + screen;
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

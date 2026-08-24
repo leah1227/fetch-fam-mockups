@@ -52,20 +52,23 @@
   --orange-soft:   #ffe7c2;
   --orange-ink:    #c45500;
 
-  /* Semantics */
-  --background:    #fdf2fb;
+  --pink-cta:      #fa6fd8;
+
+  /* Semantics — matched to the live Fetch app (cream ground, white cards) */
+  --background:    #f8f6f1;
   --surface:       #ffffff;
-  --surface-muted: #fbeff6;
-  --foreground:    #1b1b1c;
-  --muted:         #5e5e5e;
+  --surface-muted: #f3f1ec;
+  --foreground:    #111112;
+  --muted:         #6b6b6e;
   --muted-strong:  #3a3a3c;
-  --border:        #ccb4c1;
-  --border-subtle: rgba(230, 210, 221, 0.5);
-  --interactive:   #1b1b1c;
+  --border:        #e4e0d8;
+  --border-subtle: rgba(5, 5, 5, 0.07);
+  --interactive:   #111112;
 
   /* Shadows */
-  --shadow-xs: 0 1px 0 rgba(5,5,5,.04);
-  --shadow-sm: 0 1px 2px rgba(5,5,5,.05), 0 1px 0 rgba(5,5,5,.02);
+  /* Live app cards are flat white on cream — no lift. */
+  --shadow-xs: none;
+  --shadow-sm: none;
   --shadow-md: 0 4px 12px -4px rgba(5,5,5,.10), 0 1px 3px rgba(5,5,5,.05);
   --shadow-lg: 0 20px 48px -20px rgba(5,5,5,.16);
 
@@ -87,7 +90,7 @@
 
 body {
   font-family: "Circular Std", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  background: #d8ccd8;
+  background: #ddd8d0;
   min-height: 100vh;
   display: flex;
   align-items: flex-start;
@@ -145,6 +148,8 @@ body {
   position: relative;
   z-index: 50;
   letter-spacing: -0.2px;
+  background: var(--background);
+  padding-bottom: 6px;
 }
 .status-icons { display: flex; align-items: center; gap: 6px; }
 
@@ -157,7 +162,8 @@ body {
   transition: transform var(--slow) var(--ease-out);
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: 88px;
+  padding-top: 42px;
+  padding-bottom: 96px;
   scrollbar-width: none;
 }
 .screen::-webkit-scrollbar { display: none; }
@@ -167,20 +173,17 @@ body {
 
 /* ── App Header ──────────────────────────────────────────────── */
 .app-header {
-  position: sticky;
-  top: 0; z-index: 20;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border-subtle);
+  background: var(--background);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
-  box-shadow: var(--shadow-xs);
+  padding: 8px 16px 16px;
 }
 .app-header-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  min-width: 0;
 }
 .fetch-mark {
   width: 30px; height: 30px;
@@ -198,7 +201,7 @@ body {
   font-size: 18px; line-height: 1;
 }
 .header-title {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--foreground);
   letter-spacing: -0.4px;
@@ -243,31 +246,27 @@ body {
 
 /* ── Sub-header (back nav) ───────────────────────────────────── */
 .sub-header {
-  position: sticky;
-  top: 0; z-index: 20;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border-subtle);
+  background: var(--background);
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  box-shadow: var(--shadow-xs);
+  gap: 12px;
+  padding: 8px 16px 16px;
 }
 .sub-header h1 {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.4px;
   color: var(--foreground);
 }
 .back-btn {
-  background: var(--surface-muted); border: 1px solid var(--border-subtle); cursor: pointer;
-  color: var(--foreground);
-  display: flex; align-items: center;
-  padding: 7px; border-radius: var(--r-f);
-  box-shadow: 0 1px 2px rgba(5,5,5,.06);
+  width: 34px; height: 34px; flex-shrink: 0;
+  background: var(--surface); border: 1px solid rgba(5,5,5,0.06);
+  cursor: pointer; color: var(--foreground);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--r-f);
   transition: background var(--fast);
 }
-.back-btn:hover { background: var(--surface-muted); }
+.back-btn:hover { background: #f2f0ec; }
 .sub-action {
   margin-left: auto;
   background: var(--interactive); color: #fff;
@@ -298,7 +297,7 @@ body {
   overflow: hidden;
 }
 .welcome-card-top {
-  background: linear-gradient(135deg, var(--pink-soft) 0%, #f0d8ff 100%);
+  background: #fdeef9;
   padding: 16px;
   display: flex;
   align-items: flex-start;
@@ -507,7 +506,7 @@ body {
 .sheet-item:active { background:var(--surface-muted); }
 .sheet-item.danger { color:var(--red-ink); }
 /* Toast */
-.fam-toast { position:absolute;bottom:88px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(27,27,28,0.9);backdrop-filter:blur(8px);color:#fff;padding:10px 18px;border-radius:var(--r-f);font-size:12.5px;font-weight:500;opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:60;white-space:nowrap;max-width:300px;text-align:center; }
+.fam-toast { position:absolute;bottom:88px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(27,27,28,0.9);backdrop-filter:blur(8px);color:#fff;padding:10px 18px;border-radius:var(--r-f);font-size:12.5px;font-weight:500;opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:60;max-width:300px;text-align:center;line-height:1.45; }
 .fam-toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
 /* Comment warning */
 .cmt-warn { display:none;margin:0 12px 6px;padding:8px 12px;background:#fff0f0;border-radius:var(--r-sm);font-size:12px;color:var(--red-ink);border:1px solid rgba(220,48,48,0.18); }
@@ -584,28 +583,22 @@ body {
   border-color: var(--neutral-400);
 }
 
-/* ── Bottom Nav ──────────────────────────────────────────────── */
+/* ── Bottom Nav — the live app's five icons, paw lit ─────────── */
 .bottom-nav {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  background: var(--surface);
-  border-top: 1px solid var(--border-subtle);
-  display: flex; align-items: flex-end;
+  background: var(--background);
+  display: flex; align-items: center;
   justify-content: space-around;
-  padding: 8px 0 18px;
+  padding: 14px 0 26px;
   z-index: 30;
-  box-shadow: 0 -1px 0 var(--border-subtle);
 }
 .nav-tab {
-  display: flex; flex-direction: column;
-  align-items: center; gap: 3px;
   background: none; border: none;
-  cursor: pointer; padding: 2px 8px;
-  color: var(--muted);
-  font-size: 10px; font-weight: 700;
-  font-family: inherit;
+  cursor: pointer; padding: 6px 14px;
+  color: #c9c6c0;
+  display: flex; align-items: center; justify-content: center;
   transition: color var(--fast);
-  letter-spacing: -0.1px;
 }
 .nav-tab.active { color: var(--foreground); }
 .nav-fab {
@@ -743,7 +736,7 @@ body {
 .t-track {
   display: block;
   width: 44px; height: 26px;
-  background: var(--neutral-300); border-radius: 13px;
+  background: #d3cfc7; border-radius: 13px;
   transition: background var(--base);
   position: relative;
 }
@@ -812,12 +805,13 @@ body {
   padding: 4px; align-self: center; flex-shrink: 0;
 }
 .cmt-input-bar {
-  position: sticky; bottom: 88px;
+  /* Sticks just above the five-icon nav (the screen's own bottom padding
+     already clears it). */
+  position: sticky; bottom: 0;
   background: var(--surface);
   border-top: 1px solid var(--border-subtle);
   display: flex; align-items: center;
   gap: 10px; padding: 10px 14px;
-  box-shadow: 0 -1px 0 var(--border-subtle);
 }
 .cmt-avi-sm {
   width: 30px; height: 30px; border-radius: 50%;
@@ -990,6 +984,337 @@ body {
 .fb-textarea { width: 100%; min-height: 90px; background: var(--surface-muted); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); padding: 10px 12px; font-size: 13px; font-family: inherit; color: var(--foreground); resize: none; outline: none; line-height: 1.5; }
 .fb-textarea:focus { border-color: var(--border); }
 .fb-cta { padding: 12px; }
+
+/* ── Care card (reminder / AI insight in feed) ───────────────── */
+.care-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--green-ink);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-sm);
+  margin: 0 12px 10px;
+  overflow: hidden;
+}
+.care-card.insight { border-left-color: var(--blue-ink); }
+.care-top {
+  display: flex; align-items: center; gap: 8px;
+  padding: 11px 13px 0;
+}
+.care-mark {
+  width: 26px; height: 26px; border-radius: var(--r-sm);
+  background: var(--green-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.care-card.insight .care-mark { background: var(--blue-soft); }
+.care-eyebrow {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.7px;
+  color: var(--green-ink);
+}
+.care-card.insight .care-eyebrow { color: var(--blue-ink); }
+.care-src { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.care-dismiss {
+  margin-left: auto; background: none; border: none;
+  color: var(--ink-faint); cursor: pointer; padding: 4px;
+  font-size: 16px; line-height: 1; font-family: inherit;
+}
+.care-body { padding: 7px 13px 0; }
+.care-title {
+  font-size: 15px; font-weight: 700;
+  color: var(--foreground); letter-spacing: -0.3px;
+  line-height: 1.25;
+}
+.care-text {
+  font-size: 12.5px; color: var(--muted-strong);
+  line-height: 1.5; margin-top: 4px;
+}
+.care-why {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-top: 8px; padding: 5px 10px;
+  background: var(--surface-muted);
+  border-radius: var(--r-f);
+  font-size: 11px; color: var(--muted);
+}
+.care-actions { display: flex; gap: 8px; padding: 11px 13px 13px; }
+.care-btn {
+  flex: 1; border-radius: var(--r-f);
+  padding: 10px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: opacity var(--fast);
+}
+.care-btn.solid { background: var(--interactive); color: #fff; border: none; }
+.care-btn.ghost { background: transparent; color: var(--muted-strong); border: 1px solid var(--border); }
+.care-btn:hover { opacity: 0.85; }
+.care-streak {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 13px;
+  background: var(--green-soft);
+  border-top: 1px solid var(--border-subtle);
+  font-size: 11.5px; font-weight: 500; color: var(--green-ink);
+}
+.care-streak strong { font-weight: 700; }
+
+/* ── Care badges (profile loyalty) ───────────────────────────── */
+.badge-card {
+  margin: 0 14px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.badge-head {
+  display: flex; align-items: center;
+  padding: 12px 14px 10px;
+}
+.badge-head-title {
+  font-size: 13.5px; font-weight: 700;
+  color: var(--foreground); letter-spacing: -0.2px;
+}
+.badge-head-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.badge-count {
+  margin-left: auto; flex-shrink: 0;
+  background: var(--green-soft); color: var(--green-ink);
+  font-size: 11px; font-weight: 700;
+  border-radius: var(--r-f); padding: 4px 10px;
+}
+.badge-row {
+  display: flex; gap: 9px;
+  padding: 0 14px 12px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.badge-row::-webkit-scrollbar { display: none; }
+.badge {
+  flex-shrink: 0; width: 74px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 5px;
+  background: none; border: none; padding: 0;
+  cursor: pointer; font-family: inherit;
+}
+.badge-disc {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 23px;
+  background: linear-gradient(150deg, var(--green-soft), #c8f0bd);
+  border: 1.5px solid var(--green);
+  transition: transform var(--fast) var(--ease-spring);
+}
+.badge:active .badge-disc { transform: scale(0.92); }
+.badge-label {
+  font-size: 10px; font-weight: 700; line-height: 1.25;
+  color: var(--foreground); text-align: center;
+}
+.badge.locked .badge-disc {
+  background: var(--surface-muted);
+  border: 1.5px dashed var(--border);
+  filter: grayscale(1); opacity: 0.5;
+}
+.badge.locked .badge-label { color: var(--ink-faint); font-weight: 500; }
+.badge-reward {
+  border-top: 1px solid var(--border-subtle);
+  background: var(--surface-muted);
+  padding: 11px 14px;
+}
+.reward-line {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 700; color: var(--foreground);
+  margin-bottom: 7px;
+}
+.reward-line span:last-child { margin-left: auto; color: var(--muted); font-weight: 500; }
+.reward-bar {
+  height: 6px; border-radius: var(--r-f);
+  background: var(--neutral-200); overflow: hidden;
+}
+.reward-fill {
+  height: 100%; width: 60%;
+  border-radius: var(--r-f);
+  background: linear-gradient(90deg, var(--green), var(--green-ink));
+}
+.reward-note { font-size: 10.5px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+
+/* ── Care screen ─────────────────────────────────────────────── */
+.care-hero {
+  margin: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--green-soft) 0%, #d8ecff 100%);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; gap: 14px;
+}
+.hero-ring {
+  width: 68px; height: 68px; border-radius: 50%;
+  flex-shrink: 0;
+  background: conic-gradient(var(--green-ink) 0% 78%, rgba(255,255,255,0.55) 78% 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-ring-inner {
+  width: 54px; height: 54px; border-radius: 50%;
+  background: var(--surface);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.hero-score { font-size: 19px; font-weight: 700; letter-spacing: -0.5px; color: var(--foreground); line-height: 1; }
+.hero-score-lbl { font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin-top: 2px; }
+.hero-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; color: var(--foreground); line-height: 1.25; }
+.hero-sub { font-size: 12px; color: var(--muted-strong); line-height: 1.45; margin-top: 4px; }
+
+.care-sec-head {
+  display: flex; align-items: baseline;
+  padding: 6px 16px 8px;
+}
+.care-sec-head span:first-child {
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--muted);
+}
+.care-sec-head span:last-child:not(:first-child) { margin-left: auto; font-size: 11px; color: var(--muted); }
+
+.care-list {
+  margin: 0 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.care-item {
+  position: relative;
+  display: flex; align-items: center; gap: 11px;
+  width: 100%; padding: 13px;
+  background: none; border: none;
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.care-item::after {
+  content: '';
+  position: absolute;
+  left: 58px; right: 0; bottom: 0;
+  height: 1px; background: var(--border-subtle);
+}
+.care-item:last-child::after { display: none; }
+.care-item:active { background: var(--surface-muted); }
+.care-item-icon {
+  width: 34px; height: 34px; border-radius: var(--r-md);
+  background: var(--surface-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.care-item-icon.due { background: var(--orange-soft); }
+.care-item-icon.done { background: var(--green-soft); }
+.care-item-title { font-size: 13.5px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+.care-item-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.care-pill {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 10px; font-weight: 700;
+  border-radius: var(--r-f); padding: 4px 9px;
+  background: var(--orange-soft); color: var(--orange-ink);
+}
+.care-pill.ok { background: var(--green-soft); color: var(--green-ink); }
+.care-pill.later { background: var(--surface-muted); color: var(--muted); }
+
+/* Breed card */
+.breed-card {
+  margin: 0 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.breed-top {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 14px 11px;
+  background: var(--blue-soft);
+}
+.breed-title { font-size: 14px; font-weight: 700; color: var(--foreground); letter-spacing: -0.25px; }
+.breed-sub { font-size: 11.5px; color: var(--blue-ink); margin-top: 2px; font-weight: 500; }
+.breed-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.breed-rank {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--surface-muted); color: var(--muted);
+  font-size: 10.5px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.breed-name { font-size: 13px; font-weight: 700; color: var(--foreground); }
+.breed-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.breed-cov {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 10px; font-weight: 700;
+  background: var(--green-soft); color: var(--green-ink);
+  border-radius: var(--r-f); padding: 4px 9px;
+}
+.breed-foot {
+  padding: 11px 14px;
+  background: var(--surface-muted);
+  font-size: 11px; color: var(--muted); line-height: 1.5;
+}
+
+/* Breed cohort / community tie-in */
+.cohort-card {
+  margin: 0 12px 14px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-xs);
+}
+.cohort-avis { display: flex; margin-bottom: 9px; }
+.cohort-avi {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--pink-soft);
+  border: 2px solid var(--surface);
+  margin-left: -8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.cohort-avi:first-child { margin-left: 0; }
+.cohort-avi.more { background: var(--surface-muted); font-size: 9.5px; font-weight: 700; color: var(--muted); }
+.cohort-title { font-size: 14px; font-weight: 700; color: var(--foreground); letter-spacing: -0.25px; }
+.cohort-text { font-size: 12px; color: var(--muted-strong); line-height: 1.5; margin-top: 4px; }
+/* Care list on the pet profile */
+.checkup-empty {
+  padding: 18px 14px;
+  text-align: center;
+  font-size: 12.5px; color: var(--muted); line-height: 1.5;
+}
+.checkup-foot {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 12px 13px;
+  background: var(--surface-muted); border: none;
+  border-top: 1px solid var(--border-subtle);
+  font-family: inherit; font-size: 12.5px; font-weight: 700;
+  color: var(--foreground); cursor: pointer; text-align: left;
+}
+.checkup-foot:active { opacity: 0.7; }
+.row-remove {
+  margin-left: auto; flex-shrink: 0;
+  background: none; border: none; cursor: pointer;
+  color: var(--ink-faint); font-size: 17px; line-height: 1;
+  padding: 4px 2px; font-family: inherit;
+}
+.row-remove:hover { color: var(--muted); }
+@keyframes justAdded {
+  0%   { background: var(--green-soft); }
+  100% { background: transparent; }
+}
+.care-item.just-added { animation: justAdded 2.2s var(--ease-out); }
+
+.privacy-note {
+  margin: 0 12px 8px;
+  padding: 11px 13px;
+  background: var(--surface-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  font-size: 11px; color: var(--muted);
+  line-height: 1.5;
+  display: flex; gap: 8px;
+}
 </style>
 </head>
 <body>
@@ -999,7 +1324,7 @@ body {
   <div>
     <div class="s-label">Feature</div>
     <div class="s-title">Fetch Fam Community</div>
-    <div class="s-desc">An in-app community where Fetch customers connect, share pet moments, and celebrate each other's journeys.</div>
+    <div class="s-desc">An in-app community where Fetch customers connect, share pet moments, and celebrate each other's journeys. Styled to the live app, and reached from the pet profile under the paw tab.</div>
   </div>
   <div>
     <div class="s-label">Screens</div>
@@ -1008,12 +1333,13 @@ body {
       <div class="s-screen-item"><span class="s-dot"></span>Share a moment</div>
       <div class="s-screen-item"><span class="s-dot"></span>Post detail + comments</div>
       <div class="s-screen-item"><span class="s-dot"></span>My pet's profile</div>
+      <div class="s-screen-item"><span class="s-dot"></span>Care — data &amp; AI</div>
     </div>
   </div>
   <div>
     <div class="s-hint">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      Tap posts &amp; nav to explore
+      Tap posts to explore · back arrow returns to Charlie
     </div>
   </div>
 </div>
@@ -1055,10 +1381,9 @@ body {
     <!-- Header -->
     <div class="app-header">
       <div class="app-header-logo">
-        <div class="fetch-mark">
-          <img src="fetch-logo-mark.png" alt="Fetch" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <span class="fetch-mark-fallback" style="display:none">🐾</span>
-        </div>
+        <button class="back-btn" onclick="backToApp()" aria-label="Back to Charlie">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
         <span class="header-title">Fetch Fam</span>
       </div>
       <div class="header-actions">
@@ -1125,7 +1450,7 @@ body {
       </div>
       <div class="post-likes" data-likes="84">84 likes</div>
       <div class="post-caption">
-        <strong onclick="navigate('screen-profile')">Biscuit</strong> First beach day post-surgery and he's absolutely thriving 🌊 So grateful Fetch covered his knee treatment — couldn't have done it without them. <span class="hashtags">#FetchFam #BeachDog</span>
+        <strong onclick="navigate('screen-profile')">Biscuit</strong> First beach day post-surgery and he's absolutely thriving 🌊 So grateful for the Fetch team — couldn't have done it without them. <span class="hashtags">#FetchFam #BeachDog</span>
       </div>
       <button class="view-comments" onclick="navigate('screen-post','post-1')">View all 12 comments</button>
     </div>
@@ -1158,6 +1483,30 @@ body {
       <button class="view-comments" onclick="navigate('screen-post','post-2')">View all 8 comments</button>
     </div>
 
+    <!-- Care reminder — sits inline in the feed -->
+    <div class="care-card" id="care-reminder">
+      <div class="care-top">
+        <div class="care-mark">🩺</div>
+        <div style="flex:1;min-width:0;">
+          <div class="care-eyebrow">Charlie's care</div>
+          <div class="care-src">From Fetch · based on his last visit</div>
+        </div>
+        <button class="care-dismiss" onclick="dismissCare()" aria-label="Dismiss">×</button>
+      </div>
+      <div class="care-body">
+        <div class="care-title">Charlie's annual checkup is due in 3 weeks</div>
+        <div class="care-text">Goldens his age are most often claimed for ear infections and hip trouble — both are far cheaper to treat when they're caught at a routine visit.</div>
+        <div class="care-why">🐾 Suggested for Golden Retrievers, age 2</div>
+      </div>
+      <div class="care-actions">
+        <button class="care-btn solid" onclick="bookCheckup()">Book a checkup</button>
+        <button class="care-btn ghost" onclick="snoozeCare()">Remind me later</button>
+      </div>
+      <div class="care-streak">
+        🔥 <span>Booking keeps Charlie's <strong>checkup streak</strong> alive — 2 years running</span>
+      </div>
+    </div>
+
     <!-- Post 3 — mine -->
     <div class="post-card">
       <div class="post-header">
@@ -1181,7 +1530,7 @@ body {
       </div>
       <div class="post-likes" data-likes="147">147 likes</div>
       <div class="post-caption">
-        <strong onclick="navigate('screen-profile')">Charlie</strong> Our little golden just turned 2! We took him in for a birthday checkup (yes, really 😂) and Fetch had us covered. Here's to many more adventures. <span class="hashtags">#GoldenLife #FetchFam</span>
+        <strong onclick="navigate('screen-profile')">Charlie</strong> Our little golden just turned 2! We took him in for a birthday checkup (yes, really 😂) and it was so easy. Here's to many more adventures. <span class="hashtags">#GoldenLife #FetchFam</span>
       </div>
       <button class="view-comments" onclick="navigate('screen-post','post-3')">View all 23 comments</button>
     </div>
@@ -1209,9 +1558,30 @@ body {
       </div>
       <div class="post-likes" data-likes="203">203 likes</div>
       <div class="post-caption">
-        <strong>Pepper</strong> Ortho claim approved in under 48 hours. Her knee surgery is fully covered and she's already back to zoomies 🥹❤️ Fetch came through when we needed it most. <span class="hashtags">#FetchFam #Grateful</span>
+        <strong>Pepper</strong> Ortho claim approved in under 48 hours. Her knee surgery is all sorted and she's already back to zoomies 🥹❤️ Fetch came through when we needed it most. <span class="hashtags">#FetchFam #Grateful</span>
       </div>
       <button class="view-comments" onclick="navigate('screen-post','post-4')">View all 31 comments</button>
+    </div>
+
+    <!-- AI insight drawn from posted photos -->
+    <div class="care-card insight" id="care-insight">
+      <div class="care-top">
+        <div class="care-mark">✨</div>
+        <div style="flex:1;min-width:0;">
+          <div class="care-eyebrow">Spotted in your photos</div>
+          <div class="care-src">From Fetch · 12 photos over 6 months</div>
+        </div>
+        <button class="care-dismiss" onclick="dismissInsight()" aria-label="Dismiss">×</button>
+      </div>
+      <div class="care-body">
+        <div class="care-title">Charlie's looking a little heavier than last winter</div>
+        <div class="care-text">Nothing to worry about on its own — but weight is the single biggest driver of joint claims in Goldens. Worth a quick weigh-in at his next visit.</div>
+        <div class="care-why">🔒 Only you can see this. Photos stay private.</div>
+      </div>
+      <div class="care-actions">
+        <button class="care-btn solid" onclick="addToCheckup('weighin')">Add to his checkup</button>
+        <button class="care-btn ghost" onclick="dismissInsight()">Not now</button>
+      </div>
     </div>
 
     <div class="feed-footer">
@@ -1361,6 +1731,8 @@ body {
       <div class="p-stat"><div class="stat-val">147</div><div class="stat-lbl">Likes</div></div>
       <div class="p-stat"><div class="stat-val">Active</div><div class="stat-lbl">Community</div></div>
     </div>
+    <!-- Care lives under Charlie's care now, not on his social profile. -->
+
     <div class="settings-card">
       <div class="settings-card-label">Fetch Fam settings</div>
       <div class="settings-card-body">
@@ -1398,6 +1770,171 @@ body {
       <div class="grid-cell" style="background:linear-gradient(160deg,#fce7f3,var(--pink-soft));" onclick="navigate('screen-post','post-3')">🐕🎾<div class="grid-overlay">❤️ 89</div></div>
       <div class="grid-cell" style="background:linear-gradient(160deg,#fce7f3,var(--pink-soft));" onclick="navigate('screen-post','post-3')">🌊🐕<div class="grid-overlay">❤️ 64</div></div>
       <div class="grid-cell" style="background:linear-gradient(160deg,#ede0ff,#fce7f3);" onclick="navigate('screen-post','post-3')">🐕😴<div class="grid-overlay">❤️ 52</div></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       CARE SCREEN — data & AI
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-care">
+    <div class="app-header">
+      <div class="app-header-logo">
+        <button class="back-btn" onclick="backToApp()" aria-label="Back to Charlie">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="header-title">Care</span>
+      </div>
+      <div class="header-actions">
+        <button class="pet-chip" onclick="navigate('screen-profile')">
+          <div class="pet-chip-avatar">🐕</div>
+          Charlie
+        </button>
+      </div>
+    </div>
+
+    <!-- Hero: care score -->
+    <div class="care-hero">
+      <div class="hero-ring">
+        <div class="hero-ring-inner">
+          <div class="hero-score">78</div>
+          <div class="hero-score-lbl">Care</div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div class="hero-title">Charlie's in good shape</div>
+        <div class="hero-sub">Two things are coming up. Staying on top of them is the best thing you can do for him.</div>
+      </div>
+    </div>
+
+    <!-- Care badges — the loyalty layer, earned by keeping up with his care.
+         Leads the screen: the reward is the reason to look at the care list below. -->
+    <div class="care-sec-head"><span>Charlie's care badges</span><span>3 of 5</span></div>
+    <div class="badge-card">
+      <div class="badge-head">
+        <div>
+          <div class="badge-head-title">Earned by keeping him healthy</div>
+          <div class="badge-head-sub">Each one comes off his excess</div>
+        </div>
+      </div>
+      <div class="badge-row">
+        <button class="badge" onclick="badgeInfo('streak')">
+          <div class="badge-disc">🔥</div>
+          <div class="badge-label">Checkup streak</div>
+        </button>
+        <button class="badge" onclick="badgeInfo('dental')">
+          <div class="badge-disc">🦷</div>
+          <div class="badge-label">Dental done</div>
+        </button>
+        <button class="badge" onclick="badgeInfo('vax')">
+          <div class="badge-disc">💉</div>
+          <div class="badge-label">Vaccines up to date</div>
+        </button>
+        <button class="badge locked" onclick="badgeInfo('weight')">
+          <div class="badge-disc">⚖️</div>
+          <div class="badge-label">Healthy weight</div>
+        </button>
+        <button class="badge locked" onclick="badgeInfo('breed')">
+          <div class="badge-disc">🧬</div>
+          <div class="badge-label">Hip screen</div>
+        </button>
+      </div>
+      <div class="badge-reward">
+        <div class="reward-line"><span>Next reward</span><span>3 / 5 badges</span></div>
+        <div class="reward-bar"><div class="reward-fill"></div></div>
+        <div class="reward-note">Earn all 5 to knock $50 off Charlie's excess at his next claim.</div>
+      </div>
+    </div>
+
+    <!-- Up next — Charlie's care list. Where "Add to his checkup" lands. -->
+    <div class="care-sec-head"><span>Up next</span><span id="checkup-count">2 items</span></div>
+    <div class="care-list" id="checkup-card">
+      <div id="checkup-rows"></div>
+      <button class="checkup-foot" onclick="bookAll()">
+        <span>📅</span>
+        <span id="checkup-foot-label">Book these at your vet</span>
+      </button>
+    </div>
+
+    <!-- AI insight from photos -->
+    <div class="care-sec-head"><span>Spotted in your photos</span><span>12 photos · 6 months</span></div>
+    <div class="care-card insight" id="care-insight-2" style="margin-bottom:14px;">
+      <div class="care-top">
+        <div class="care-mark">✨</div>
+        <div style="flex:1;min-width:0;">
+          <div class="care-eyebrow">Weight trend</div>
+          <div class="care-src">From Fetch · updated 2 days ago</div>
+        </div>
+      </div>
+      <div class="care-body">
+        <div class="care-title">Charlie's looking a little heavier than last winter</div>
+        <div class="care-text">Nothing to worry about on its own — but weight is the single biggest driver of joint claims in Goldens. Worth a quick weigh-in at his next visit.</div>
+        <div class="care-why">🔒 Only you can see this. Photos stay private.</div>
+      </div>
+      <div class="care-actions">
+        <button class="care-btn solid" onclick="addToCheckup('weighin')">Add to his checkup</button>
+        <button class="care-btn ghost" onclick="showToast(&quot;Got it \u2014 we won't flag this again&quot;)">Not now</button>
+      </div>
+    </div>
+
+    <!-- Breed intelligence -->
+    <div class="care-sec-head"><span>Common in his breed</span></div>
+    <div class="breed-card">
+      <div class="breed-top">
+        <div style="font-size:22px">🧬</div>
+        <div style="flex:1;min-width:0;">
+          <div class="breed-title">Golden Retriever, age 2</div>
+          <div class="breed-sub">Top claims from 4,180 Goldens with Fetch</div>
+        </div>
+      </div>
+      <div class="breed-row">
+        <div class="breed-rank">1</div>
+        <div style="flex:1;min-width:0;">
+          <div class="breed-name">Ear infections</div>
+          <div class="breed-meta">1 in 5 claim by age 4 · avg $340</div>
+        </div>
+      </div>
+      <div class="breed-row">
+        <div class="breed-rank">2</div>
+        <div style="flex:1;min-width:0;">
+          <div class="breed-name">Hip dysplasia</div>
+          <div class="breed-meta">1 in 8 claim by age 6 · avg $4,900</div>
+        </div>
+      </div>
+      <div class="breed-row">
+        <div class="breed-rank">3</div>
+        <div style="flex:1;min-width:0;">
+          <div class="breed-name">Skin allergies</div>
+          <div class="breed-meta">1 in 6 claim by age 5 · avg $610</div>
+        </div>
+      </div>
+      <div class="breed-foot">Based on Fetch claims across the breed — not a diagnosis, and nothing here changes Charlie's plan.</div>
+    </div>
+
+    <!-- Community cohort -->
+    <div class="care-sec-head"><span>Goldens in Fetch Fam</span></div>
+    <div class="cohort-card">
+      <div class="cohort-avis">
+        <div class="cohort-avi">🐕</div>
+        <div class="cohort-avi" style="background:#fce7f3">🦮</div>
+        <div class="cohort-avi" style="background:#ede0ff">🐶</div>
+        <div class="cohort-avi" style="background:var(--green-soft)">🐕‍🦺</div>
+        <div class="cohort-avi more">+308</div>
+      </div>
+      <div class="cohort-title">312 Goldens are doing hip screens this month</div>
+      <div class="cohort-text">Owners are posting how their dogs went. Charlie's due for his first one.</div>
+      <div style="display:flex;gap:8px;margin-top:11px;">
+        <button class="care-btn solid" onclick="addToCheckup('hips')">Add to his care list</button>
+        <button class="care-btn ghost" onclick="navigate('screen-feed')">#GoldenHipCheck</button>
+      </div>
+    </div>
+
+    <div class="privacy-note">
+      <span>🔒</span>
+      <span>Your photos and Charlie's health data stay private to you. Fetch uses breed-level patterns, never another customer's pet.</span>
+    </div>
+
+    <div style="padding:4px 12px 20px;">
+      <button class="feed-cta" style="width:100%" onclick="navigate('screen-feedback')">Share feedback on Fetch</button>
     </div>
   </div>
 
@@ -1446,22 +1983,22 @@ body {
   </div>
 
   <!-- ════ Bottom Nav ════ -->
+  <!-- The live app's five tabs, untouched. Fetch Fam lives inside the paw. -->
   <nav class="bottom-nav">
-    <button class="nav-tab active" id="nav-home" onclick="navigate('screen-feed')">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      Home
+    <button class="nav-tab" aria-label="Account" onclick="offTab()">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
     </button>
-    <button class="nav-tab" id="nav-share" onclick="navigate('screen-new')">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-      Share
+    <button class="nav-tab active" id="nav-paw" aria-label="Pets" onclick="navigate('screen-profile')">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><ellipse cx="6" cy="9" rx="2" ry="2.6"/><ellipse cx="10.4" cy="6.2" rx="2" ry="2.7"/><ellipse cx="15.1" cy="6.4" rx="2" ry="2.7"/><ellipse cx="19" cy="9.4" rx="2" ry="2.5"/><path d="M12.5 11c2.6 0 5.2 2.3 5.2 4.9 0 2.2-1.7 3.5-3.9 3.5-1 0-1.4-.3-2.4-.3s-1.4.3-2.4.3c-2.2 0-3.7-1.3-3.7-3.5C5.3 13.3 9.9 11 12.5 11z"/></svg>
     </button>
-    <button class="nav-tab" id="nav-feedback" onclick="navigate('screen-feedback')">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Feedback
+    <button class="nav-tab" aria-label="Claims" onclick="offTab()">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="19" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/><path d="M12 11v5M9.5 13.5h5"/></svg>
     </button>
-    <button class="nav-tab" id="nav-profile" onclick="navigate('screen-profile')">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
-      My Pets
+    <button class="nav-tab" aria-label="Cover" onclick="offTab()">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.6-3.1 8.2-7.5 9.4C7.6 20.2 4.5 16.6 4.5 12V6z"/><path d="m9.2 12.2 2 2 3.6-3.8"/></svg>
+    </button>
+    <button class="nav-tab" aria-label="Chat" onclick="offTab()">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12.4c0 4.2-3.8 7.6-8.5 7.6-1.2 0-2.4-.2-3.4-.6L3.5 21l1.7-4.2c-.9-1.2-1.4-2.7-1.4-4.4C3.8 8.2 7.6 4.8 12.3 4.8s8.2 3.4 8.2 7.6z"/></svg>
     </button>
   </nav>
 
@@ -1487,7 +2024,7 @@ const posts = {
     pet:'Biscuit', owner:'Leah', loc:'Bondi, NSW', time:'2 hours ago',
     emoji:'🐶🌊', bg:'linear-gradient(160deg,#fce7f3,var(--pink-soft))',
     avi:'var(--pink-soft)',
-    caption:"First beach day post-surgery and he's absolutely thriving 🌊 So grateful Fetch covered his knee treatment — couldn't have done it without them. #FetchFam #BeachDog",
+    caption:"First beach day post-surgery and he's absolutely thriving 🌊 So grateful for the Fetch team — couldn't have done it without them. #FetchFam #BeachDog",
     tags:['beach','labrador','fetchfam','grateful'], likes:84, liked:false,
     comments:[
       {e:'🐩',pet:'Ziggy',txt:"Biscuit is such a gorgeous boy! So happy he's back at the beach 🌊",t:'1h ago'},
@@ -1510,7 +2047,7 @@ const posts = {
     pet:'Charlie', owner:'Sarah', loc:'Sydney, NSW', time:'1 day ago',
     emoji:'🎂🐕', bg:'linear-gradient(160deg,#fef9c3,#fde047,#fda9ff)',
     avi:'linear-gradient(135deg,#fec9ff,#fda9ff)',
-    caption:"Our little golden just turned 2! We took him in for a birthday checkup (yes, really 😂) and Fetch had us covered. Here's to many more adventures. #GoldenLife #FetchFam",
+    caption:"Our little golden just turned 2! We took him in for a birthday checkup (yes, really 😂) and it was so easy. Here's to many more adventures. #GoldenLife #FetchFam",
     tags:['goldenretriever','birthday','fetchfam'], likes:147, liked:false,
     comments:[
       {e:'🐾',pet:'Max',  txt:"Happy 2nd birthday Charlie!!! 🎂🐶",t:'20h ago'},
@@ -1523,12 +2060,12 @@ const posts = {
     pet:'Pepper', owner:'Amelia', loc:'Brisbane, QLD', time:'2 days ago',
     emoji:'🐕‍🦺🥹', bg:'linear-gradient(160deg,#ede0ff,var(--pink-soft))',
     avi:'#ede0ff',
-    caption:"Pepper's ortho claim approved in under 48 hours. Her knee surgery is fully covered and she's already back to zoomies 🥹❤️ Fetch came through when we needed it most. #FetchFam #Grateful",
+    caption:"Pepper's ortho claim approved in under 48 hours. Her knee surgery is all sorted and she's already back to zoomies 🥹❤️ Fetch came through when we needed it most. #FetchFam #Grateful",
     tags:['bordercollie','claim','grateful','recovery'], likes:203, liked:true,
     comments:[
       {e:'🐕',pet:'Charlie',txt:"So relieved for you and Pepper!! Fetch is truly incredible ❤️",t:'1d ago'},
       {e:'🌭',pet:'Noodle', txt:"Go Pepper go!! What a trooper 🫶",t:'1d ago'},
-      {e:'🐩',pet:'Ziggy',  txt:"This gives me so much peace of mind about our cover 🥺",t:'22h ago'},
+      {e:'🐩',pet:'Ziggy',  txt:"So happy for you both — what a relief 🥺",t:'22h ago'},
     ]
   },
 };
@@ -1538,12 +2075,8 @@ const cmts = Object.fromEntries(Object.entries(posts).map(([k,v])=>[k,[...v.comm
 
 function navigate(sid, pid) {
   const cur = navHistory[navHistory.length-1];
+  if (sid===cur) { document.getElementById(sid).scrollTop=0; return; }
   if (sid==='screen-post' && pid) { activePid=pid; renderDetail(pid); }
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  if(sid==='screen-feed') document.getElementById('nav-home')?.classList.add('active');
-  if(sid==='screen-new') document.getElementById('nav-share')?.classList.add('active');
-  if(sid==='screen-feedback') document.getElementById('nav-feedback')?.classList.add('active');
-  if(sid==='screen-profile') document.getElementById('nav-profile')?.classList.add('active');
   const curEl = document.getElementById(cur);
   const newEl = document.getElementById(sid);
   curEl?.classList.add('slide-out');
@@ -1558,11 +2091,6 @@ function goBack() {
   if(navHistory.length<=1) return;
   const cur = navHistory.pop();
   const prev = navHistory[navHistory.length-1];
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  if(prev==='screen-feed') document.getElementById('nav-home')?.classList.add('active');
-  if(prev==='screen-new') document.getElementById('nav-share')?.classList.add('active');
-  if(prev==='screen-feedback') document.getElementById('nav-feedback')?.classList.add('active');
-  if(prev==='screen-profile') document.getElementById('nav-profile')?.classList.add('active');
   const curEl = document.getElementById(cur);
   const prevEl = document.getElementById(prev);
   curEl?.classList.remove('active'); curEl?.classList.add('slide-out');
@@ -1587,7 +2115,7 @@ function renderDetail(pid) {
 
   document.getElementById('detail-body').innerHTML = `
     <div class="post-header">
-      <div class="post-avatar" style="background:${p.avi}">${p.emoji[0]}</div>
+      <div class="post-avatar" style="background:${p.avi}">${[...p.emoji][0]}</div>
       <div style="flex:1;min-width:0;margin-left:10px;">
         <div class="post-pet-name">${p.pet}</div>
         <div class="post-owner">${p.owner} · ${p.loc}</div>
@@ -1727,7 +2255,8 @@ function submitPost() {
   setTimeout(()=>{ navigate('screen-feed'); },1800);
 }
 
-document.getElementById('nav-home').classList.add('active');
+/* The paw tab stays lit throughout — every Fetch Fam screen lives inside it. */
+document.getElementById('nav-paw')?.classList.add('active');
 
 /* ── Feedback ───────────────────────────────────────────────── */
 let fbRating = 0;
@@ -1799,6 +2328,123 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 3200);
 }
+
+/* ── Care cards ──────────────────────────────────────────────── */
+function hideCard(id) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.style.transition = 'opacity 0.2s, transform 0.2s';
+  el.style.opacity = '0';
+  el.style.transform = 'scale(0.97)';
+  setTimeout(()=>{ el.style.display='none'; }, 200);
+}
+function dismissCare()    { hideCard('care-reminder'); showToast("We'll stop showing this one \uD83D\uDC3E"); }
+function snoozeCare()     { hideCard('care-reminder'); showToast("Reminder set for two weeks before it's due"); }
+function bookCheckup()    { hideCard('care-reminder'); showToast("Finding vets near you who bill Fetch direct \u2026"); }
+function dismissInsight() { hideCard('care-insight'); showToast("Got it \u2014 we won't flag this again"); }
+
+/* ── Care list (lives on the Care screen) ────────────────────── */
+const checkupLibrary = {
+  annual:  {icon:'🩺', cls:'due',  title:'Annual checkup', sub:'Due 14 September · Fetch pays your vet direct'},
+  vax:     {icon:'💉', cls:'done', title:'C5 booster', sub:'Done · next one due March 2027'},
+  weighin: {icon:'⚖️', cls:'',     title:'Weigh-in', sub:"Flagged from Charlie's photos"},
+  hips:    {icon:'🧬', cls:'',     title:'Hip screen', sub:'Common in Goldens from age 2'},
+};
+let checkupList = ['annual','vax'];
+
+function renderCheckup(justAdded) {
+  const rows = document.getElementById('checkup-rows');
+  if(!rows) return;
+  rows.innerHTML = checkupList.length ? checkupList.map(id=>{
+    const it = checkupLibrary[id];
+    return `<div class="care-item ${id===justAdded?'just-added':''}">
+      <div class="care-item-icon ${it.cls}">${it.icon}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="care-item-title">${it.title}</div>
+        <div class="care-item-sub">${it.sub}</div>
+      </div>
+      <button class="row-remove" onclick="removeCheckup('${id}')" aria-label="Remove">×</button>
+    </div>`;
+  }).join('') : `<div class="checkup-empty">Nothing on Charlie's list right now.<br>We'll add things here as they come up.</div>`;
+
+  const n = checkupList.length;
+  document.getElementById('checkup-count').textContent = n===1 ? '1 item' : n+' items';
+  document.getElementById('checkup-foot-label').textContent =
+    n ? 'Book these at your vet' : 'Find a vet near you';
+}
+
+function addToCheckup(key) {
+  const it = checkupLibrary[key];
+  if(!it) return;
+  if(checkupList.includes(key)) {
+    showToast(`${it.title} is already on Charlie's care list`);
+    return;
+  }
+  checkupList.push(key);
+  renderCheckup(key);
+  navigate('screen-care');
+  setTimeout(()=>{
+    const s = document.getElementById('screen-care');
+    const c = document.getElementById('checkup-card');
+    if(s && c) s.scrollTop = Math.max(0, c.offsetTop - 120);
+    showToast(`${it.title} added to Charlie's care list`);
+  }, 420);
+}
+
+function removeCheckup(id) {
+  checkupList = checkupList.filter(x=>x!==id);
+  renderCheckup();
+  showToast(`Removed from Charlie's care list`);
+}
+
+function bookAll() {
+  if(!checkupList.length) { showToast('Finding vets near you who bill Fetch direct \u2026'); return; }
+  showToast(`Finding a vet who can do all ${checkupList.length} \u2014 and bill Fetch direct`);
+}
+
+renderCheckup();
+
+/* ── Care badges ─────────────────────────────────────────────── */
+const badgeCopy = {
+  streak: "Checkup streak \u2014 earned. Charlie's been in for a routine visit two years running.",
+  dental: "Dental done \u2014 earned. A dental clean was logged on his last visit.",
+  vax:    "Vaccines up to date \u2014 earned. His C5 booster is current until March 2027.",
+  weight: "Healthy weight \u2014 not yet. Log a weigh-in at his next visit to earn this one.",
+  breed:  "Hip screen \u2014 not yet. Recommended for Goldens from age 2.",
+};
+function badgeInfo(k) { showToast(badgeCopy[k]); }
+
+/* ── Deep links ──────────────────────────────────────────────────
+   Lets the in-app placement study open a specific screen directly,
+   e.g. fetch-fam-mockup.html#screen-care                         */
+function openFromHash(instant){
+  let sid = (location.hash || '').replace('#','');
+  /* Fallback for hosts that drop the fragment on a .html redirect. */
+  if(!sid) { try { sid = sessionStorage.getItem('famScreen') || ''; } catch(e){} }
+  if(!sid || sid === navHistory[navHistory.length-1]) return;
+  const el = document.getElementById(sid);
+  if(!el || !el.classList.contains('screen')) return;
+
+  try { sessionStorage.removeItem('famScreen'); } catch(e){}
+  if(!instant) { navigate(sid); return; }
+
+  document.querySelectorAll('.screen.active').forEach(s=>{
+    if(s.id!=='screen-feed') s.classList.remove('active');
+  });
+  el.style.transition = 'none';
+  el.classList.add('active');
+  el.scrollTop = 0;
+  navHistory = ['screen-feed', sid];
+  requestAnimationFrame(()=>{ el.style.transition = ''; });
+}
+openFromHash(true);
+window.addEventListener('hashchange', ()=>openFromHash(false));
+
+/* Back out to the pet profile in the live app shell. */
+function backToApp() { window.location.href = 'fetch-fam-in-app.html'; }
+
+/* The other four tabs are the real app's — out of scope for this study. */
+function offTab() { showToast("That's the existing app — this study is just the paw tab"); }
 </script>
 </body>
 </html>
