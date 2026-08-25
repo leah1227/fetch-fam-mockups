@@ -1231,9 +1231,13 @@ body {
 .breed-sub { font-size: 11.5px; color: var(--blue-ink); margin-top: 2px; font-weight: 500; }
 .breed-row {
   display: flex; align-items: center; gap: 10px;
-  padding: 11px 14px;
+  width: 100%; padding: 11px 14px;
+  background: none; border: none;
   border-bottom: 1px solid var(--border-subtle);
+  font-family: inherit; text-align: left; cursor: pointer;
 }
+.breed-row:active { background: var(--surface-muted); }
+.breed-chev { margin-left: auto; flex-shrink: 0; color: var(--ink-faint); display: flex; }
 .breed-rank {
   width: 20px; height: 20px; border-radius: 50%;
   background: var(--surface-muted); color: var(--muted);
@@ -1255,28 +1259,6 @@ body {
   font-size: 11px; color: var(--muted); line-height: 1.5;
 }
 
-/* Breed cohort / community tie-in */
-.cohort-card {
-  margin: 0 12px 14px;
-  padding: 14px;
-  background: var(--surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-xs);
-}
-.cohort-avis { display: flex; margin-bottom: 9px; }
-.cohort-avi {
-  width: 30px; height: 30px; border-radius: 50%;
-  background: var(--pink-soft);
-  border: 2px solid var(--surface);
-  margin-left: -8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-}
-.cohort-avi:first-child { margin-left: 0; }
-.cohort-avi.more { background: var(--surface-muted); font-size: 9.5px; font-weight: 700; color: var(--muted); }
-.cohort-title { font-size: 14px; font-weight: 700; color: var(--foreground); letter-spacing: -0.25px; }
-.cohort-text { font-size: 12px; color: var(--muted-strong); line-height: 1.5; margin-top: 4px; }
 /* Care list on the pet profile */
 .checkup-empty {
   padding: 18px 14px;
@@ -1292,18 +1274,500 @@ body {
   color: var(--foreground); cursor: pointer; text-align: left;
 }
 .checkup-foot:active { opacity: 0.7; }
-.row-remove {
-  margin-left: auto; flex-shrink: 0;
-  background: none; border: none; cursor: pointer;
-  color: var(--ink-faint); font-size: 17px; line-height: 1;
-  padding: 4px 2px; font-family: inherit;
-}
-.row-remove:hover { color: var(--muted); }
 @keyframes justAdded {
   0%   { background: var(--green-soft); }
   100% { background: transparent; }
 }
 .care-item.just-added { animation: justAdded 2.2s var(--ease-out); }
+
+/* ── Charlie's to do list ────────────────────────────────────── */
+.todo-hero {
+  margin: 0 12px 14px;
+  padding: 15px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+}
+.todo-hero-title { font-size: 15px; font-weight: 700; color: var(--foreground); letter-spacing: -0.3px; }
+.todo-hero-sub { font-size: 12px; color: var(--muted); margin-top: 3px; margin-bottom: 10px; line-height: 1.45; }
+.todo-item {
+  position: relative;
+  display: flex; align-items: center; gap: 11px;
+  width: 100%; padding: 13px;
+  background: none; border: none;
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.todo-item::after {
+  content: '';
+  position: absolute;
+  left: 13px; right: 0; bottom: 0;
+  height: 1px; background: var(--border-subtle);
+}
+.todo-item:last-child::after { display: none; }
+.todo-item:active { background: var(--surface-muted); }
+.todo-check {
+  width: 21px; height: 21px; border-radius: 50%;
+  border: 1.6px solid var(--border);
+  background: transparent;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff;
+  transition: background var(--fast), border-color var(--fast);
+}
+.todo-item.done .todo-check { background: var(--green-ink); border-color: var(--green-ink); }
+.todo-item.done .care-item-title { text-decoration: line-through; color: var(--muted); }
+.todo-item.done .care-item-icon { opacity: 0.45; }
+.todo-item.done .care-item-sub { color: var(--ink-faint); }
+
+/* ── Charlie's Training — behaviour goals ──────────────────────────
+   Behaviour goals sit next to the health list because they belong to
+   the same bargain: the safety ones genuinely lower claim risk, so
+   Fetch can afford to pay for them. Tricks earn a token amount —
+   they're for the relationship, not the loss ratio. */
+.habit-item {
+  position: relative;
+  display: flex; align-items: center; gap: 11px;
+  width: 100%; padding: 12px 13px;
+  background: none; border: none;
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.habit-item::after {
+  content: '';
+  position: absolute;
+  left: 58px; right: 0; bottom: 0;
+  height: 1px; background: var(--border-subtle);
+}
+.habit-item:last-child::after { display: none; }
+.habit-item:active { background: var(--surface-muted); }
+.habit-body { flex: 1; min-width: 0; }
+.habit-title { display: block; font-size: 13.5px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+.habit-meta {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--muted); margin-top: 3px;
+}
+.habit-prog {
+  height: 4px; border-radius: var(--r-f);
+  background: var(--neutral-200); overflow: hidden;
+  margin-top: 7px;
+}
+.habit-prog-fill {
+  height: 100%; border-radius: var(--r-f);
+  background: linear-gradient(90deg, var(--green), var(--green-ink));
+  transition: width var(--slow) var(--ease-out);
+}
+.habit-cat {
+  flex-shrink: 0;
+  font-size: 9.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  border-radius: var(--r-f); padding: 3px 7px;
+  background: var(--surface-muted); color: var(--muted);
+}
+.habit-cat.safety  { background: var(--orange-soft); color: var(--orange-ink); }
+.habit-cat.manners { background: var(--blue-soft);   color: var(--blue-ink); }
+.habit-cat.tricks  { background: var(--pink-soft);   color: var(--pink-ink); }
+.habit-item.done .habit-title { color: var(--muted); }
+.habit-item.done .habit-icon  { opacity: 0.5; }
+
+/* Reward tally at the top of the training screen */
+.habit-hero {
+  margin: 0 12px 14px;
+  padding: 15px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+}
+.habit-hero-title { font-size: 15px; font-weight: 700; color: var(--foreground); letter-spacing: -0.3px; }
+.habit-hero-sub { font-size: 12px; color: var(--muted); margin-top: 3px; margin-bottom: 10px; line-height: 1.45; }
+.habit-hero-note { font-size: 10.5px; color: var(--muted); margin-top: 7px; line-height: 1.45; }
+
+/* Goal detail */
+.goal-hero {
+  margin: 0 12px 14px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+}
+.goal-hero-top { display: flex; align-items: center; gap: 11px; }
+.goal-disc {
+  width: 44px; height: 44px; border-radius: var(--r-md);
+  background: var(--surface-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.goal-title { font-size: 17px; font-weight: 700; color: var(--foreground); letter-spacing: -0.4px; line-height: 1.25; }
+.goal-target { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+.goal-why {
+  margin-top: 13px; padding: 11px 12px;
+  background: var(--surface-muted);
+  border-radius: var(--r-md);
+  font-size: 12px; line-height: 1.55; color: var(--muted-strong);
+}
+.goal-why strong { color: var(--foreground); font-weight: 700; }
+.goal-reward {
+  display: flex; align-items: center; gap: 7px;
+  margin-top: 10px; padding: 10px 12px;
+  background: var(--green-soft);
+  border-radius: var(--r-md);
+  font-size: 12px; font-weight: 700; color: var(--green-ink);
+  line-height: 1.4;
+}
+
+/* Steps */
+.step-row {
+  position: relative;
+  display: flex; align-items: flex-start; gap: 11px;
+  width: 100%; padding: 12px 13px;
+  background: none; border: none;
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.step-row::after {
+  content: '';
+  position: absolute;
+  left: 13px; right: 0; bottom: 0;
+  height: 1px; background: var(--border-subtle);
+}
+.step-row:last-child::after { display: none; }
+.step-row:active { background: var(--surface-muted); }
+.step-check {
+  width: 21px; height: 21px; border-radius: 50%;
+  border: 1.6px solid var(--border);
+  background: transparent; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #fff;
+  transition: background var(--fast), border-color var(--fast);
+  margin-top: 1px;
+}
+.step-row.done .step-check { background: var(--green-ink); border-color: var(--green-ink); }
+.step-text { font-size: 13px; line-height: 1.45; color: var(--muted-strong); }
+.step-row.done .step-text { color: var(--ink-faint); text-decoration: line-through; }
+
+/* Evidence — photos and videos of him actually doing it */
+.ev-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; padding: 13px;
+}
+.ev-tile {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--r-md);
+  background: linear-gradient(160deg, #fce7f3, var(--pink-soft));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+.ev-play {
+  position: absolute; right: 5px; bottom: 5px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(5,5,5,0.6); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px;
+}
+.ev-add {
+  aspect-ratio: 1;
+  border-radius: var(--r-md);
+  background: var(--surface-muted);
+  border: 1.5px dashed var(--border);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  font-family: inherit; cursor: pointer;
+  font-size: 18px; color: var(--muted);
+}
+.ev-add span:last-child { font-size: 9.5px; font-weight: 700; }
+.ev-add:active { background: var(--neutral-150); }
+.ev-empty {
+  padding: 16px 14px; text-align: center;
+  font-size: 12px; color: var(--muted); line-height: 1.5;
+}
+
+/* Goal library — picking a new goal */
+.lib-row {
+  position: relative;
+  display: flex; align-items: center; gap: 11px;
+  width: 100%; padding: 12px 13px;
+  background: none; border: none;
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.lib-row::after {
+  content: '';
+  position: absolute;
+  left: 50px; right: 0; bottom: 0;
+  height: 1px; background: var(--border-subtle);
+}
+.lib-row:last-child::after { display: none; }
+.lib-row:active { background: var(--surface-muted); }
+.lib-row.added { opacity: 0.45; cursor: default; }
+.lib-title { display: block; font-size: 13.5px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+.lib-sub { display: block; font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.lib-worth {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 11px; font-weight: 700;
+  color: var(--green-ink); background: var(--green-soft);
+  border-radius: var(--r-f); padding: 4px 9px;
+}
+.own-card {
+  margin: 0 12px 14px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+}
+.own-input {
+  width: 100%; margin-top: 9px;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 11px 12px;
+  font-family: inherit; font-size: 13px; color: var(--foreground);
+}
+.own-input::placeholder { color: var(--ink-faint); }
+.own-input:focus { outline: none; border-color: var(--ink-faint); }
+
+/* ── Fetch Help article ─────────────────────────────────────── */
+.art-hero {
+  margin: 0 12px 14px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+}
+.art-eyebrow {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.7px;
+  color: var(--blue-ink); background: var(--blue-soft);
+  border-radius: var(--r-f); padding: 4px 9px;
+}
+.art-title {
+  font-size: 19px; font-weight: 700; color: var(--foreground);
+  letter-spacing: -0.5px; line-height: 1.25; margin-top: 11px;
+}
+.art-meta { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+.art-lede {
+  font-size: 14px; line-height: 1.55; font-weight: 500;
+  color: var(--muted-strong); margin-top: 12px;
+}
+.art-card {
+  margin: 0 12px 14px;
+  padding: 15px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+}
+.art-h {
+  font-size: 14px; font-weight: 700; color: var(--foreground);
+  letter-spacing: -0.25px; margin-bottom: 8px;
+}
+.art-p { font-size: 13px; line-height: 1.6; color: var(--muted-strong); }
+.art-p + .art-p { margin-top: 9px; }
+.art-list { list-style: none; }
+.art-list li {
+  position: relative; padding-left: 17px; margin-top: 7px;
+  font-size: 13px; line-height: 1.5; color: var(--muted-strong);
+}
+.art-list li::before { content: '•'; position: absolute; left: 5px; color: var(--muted); }
+.art-flag {
+  margin: 0 12px 14px;
+  padding: 13px 14px;
+  background: var(--orange-soft);
+  border-radius: var(--r-xl);
+}
+.art-flag-h {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12.5px; font-weight: 700; color: var(--orange-ink);
+}
+.art-flag-p { font-size: 12.5px; line-height: 1.5; color: var(--muted-strong); margin-top: 6px; }
+
+/* ── FetchGPT — pet-scoped assistant ──────────────────────────── */
+.ask-ctx {
+  margin: 0 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+.ask-ctx-head {
+  display: flex; align-items: center; gap: 9px;
+  padding: 12px 14px;
+  background: var(--blue-soft);
+}
+.ask-ctx-title { font-size: 13px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+.ask-ctx-sub { font-size: 11px; color: var(--blue-ink); margin-top: 1px; font-weight: 500; }
+.ask-ctx-toggle {
+  margin-left: auto; flex-shrink: 0;
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  font-size: 11.5px; font-weight: 700; color: var(--blue-ink);
+}
+.ask-ctx-body { padding: 4px 14px 12px; display: none; }
+.ask-ctx-body.open { display: block; }
+.ask-fact {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12.5px; color: var(--muted-strong); line-height: 1.45;
+}
+.ask-fact:last-child { border-bottom: none; }
+.ask-fact-k { font-weight: 700; color: var(--foreground); flex-shrink: 0; }
+
+/* Chat layout: only the thread scrolls. The composer and chips sit at the
+   foot of the screen whether there's one message or twenty — a sticky bar
+   inside the screen's own scroller ends up covering the chips. */
+#screen-ask { display: flex; flex-direction: column; overflow: hidden; }
+.ask-thread { padding: 0 12px 8px; flex: 1 1 auto; overflow-y: auto; scrollbar-width: none; }
+.ask-thread::-webkit-scrollbar { display: none; }
+.ask-msg { display: flex; gap: 8px; margin-bottom: 14px; align-items: flex-end; }
+.ask-msg.me { flex-direction: row-reverse; }
+.ask-avi {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+  background: var(--surface-muted);
+}
+.ask-avi.ai { background: var(--foreground); color: #fff; font-size: 12px; font-weight: 700; }
+.ask-bub {
+  max-width: 80%;
+  padding: 11px 13px;
+  border-radius: var(--r-lg);
+  font-size: 13.5px; line-height: 1.55;
+}
+.ask-msg.ai .ask-bub {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--muted-strong);
+  border-bottom-left-radius: 5px;
+}
+.ask-msg.me .ask-bub {
+  background: var(--interactive); color: #fff;
+  border-bottom-right-radius: 5px;
+}
+.ask-bub strong { color: var(--foreground); font-weight: 700; }
+.ask-msg.me .ask-bub strong { color: #fff; }
+.ask-bub p + p { margin-top: 8px; }
+
+/* Proactive check-in reads differently from a reply */
+.ask-msg.checkin .ask-bub {
+  background: var(--green-soft);
+  border-color: transparent;
+  color: var(--muted-strong);
+}
+.ask-checkin-tag {
+  display: block; font-size: 9.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.7px;
+  color: var(--green-ink); margin-bottom: 5px;
+}
+
+/* Where an answer came from — his own records */
+.ask-cite {
+  margin-top: 9px; padding: 9px 10px;
+  background: var(--surface-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  width: 100%; text-align: left;
+  font-family: inherit; cursor: pointer;
+  display: block;
+}
+.ask-cite:active { opacity: 0.7; }
+.ask-cite-k {
+  font-size: 9.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--muted);
+}
+.ask-cite-v { font-size: 12px; color: var(--foreground); font-weight: 700; margin-top: 3px; line-height: 1.4; }
+.ask-cite-m { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.ask-photo {
+  width: 132px; height: 132px; border-radius: var(--r-md);
+  background: linear-gradient(160deg, #fce7f3, var(--pink-soft));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 46px; margin-bottom: 7px;
+}
+.ask-flagline {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 9px; padding: 8px 10px;
+  background: var(--orange-soft);
+  border-radius: var(--r-md);
+  font-size: 11.5px; font-weight: 700; color: var(--orange-ink);
+  line-height: 1.4;
+}
+
+.ask-typing { display: flex; gap: 4px; padding: 4px 2px; }
+.ask-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--muted);
+  animation: askBlink 1.3s infinite ease-in-out;
+}
+.ask-dot:nth-child(2) { animation-delay: 0.18s; }
+.ask-dot:nth-child(3) { animation-delay: 0.36s; }
+@keyframes askBlink {
+  0%, 60%, 100% { opacity: 0.25; }
+  30% { opacity: 1; }
+}
+
+.ask-chips {
+  display: flex; gap: 7px;
+  flex-shrink: 0;
+  padding: 2px 12px 10px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.ask-chips::-webkit-scrollbar { display: none; }
+.ask-chip {
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-f);
+  padding: 8px 13px;
+  font-size: 12px; font-weight: 500; color: var(--muted-strong);
+  font-family: inherit; cursor: pointer; white-space: nowrap;
+}
+.ask-chip:active { background: var(--surface-muted); }
+
+.ask-bar {
+  flex-shrink: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border-subtle);
+  display: flex; align-items: center;
+  gap: 9px; padding: 10px 12px;
+}
+.ask-cam {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; cursor: pointer; flex-shrink: 0;
+  font-family: inherit;
+}
+.ask-cam:active { opacity: 0.7; }
+.ask-scope {
+  padding: 0 16px 14px;
+  margin-top: -6px;
+  font-size: 10.5px; color: var(--muted);
+  line-height: 1.45;
+}
+
+/* Entry point from the Care screen */
+.ask-entry {
+  display: flex; align-items: center; gap: 11px;
+  width: calc(100% - 24px); margin: 0 12px 14px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.ask-entry:active { background: var(--surface-muted); }
+.ask-entry-avi {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--foreground); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; flex-shrink: 0;
+}
+.ask-entry-title { font-size: 13.5px; font-weight: 700; color: var(--foreground); letter-spacing: -0.2px; }
+.ask-entry-sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+.new-pill-sm {
+  margin-left: auto;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.5px;
+  background: var(--pink-cta); color: #fff;
+  border-radius: var(--r-f); padding: 3px 7px;
+}
 
 .privacy-note {
   margin: 0 12px 8px;
@@ -1334,6 +1798,10 @@ body {
       <div class="s-screen-item"><span class="s-dot"></span>Post detail + comments</div>
       <div class="s-screen-item"><span class="s-dot"></span>My pet's profile</div>
       <div class="s-screen-item"><span class="s-dot"></span>Care — data &amp; AI</div>
+      <div class="s-screen-item"><span class="s-dot"></span>Charlie's to do list</div>
+      <div class="s-screen-item"><span class="s-dot"></span>Charlie's Training + goal detail</div>
+      <div class="s-screen-item"><span class="s-dot"></span>FetchGPT — ask about your pet</div>
+      <div class="s-screen-item"><span class="s-dot"></span>Fetch Help article</div>
     </div>
   </div>
   <div>
@@ -1579,7 +2047,7 @@ body {
         <div class="care-why">🔒 Only you can see this. Photos stay private.</div>
       </div>
       <div class="care-actions">
-        <button class="care-btn solid" onclick="addToCheckup('weighin')">Add to his checkup</button>
+        <button class="care-btn solid" onclick="addToCheckup('weighin')">Add to his to do list</button>
         <button class="care-btn ghost" onclick="dismissInsight()">Not now</button>
       </div>
     </div>
@@ -1806,6 +2274,17 @@ body {
       </div>
     </div>
 
+    <!-- FetchGPT — sits high, because a question is the cheapest first step -->
+    <div class="care-sec-head"><span>FetchGPT</span><span class="new-pill-sm">NEW</span></div>
+    <button class="ask-entry" onclick="openAsk()">
+      <div class="ask-entry-avi">F</div>
+      <div style="flex:1;min-width:0;">
+        <div class="ask-entry-title">Ask FetchGPT anything about Charlie</div>
+        <div class="ask-entry-sub">It knows his weight history, his claims and his photos — so the answers are about him</div>
+      </div>
+      <span class="breed-chev"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+    </button>
+
     <!-- Care badges — the loyalty layer, earned by keeping up with his care.
          Leads the screen: the reward is the reason to look at the care list below. -->
     <div class="care-sec-head"><span>Charlie's care badges</span><span>3 of 5</span></div>
@@ -1813,7 +2292,7 @@ body {
       <div class="badge-head">
         <div>
           <div class="badge-head-title">Earned by keeping him healthy</div>
-          <div class="badge-head-sub">Each one comes off his excess</div>
+          <div class="badge-head-sub">Each one comes off his contribution</div>
         </div>
       </div>
       <div class="badge-row">
@@ -1841,17 +2320,31 @@ body {
       <div class="badge-reward">
         <div class="reward-line"><span>Next reward</span><span>3 / 5 badges</span></div>
         <div class="reward-bar"><div class="reward-fill"></div></div>
-        <div class="reward-note">Earn all 5 to knock $50 off Charlie's excess at his next claim.</div>
+        <div class="reward-note">Earn all 5 to knock $50 off Charlie's contribution at his next claim.</div>
       </div>
     </div>
 
-    <!-- Up next — Charlie's care list. Where "Add to his checkup" lands. -->
-    <div class="care-sec-head"><span>Up next</span><span id="checkup-count">2 items</span></div>
+    <!-- Up next — the health slice of Charlie's to do list, with a way
+         through to the full thing (food, grooming, rego and the rest). -->
+    <div class="care-sec-head"><span>Up next</span><span id="checkup-count">1 item</span></div>
     <div class="care-list" id="checkup-card">
       <div id="checkup-rows"></div>
-      <button class="checkup-foot" onclick="bookAll()">
-        <span>📅</span>
-        <span id="checkup-foot-label">Book these at your vet</span>
+      <button class="checkup-foot" onclick="navigate('screen-todo')">
+        <span>📝</span>
+        <span>See all of Charlie's to do list</span>
+        <span style="margin-left:auto">›</span>
+      </button>
+    </div>
+
+    <!-- Charlie's Training — the behaviour half of his care. Sits under the
+         health list because it's the same deal in a different currency. -->
+    <div class="care-sec-head"><span>Charlie's Training</span><span id="habit-count">2 in progress</span></div>
+    <div class="care-list">
+      <div id="habit-rows"></div>
+      <button class="checkup-foot" onclick="navigate('screen-habits')">
+        <span>🎓</span>
+        <span>See all of Charlie's training goals</span>
+        <span style="margin-left:auto">›</span>
       </button>
     </div>
 
@@ -1871,7 +2364,7 @@ body {
         <div class="care-why">🔒 Only you can see this. Photos stay private.</div>
       </div>
       <div class="care-actions">
-        <button class="care-btn solid" onclick="addToCheckup('weighin')">Add to his checkup</button>
+        <button class="care-btn solid" onclick="addToCheckup('weighin')">Add to his to do list</button>
         <button class="care-btn ghost" onclick="showToast(&quot;Got it \u2014 we won't flag this again&quot;)">Not now</button>
       </div>
     </div>
@@ -1886,46 +2379,31 @@ body {
           <div class="breed-sub">Top claims from 4,180 Goldens with Fetch</div>
         </div>
       </div>
-      <div class="breed-row">
+      <button class="breed-row" onclick="openArticle('ears')">
         <div class="breed-rank">1</div>
         <div style="flex:1;min-width:0;">
           <div class="breed-name">Ear infections</div>
           <div class="breed-meta">1 in 5 claim by age 4 · avg $340</div>
         </div>
-      </div>
-      <div class="breed-row">
+        <span class="breed-chev"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>
+      <button class="breed-row" onclick="openArticle('hips')">
         <div class="breed-rank">2</div>
         <div style="flex:1;min-width:0;">
           <div class="breed-name">Hip dysplasia</div>
           <div class="breed-meta">1 in 8 claim by age 6 · avg $4,900</div>
         </div>
-      </div>
-      <div class="breed-row">
+        <span class="breed-chev"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>
+      <button class="breed-row" onclick="openArticle('skin')">
         <div class="breed-rank">3</div>
         <div style="flex:1;min-width:0;">
           <div class="breed-name">Skin allergies</div>
           <div class="breed-meta">1 in 6 claim by age 5 · avg $610</div>
         </div>
-      </div>
+        <span class="breed-chev"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>
       <div class="breed-foot">Based on Fetch claims across the breed — not a diagnosis, and nothing here changes Charlie's plan.</div>
-    </div>
-
-    <!-- Community cohort -->
-    <div class="care-sec-head"><span>Goldens in Fetch Fam</span></div>
-    <div class="cohort-card">
-      <div class="cohort-avis">
-        <div class="cohort-avi">🐕</div>
-        <div class="cohort-avi" style="background:#fce7f3">🦮</div>
-        <div class="cohort-avi" style="background:#ede0ff">🐶</div>
-        <div class="cohort-avi" style="background:var(--green-soft)">🐕‍🦺</div>
-        <div class="cohort-avi more">+308</div>
-      </div>
-      <div class="cohort-title">312 Goldens are doing hip screens this month</div>
-      <div class="cohort-text">Owners are posting how their dogs went. Charlie's due for his first one.</div>
-      <div style="display:flex;gap:8px;margin-top:11px;">
-        <button class="care-btn solid" onclick="addToCheckup('hips')">Add to his care list</button>
-        <button class="care-btn ghost" onclick="navigate('screen-feed')">#GoldenHipCheck</button>
-      </div>
     </div>
 
     <div class="privacy-note">
@@ -1936,6 +2414,159 @@ body {
     <div style="padding:4px 12px 20px;">
       <button class="feed-cta" style="width:100%" onclick="navigate('screen-feedback')">Share feedback on Fetch</button>
     </div>
+  </div>
+
+  <!-- TO DO LIST SCREEN — everything Charlie needs, not just the vet bits.
+       Health items are the same data the Care screen shows as "Up next". -->
+  <div class="screen" id="screen-todo">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Charlie's to do list</h1>
+    </div>
+
+    <div class="todo-hero">
+      <div class="todo-hero-title">Everything Charlie needs</div>
+      <div class="todo-hero-sub" id="todo-progress-label">3 of 11 done</div>
+      <div class="reward-bar"><div class="reward-fill" id="todo-progress-fill" style="width:27%"></div></div>
+    </div>
+
+    <div id="todo-sections"></div>
+
+    <div class="privacy-note">
+      <span>🐾</span>
+      <span>Add your own, or let Fetch add the health ones as they come up. Ticking things off keeps his care badges on track.</span>
+    </div>
+
+    <div style="padding:4px 12px 20px;"></div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       CHARLIE'S TRAINING — behaviour and training goals.
+       The reward is real money off his contribution, so the amounts
+       are tiered by whether the behaviour actually lowers claim risk.
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-habits">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Charlie's Training</h1>
+    </div>
+
+    <div class="habit-hero">
+      <div class="habit-hero-title">Training he's banked</div>
+      <div class="habit-hero-sub" id="habit-earn-label">$10 of $60 earned this year</div>
+      <div class="reward-bar"><div class="reward-fill" id="habit-earn-fill" style="width:17%"></div></div>
+      <div class="habit-hero-note">Every goal he finishes comes off the contribution on his next claim, up to $60 a year.</div>
+    </div>
+
+    <div style="padding:0 12px 14px;">
+      <button class="care-btn solid" style="width:100%" onclick="navigate('screen-newgoal')">Set a new goal</button>
+    </div>
+
+    <div id="habit-open-head" class="care-sec-head"><span>Working on</span><span id="habit-open-count"></span></div>
+    <div class="care-list" id="habit-open-card"><div id="habit-open"></div></div>
+
+    <div id="habit-done-head" class="care-sec-head"><span>Nailed it</span><span id="habit-done-count"></span></div>
+    <div class="care-list" id="habit-done-card"><div id="habit-done"></div></div>
+
+    <div class="privacy-note">
+      <span>🐾</span>
+      <span>Photos and videos you add stay private to you. Fetch only sees that a goal was marked done.</span>
+    </div>
+
+    <div style="padding:4px 12px 20px;"></div>
+  </div>
+
+  <!-- GOAL DETAIL — steps, evidence, and the payoff -->
+  <div class="screen" id="screen-goal">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Goal</h1>
+    </div>
+    <div id="goal-body"></div>
+  </div>
+
+  <!-- SET A GOAL — pick from the library or write your own -->
+  <div class="screen" id="screen-newgoal">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Set a goal</h1>
+    </div>
+
+    <div class="habit-hero">
+      <div class="habit-hero-title">What are you two working on?</div>
+      <div class="habit-hero-sub">Pick one of ours or write your own. The safety ones are worth more, because they're the ones that keep him out of the vet.</div>
+    </div>
+
+    <div id="lib-sections"></div>
+
+    <div class="care-sec-head"><span>Something else</span></div>
+    <div class="own-card">
+      <div class="lib-title">Write your own goal</div>
+      <div class="lib-sub">Anything you're teaching him that isn't on our list.</div>
+      <input class="own-input" id="own-goal" type="text" placeholder="e.g. Waits at the kerb" oninput="checkOwn(this)">
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="care-btn solid" id="own-add" style="opacity:0.4" onclick="addOwnGoal()">Add this goal</button>
+      </div>
+      <div class="habit-hero-note">Goals you write yourself earn $5, since we can't tell what they're worth.</div>
+    </div>
+
+    <div style="padding:4px 12px 20px;"></div>
+  </div>
+
+  <!-- FETCHGPT — pet-scoped assistant. Reads Charlie's record, so every
+       answer is about him rather than dogs in general. -->
+  <div class="screen" id="screen-ask">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>FetchGPT</h1>
+      <button class="pet-chip" style="margin-left:auto" onclick="navigate('screen-profile')">
+        <div class="pet-chip-avatar">🐕</div>
+        Charlie
+      </button>
+    </div>
+
+    <!-- What it's working from — the "it knows your pet" promise, made checkable -->
+    <div class="ask-ctx">
+      <div class="ask-ctx-head">
+        <div style="flex:1;min-width:0;">
+          <div class="ask-ctx-title">Working from Charlie's record</div>
+          <div class="ask-ctx-sub">Breed, age, weight history, claims and 12 photos</div>
+        </div>
+        <button class="ask-ctx-toggle" id="ask-ctx-toggle" onclick="toggleAskCtx()">See it</button>
+      </div>
+      <div class="ask-ctx-body" id="ask-ctx-body">
+        <div class="ask-fact"><span class="ask-fact-k">Pet</span><span>Golden Retriever, male, 2 years, de-sexed at 5 months</span></div>
+        <div class="ask-fact"><span class="ask-fact-k">Weight</span><span>34.2kg in March, up 1.8kg from his September weigh-in</span></div>
+        <div class="ask-fact"><span class="ask-fact-k">Vaccines</span><span>C5 booster given March 2025, next due March 2027</span></div>
+        <div class="ask-fact"><span class="ask-fact-k">Claims</span><span>Two ear infections (Nov 2024, Feb 2025) and a grass-seed removal</span></div>
+        <div class="ask-fact"><span class="ask-fact-k">Photos</span><span>12 you've shared, most recently 2 days ago</span></div>
+        <div class="ask-fact"><span class="ask-fact-k">Not used</span><span>Other customers' pets, and anything you haven't given Fetch</span></div>
+      </div>
+    </div>
+
+    <div class="ask-scope">FetchGPT only answers questions about your pets. It isn't a vet — for anything urgent, call yours.</div>
+
+    <div class="ask-thread" id="ask-thread"></div>
+
+    <div class="ask-chips" id="ask-chips"></div>
+
+    <div class="ask-bar">
+      <button class="ask-cam" onclick="askPhoto()" aria-label="Add a photo of Charlie">📷</button>
+      <div class="cmt-field-wrap">
+        <input class="cmt-field" type="text" placeholder="Ask about Charlie…" id="ask-in"
+               oninput="checkAskBtn(this)" onkeydown="if(event.key==='Enter')askSend()">
+        <button class="cmt-post-btn" id="ask-send" onclick="askSend()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FETCH HELP ARTICLE — one screen, content swapped by openArticle() -->
+  <div class="screen" id="screen-article">
+    <div class="sub-header">
+      <button class="back-btn" onclick="goBack()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Fetch Help</h1>
+    </div>
+    <div id="article-body"></div>
   </div>
 
   <!-- FEEDBACK SCREEN -->
@@ -2018,6 +2649,9 @@ body {
 /* ── Navigation ─────────────────────────────────────────────── */
 let navHistory = ['screen-feed'];
 let activePid  = null;
+/* Set when we arrive by deep link from the pet profile. Backing out of that
+   screen should return to the app you came from, not the community feed. */
+let entryScreen = null;
 
 const posts = {
   'post-1': {
@@ -2088,6 +2722,8 @@ function navigate(sid, pid) {
 }
 
 function goBack() {
+  /* Deep-linked in and backing out of that same screen: leave for the app. */
+  if(entryScreen && navHistory.length===2 && navHistory[1]===entryScreen) { backToApp(); return; }
   if(navHistory.length<=1) return;
   const cur = navHistory.pop();
   const prev = navHistory[navHistory.length-1];
@@ -2343,66 +2979,725 @@ function snoozeCare()     { hideCard('care-reminder'); showToast("Reminder set f
 function bookCheckup()    { hideCard('care-reminder'); showToast("Finding vets near you who bill Fetch direct \u2026"); }
 function dismissInsight() { hideCard('care-insight'); showToast("Got it \u2014 we won't flag this again"); }
 
-/* ── Care list (lives on the Care screen) ────────────────────── */
-const checkupLibrary = {
-  annual:  {icon:'🩺', cls:'due',  title:'Annual checkup', sub:'Due 14 September · Fetch pays your vet direct'},
-  vax:     {icon:'💉', cls:'done', title:'C5 booster', sub:'Done · next one due March 2027'},
-  weighin: {icon:'⚖️', cls:'',     title:'Weigh-in', sub:"Flagged from Charlie's photos"},
-  hips:    {icon:'🧬', cls:'',     title:'Hip screen', sub:'Common in Goldens from age 2'},
-};
-let checkupList = ['annual','vax'];
+/* ── Charlie's to do list ────────────────────────────────────────
+   One list, two views. screen-todo shows all of it, grouped and
+   tickable; the Care screen shows only the health rows as "Up next".
+   Both read todoItems, so ticking in one place shows in the other. */
+const todoSections = [
+  {id:'health',   label:'Health & vet'},
+  {id:'supplies', label:'Supplies'},
+  {id:'home',     label:'Grooming & home'},
+  {id:'admin',    label:'Admin'},
+];
 
+let todoItems = [
+  {id:'annual', sec:'health',   icon:'🩺', cls:'due',  title:'Book vet appointment',       sub:'Annual checkup due 14 September · Fetch pays your vet direct', done:false},
+  {id:'vax',    sec:'health',   icon:'💉', cls:'done', title:'C5 booster',                 sub:'Next one due March 2027', done:true},
+  {id:'food',   sec:'supplies', icon:'🥣', cls:'',     title:'Buy Charlie food',           sub:'About 5 days left in the bag', done:false},
+  {id:'flea',   sec:'supplies', icon:'🪲', cls:'',     title:'Flea and tick treatment',    sub:'Monthly · due 1 September', done:false},
+  {id:'worm',   sec:'supplies', icon:'💊', cls:'',     title:'Worming tablet',             sub:'Every 3 months · due 12 October', done:false},
+  {id:'treats', sec:'supplies', icon:'🦴', cls:'',     title:'Restock treats and poo bags', sub:'', done:true},
+  {id:'nails',  sec:'home',     icon:'✂️', cls:'',     title:'Nail trim',                  sub:'Last done 6 weeks ago', done:false},
+  {id:'bath',   sec:'home',     icon:'🛁', cls:'',     title:'Bath and brush',             sub:'Goldens shed year-round — twice a week', done:false},
+  {id:'bed',    sec:'home',     icon:'🧺', cls:'',     title:'Wash his bed and bowls',     sub:'', done:true},
+  {id:'rego',   sec:'admin',    icon:'📋', cls:'',     title:'Renew council registration', sub:'Expires 30 September', done:false},
+  {id:'chip',   sec:'admin',    icon:'📍', cls:'',     title:'Update microchip details',   sub:'Still shows your old address', done:false},
+];
+
+/* Things Fetch can add for you, from an insight or a breed prompt. */
+const todoLibrary = {
+  weighin: {id:'weighin', sec:'health', icon:'⚖️', cls:'', title:'Weigh-in',    sub:"Flagged from Charlie's photos · unlocks his Healthy weight badge", done:false},
+  hips:    {id:'hips',    sec:'health', icon:'🧬', cls:'', title:'Hip screen',  sub:'Common in Goldens from age 2 · unlocks his Hip screen badge', done:false},
+};
+
+function todoRow(it, justAdded) {
+  return `<button class="todo-item ${it.done?'done':''} ${it.id===justAdded?'just-added':''}" onclick="toggleTodo('${it.id}')">
+    <span class="todo-check">${it.done?'✓':''}</span>
+    <div class="care-item-icon ${it.cls}">${it.icon}</div>
+    <div style="flex:1;min-width:0;">
+      <div class="care-item-title">${it.title}</div>
+      ${it.sub ? `<div class="care-item-sub">${it.sub}</div>` : ''}
+    </div>
+  </button>`;
+}
+
+function renderTodo(justAdded) {
+  const wrap = document.getElementById('todo-sections');
+  if(wrap) {
+    wrap.innerHTML = todoSections.map(sec=>{
+      const items = todoItems.filter(i=>i.sec===sec.id);
+      if(!items.length) return '';
+      const left = items.filter(i=>!i.done).length;
+      return `<div class="care-sec-head"><span>${sec.label}</span><span>${left ? left+' to do' : 'All done'}</span></div>
+        <div class="care-list">
+          ${items.map(i=>todoRow(i, justAdded)).join('')}
+          ${sec.id==='health' ? `<button class="checkup-foot" onclick="bookAll()"><span>📅</span><span>Book these at your vet</span></button>` : ''}
+        </div>`;
+    }).join('');
+
+    const done = todoItems.filter(i=>i.done).length;
+    document.getElementById('todo-progress-label').textContent = `${done} of ${todoItems.length} done`;
+    document.getElementById('todo-progress-fill').style.width = Math.round(done/todoItems.length*100)+'%';
+  }
+  renderCheckup(justAdded);
+}
+
+/* The Care screen's "Up next" — the health slice of the same list. */
 function renderCheckup(justAdded) {
   const rows = document.getElementById('checkup-rows');
   if(!rows) return;
-  rows.innerHTML = checkupList.length ? checkupList.map(id=>{
-    const it = checkupLibrary[id];
-    return `<div class="care-item ${id===justAdded?'just-added':''}">
-      <div class="care-item-icon ${it.cls}">${it.icon}</div>
-      <div style="flex:1;min-width:0;">
-        <div class="care-item-title">${it.title}</div>
-        <div class="care-item-sub">${it.sub}</div>
-      </div>
-      <button class="row-remove" onclick="removeCheckup('${id}')" aria-label="Remove">×</button>
-    </div>`;
-  }).join('') : `<div class="checkup-empty">Nothing on Charlie's list right now.<br>We'll add things here as they come up.</div>`;
+  const health = todoItems.filter(i=>i.sec==='health');
+  rows.innerHTML = health.length
+    ? health.map(i=>todoRow(i, justAdded)).join('')
+    : `<div class="checkup-empty">Nothing on Charlie's list right now.<br>We'll add things here as they come up.</div>`;
 
-  const n = checkupList.length;
+  const n = health.filter(i=>!i.done).length;
   document.getElementById('checkup-count').textContent = n===1 ? '1 item' : n+' items';
-  document.getElementById('checkup-foot-label').textContent =
-    n ? 'Book these at your vet' : 'Find a vet near you';
+}
+
+function toggleTodo(id) {
+  const it = todoItems.find(i=>i.id===id);
+  if(!it) return;
+  it.done = !it.done;
+  renderTodo();
+  showToast(it.done ? `Ticked off — ${it.title.toLowerCase()}` : `Back on Charlie's to do list`);
 }
 
 function addToCheckup(key) {
-  const it = checkupLibrary[key];
+  const it = todoLibrary[key];
   if(!it) return;
-  if(checkupList.includes(key)) {
-    showToast(`${it.title} is already on Charlie's care list`);
+  if(todoItems.some(i=>i.id===key)) {
+    navigate('screen-todo');
+    showToast(`${it.title} is already on Charlie's to do list`);
     return;
   }
-  checkupList.push(key);
-  renderCheckup(key);
-  navigate('screen-care');
-  setTimeout(()=>{
-    const s = document.getElementById('screen-care');
-    const c = document.getElementById('checkup-card');
-    if(s && c) s.scrollTop = Math.max(0, c.offsetTop - 120);
-    showToast(`${it.title} added to Charlie's care list`);
-  }, 420);
-}
-
-function removeCheckup(id) {
-  checkupList = checkupList.filter(x=>x!==id);
-  renderCheckup();
-  showToast(`Removed from Charlie's care list`);
+  todoItems.push({...it});
+  renderTodo(key);
+  navigate('screen-todo');
+  setTimeout(()=>{ showToast(`${it.title} added to Charlie's to do list`); }, 420);
 }
 
 function bookAll() {
-  if(!checkupList.length) { showToast('Finding vets near you who bill Fetch direct \u2026'); return; }
-  showToast(`Finding a vet who can do all ${checkupList.length} \u2014 and bill Fetch direct`);
+  const n = todoItems.filter(i=>i.sec==='health' && !i.done).length;
+  if(!n) { showToast('Nothing to book \u2014 Charlie is all up to date \uD83D\uDC3E'); return; }
+  showToast(n===1
+    ? 'Finding a vet near you who bills Fetch direct \u2026'
+    : `Finding a vet who can do all ${n} \u2014 and bill Fetch direct`);
 }
 
-renderCheckup();
+renderTodo();
+
+/* ── Charlie's Training ────────────────────────────────────────────
+   Training goals with a payout. The tiering is the whole argument:
+   recall and "leave it" are worth real money to an insurer because
+   road trauma and swallowed objects are expensive, frequent claims.
+   Tricks pay a token $5 — they're for engagement, not risk.
+   In production the payout would need some verification; here any
+   goal can be marked done on the owner's word. */
+const habitCats = {
+  safety:  {label:'Safety',  worth:20},
+  manners: {label:'Manners', worth:10},
+  tricks:  {label:'Tricks',  worth:5},
+};
+const HABIT_CAP = 60;
+
+/* The library you pick from. Each carries its own steps so a new goal
+   arrives with a plan rather than a blank checklist. */
+const habitLibrary = {
+  recall:  {icon:'📣', cat:'safety', title:'Rock-solid recall',
+    sub:'Comes back first time, even at the park',
+    why:"Recall is the one that keeps him out of traffic. <strong>Road trauma</strong> is one of the costliest claims we see in young dogs, and it's almost always a dog who didn't come back.",
+    steps:['Comes when called inside the house','Comes in the backyard with no distractions','Comes at the park on a long lead','Comes off-lead with another dog nearby']},
+  leaveit: {icon:'✋', cat:'safety', title:'Leave it',
+    sub:'Walks past the chicken bone on the footpath',
+    why:"Swallowed objects are the claim that turns a nice weekend into surgery. A reliable <strong>leave it</strong> is the cheapest insurance against corn cobs, chicken bones and whatever's on the beach.",
+    steps:['Leaves a treat in your closed hand','Leaves a treat on the floor','Leaves food he finds on a walk','Leaves it when you\u2019re a few steps away']},
+  lead:    {icon:'🦮', cat:'safety', title:'Loose-lead walking',
+    sub:'No pulling, no lunging at the kerb',
+    why:"A 34kg dog pulling at the wrong moment is how owners get hurt and how dogs end up on the road. It also takes the strain off <strong>his own joints</strong> — worth it for a Golden.",
+    steps:['Walks a few steps without tension','Walks the length of the street','Passes another dog without pulling','Walks past the kerb and waits']},
+  car:     {icon:'🚗', cat:'safety', title:'Settles in the car',
+    sub:'Waits to be let out instead of bolting',
+    why:"Bolting from an open car door at the vet car park is a classic. Teaching him to <strong>wait for the word</strong> removes it entirely.",
+    steps:['Gets in on cue','Settles for a five-minute drive','Waits when the door opens','Waits at the vet car park']},
+  teeth:   {icon:'🪥', cat:'manners', title:'Tooth-brushing without a fight',
+    sub:'Three times a week, no wrestling',
+    why:"Dental disease is the most common thing we pay for in dogs over three. Brushing at home is the only thing that <strong>genuinely delays it</strong>.",
+    steps:['Lets you lift his lip','Accepts a finger brush','Accepts the brush on the front teeth','Full mouth, three times a week']},
+  nails:   {icon:'✂️', cat:'manners', title:'Nail trims without fuss',
+    sub:'Paws handled calmly, one nail at a time',
+    why:"Overgrown nails change how he stands and loads his joints. And a dog who <strong>hates having his feet touched</strong> is a dog who needs sedation for it later.",
+    steps:['Lets you hold each paw','Tolerates the clippers near him','One nail, then a treat','A whole paw in one go']},
+  vet:     {icon:'🏥', cat:'manners', title:'Happy on the vet table',
+    sub:'Handled all over without going stiff',
+    why:"A dog who can be examined properly gets diagnosed properly. It also means <strong>fewer sedation fees</strong> on your claims.",
+    steps:['Stands still while you check his ears','Lets you look in his mouth','Lets a stranger run hands over him','Calm on the scales at the clinic']},
+  door:    {icon:'🚪', cat:'manners', title:'Calm at the door',
+    sub:'No charging the doorbell',
+    why:"The front door is where dogs escape from. A settled greeting is <strong>manners and safety at once</strong>.",
+    steps:['Sits when you reach for the handle','Holds the sit as it opens','Holds it with a visitor there','Holds it with the door wide open']},
+  shake:   {icon:'🖐', cat:'tricks', title:'Shake hands',
+    sub:'The classic',
+    why:"No claims argument for this one. It's just a nice thing to teach him, and paw-handling helps with the nail trims.",
+    steps:['Paws at your closed hand','Lifts a paw on cue','Holds it for a second','Does it for someone else']},
+  spin:    {icon:'🔄', cat:'tricks', title:'Spin',
+    sub:'A full circle on cue',
+    why:"Pure fun. Trick training is also decent low-impact exercise for a dog who needs to lose a bit.",
+    steps:['Follows a treat in a circle','Circles with a smaller hand signal','Circles on the word alone','Both directions']},
+  tidy:    {icon:'🧺', cat:'tricks', title:'Puts his toys away',
+    sub:'Drops them in the basket',
+    why:"Genuinely useful and very good for a retriever's brain — carrying things is what he was built for.",
+    steps:['Picks a toy up on cue','Carries it to you','Drops it on cue','Drops it in the basket']},
+};
+
+/* What he's already working on. */
+let habits = [
+  {id:'recall', ...habitLibrary.recall, target:'30 September',
+   steps:[{t:'Comes when called inside the house', done:true},
+          {t:'Comes in the backyard with no distractions', done:true},
+          {t:'Comes at the park on a long lead', done:false},
+          {t:'Comes off-lead with another dog nearby', done:false}],
+   media:[{k:'video', e:'🐕'},{k:'photo', e:'🐕‍🦺'},{k:'video', e:'🌳'}],
+   done:false, doneOn:null},
+  {id:'leaveit', ...habitLibrary.leaveit, target:'15 October',
+   steps:[{t:'Leaves a treat in your closed hand', done:true},
+          {t:'Leaves a treat on the floor', done:false},
+          {t:'Leaves food he finds on a walk', done:false},
+          {t:'Leaves it when you\u2019re a few steps away', done:false}],
+   media:[{k:'photo', e:'🦴'}],
+   done:false, doneOn:null},
+  {id:'teeth', ...habitLibrary.teeth, target:'Done',
+   steps:[{t:'Lets you lift his lip', done:true},
+          {t:'Accepts a finger brush', done:true},
+          {t:'Accepts the brush on the front teeth', done:true},
+          {t:'Full mouth, three times a week', done:true}],
+   media:[{k:'video', e:'🪥'},{k:'photo', e:'🐶'}],
+   done:true, doneOn:'12 August'},
+];
+
+const habitProgress = h => h.steps.filter(s=>s.done).length;
+const habitWorth    = h => (habitCats[h.cat] || habitCats.tricks).worth;
+const habitEarned   = () => Math.min(HABIT_CAP, habits.filter(h=>h.done).reduce((n,h)=>n+habitWorth(h),0));
+
+function habitRow(h, compact){
+  const p = habitProgress(h), n = h.steps.length;
+  const pct = Math.round(p/n*100);
+  const cat = habitCats[h.cat] || habitCats.tricks;
+  return `<button class="habit-item${h.done?' done':''}" onclick="openGoal('${h.id}')">
+    <span class="care-item-icon${h.done?' done':''} habit-icon">${h.icon}</span>
+    <span class="habit-body">
+      <span class="habit-title">${h.title}</span>
+      <span class="habit-meta">
+        <span class="habit-cat ${h.cat}">${cat.label}</span>
+        <span>${h.done ? `Done ${h.doneOn} · $${habitWorth(h)} earned` : `${p} of ${n} steps · by ${h.target}`}</span>
+      </span>
+      ${h.done ? '' : `<span class="habit-prog" style="display:block"><span class="habit-prog-fill" style="display:block;width:${pct}%"></span></span>`}
+    </span>
+    ${compact ? '' : '<span class="breed-chev"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>'}
+  </button>`;
+}
+
+function renderHabits(){
+  const open = habits.filter(h=>!h.done);
+  const done = habits.filter(h=>h.done);
+
+  /* Care screen: the two he's closest to finishing. */
+  const rows = document.getElementById('habit-rows');
+  if(rows){
+    const near = [...open].sort((a,b)=>habitProgress(b)/b.steps.length - habitProgress(a)/a.steps.length).slice(0,2);
+    rows.innerHTML = near.length
+      ? near.map(h=>habitRow(h, true)).join('')
+      : `<div class="checkup-empty">No goals on the go. Setting one is the fastest way to knock money off his next claim.</div>`;
+    const c = document.getElementById('habit-count');
+    if(c) c.textContent = open.length===1 ? '1 in progress' : `${open.length} in progress`;
+  }
+
+  /* Training screen */
+  const earned = habitEarned();
+  const el = id => document.getElementById(id);
+  if(el('habit-earn-label')) el('habit-earn-label').textContent = `$${earned} of $${HABIT_CAP} earned this year`;
+  if(el('habit-earn-fill'))  el('habit-earn-fill').style.width = Math.round(earned/HABIT_CAP*100) + '%';
+
+  if(el('habit-open')){
+    el('habit-open').innerHTML = open.length
+      ? open.map(h=>habitRow(h)).join('')
+      : `<div class="checkup-empty">Nothing on the go right now.</div>`;
+    el('habit-open-count').textContent = open.length ? `${open.length} goal${open.length>1?'s':''}` : '';
+  }
+  if(el('habit-done')){
+    const show = done.length;
+    el('habit-done-head').style.display = show ? '' : 'none';
+    el('habit-done-card').style.display = show ? '' : 'none';
+    el('habit-done').innerHTML = done.map(h=>habitRow(h)).join('');
+    el('habit-done-count').textContent = done.length ? `$${done.reduce((n,h)=>n+habitWorth(h),0)} earned` : '';
+  }
+}
+
+/* ── Goal detail ─────────────────────────────────────────────── */
+let activeGoal = null;
+
+function openGoal(id){
+  activeGoal = id;
+  renderGoal();
+  navigate('screen-goal');
+}
+
+function renderGoal(){
+  const h = habits.find(x=>x.id===activeGoal);
+  const body = document.getElementById('goal-body');
+  if(!h || !body) return;
+  const p = habitProgress(h), n = h.steps.length;
+  const cat = habitCats[h.cat] || habitCats.tricks;
+
+  const steps = h.steps.map((s,i)=>`
+    <button class="step-row${s.done?' done':''}" onclick="toggleStep(${i})">
+      <span class="step-check">${s.done?'✓':''}</span>
+      <span class="step-text">${s.t}</span>
+    </button>`).join('');
+
+  const tiles = h.media.map(m=>`
+    <div class="ev-tile">${m.e}${m.k==='video'?'<span class="ev-play">▶</span>':''}</div>`).join('');
+
+  body.innerHTML = `
+    <div class="goal-hero">
+      <div class="goal-hero-top">
+        <div class="goal-disc">${h.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="goal-title">${h.title}</div>
+          <div class="goal-target">${h.done ? `Finished ${h.doneOn}` : `Target: ${h.target} · ${p} of ${n} steps`}</div>
+        </div>
+        <span class="habit-cat ${h.cat}">${cat.label}</span>
+      </div>
+      <div class="goal-why">${h.why}</div>
+      <div class="goal-reward">
+        <span>${h.done ? '✅' : '🎁'}</span>
+        <span>${h.done
+          ? `$${habitWorth(h)} is waiting on his next claim.`
+          : `$${habitWorth(h)} off the contribution on his next claim when this one's done.`}</span>
+      </div>
+    </div>
+
+    <div class="care-sec-head"><span>Steps</span><span>${p} of ${n}</span></div>
+    <div class="care-list">${steps}</div>
+
+    <div class="care-sec-head"><span>Proof he's got it</span><span>${h.media.length} ${h.media.length===1?'item':'items'}</span></div>
+    <div class="care-list">
+      <div class="ev-grid">
+        ${tiles}
+        <button class="ev-add" onclick="addEvidence('photo')"><span>📷</span><span>Photo</span></button>
+        <button class="ev-add" onclick="addEvidence('video')"><span>🎥</span><span>Video</span></button>
+      </div>
+      <div class="ev-empty" style="border-top:1px solid var(--border-subtle)">
+        Only you can see these. They're for you to look back on — Fetch never sees the footage.
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;padding:4px 12px 20px;">
+      ${h.done
+        ? `<button class="care-btn ghost" style="width:100%" onclick="reopenGoal()">Put this back in progress</button>`
+        : `<button class="care-btn solid" style="width:100%" onclick="completeGoal()">Mark as complete</button>`}
+    </div>`;
+}
+
+function toggleStep(i){
+  const h = habits.find(x=>x.id===activeGoal);
+  if(!h) return;
+  h.steps[i].done = !h.steps[i].done;
+  renderGoal();
+  renderHabits();
+  const p = habitProgress(h), n = h.steps.length;
+  if(p===n && !h.done) showToast("That's every step \u2014 mark it complete to bank the reward \uD83C\uDF89");
+}
+
+/* Simulated upload. A real one would open the camera roll. */
+function addEvidence(kind){
+  const h = habits.find(x=>x.id===activeGoal);
+  if(!h) return;
+  const pool = ['🐕','🐶','🎾','🌳','🦴','🐾','🏡'];
+  h.media.push({k:kind, e:pool[h.media.length % pool.length]});
+  renderGoal();
+  showToast(kind==='video' ? 'Video added to his goal' : 'Photo added to his goal');
+}
+
+function completeGoal(){
+  const h = habits.find(x=>x.id===activeGoal);
+  if(!h) return;
+  const left = h.steps.filter(s=>!s.done).length;
+  h.steps.forEach(s=>s.done=true);
+  h.done = true;
+  h.doneOn = 'today';
+  renderGoal();
+  renderHabits();
+  const earned = habitEarned();
+  showToast(`Nice one \u2014 $${habitWorth(h)} off his next claim. That's $${earned} banked this year \uD83C\uDF89`);
+}
+
+function reopenGoal(){
+  const h = habits.find(x=>x.id===activeGoal);
+  if(!h) return;
+  h.done = false; h.doneOn = null;
+  h.steps[h.steps.length-1].done = false;
+  renderGoal();
+  renderHabits();
+  showToast(`${h.title} is back in progress`);
+}
+
+/* ── Setting a new goal ──────────────────────────────────────── */
+function renderNewGoal(){
+  const wrap = document.getElementById('lib-sections');
+  if(!wrap) return;
+  const order = ['safety','manners','tricks'];
+  const blurb = { safety: '$20 each', manners: '$10 each', tricks: '$5 each' };
+  wrap.innerHTML = order.map(cat=>{
+    const rows = Object.entries(habitLibrary)
+      .filter(([,v])=>v.cat===cat)
+      .map(([k,v])=>{
+        const added = habits.some(h=>h.id===k);
+        return `<button class="lib-row${added?' added':''}" ${added?'':`onclick="addGoal('${k}')"`}>
+          <span class="care-item-icon">${v.icon}</span>
+          <span style="flex:1;min-width:0;">
+            <span class="lib-title">${v.title}</span>
+            <span class="lib-sub">${added ? 'Already on his list' : v.sub}</span>
+          </span>
+          <span class="lib-worth">$${habitCats[cat].worth}</span>
+        </button>`;
+      }).join('');
+    return `<div class="care-sec-head"><span>${habitCats[cat].label}</span><span>${blurb[cat]}</span></div>
+      <div class="care-list">${rows}</div>`;
+  }).join('');
+}
+
+function addGoal(key){
+  const v = habitLibrary[key];
+  if(!v || habits.some(h=>h.id===key)) return;
+  habits.push({
+    id:key, ...v, target:'in 8 weeks',
+    steps: v.steps.map(t=>({t, done:false})),
+    media: [], done:false, doneOn:null,
+  });
+  renderHabits();
+  renderNewGoal();
+  openGoal(key);
+  setTimeout(()=>{ showToast(`${v.title} added \u2014 worth $${habitCats[v.cat].worth} when he's got it`); }, 420);
+}
+
+function checkOwn(el){
+  const b = document.getElementById('own-add');
+  if(b) b.style.opacity = el.value.trim() ? '1' : '0.4';
+}
+
+function addOwnGoal(){
+  const inp = document.getElementById('own-goal');
+  const t = inp.value.trim();
+  if(!t) { showToast('Give the goal a name first'); return; }
+  const id = 'own-' + Date.now();
+  habits.push({
+    id, icon:'⭐', cat:'tricks', title:t,
+    sub:'Your own goal',
+    why:"You set this one yourself, so there's no Fetch guidance behind it \u2014 the steps are yours to define as he gets there.",
+    target:'in 8 weeks',
+    steps:[{t:'Getting the idea', done:false},
+           {t:'Does it with help', done:false},
+           {t:'Does it on cue', done:false},
+           {t:'Does it anywhere', done:false}],
+    media:[], done:false, doneOn:null,
+  });
+  inp.value = ''; checkOwn(inp);
+  renderHabits();
+  openGoal(id);
+  setTimeout(()=>{ showToast(`${t} added to Charlie's Training`); }, 420);
+}
+
+renderHabits();
+renderNewGoal();
+
+/* ── Fetch Help articles ─────────────────────────────────────────
+   Reached from the "Common in his breed" rows. One screen, content
+   swapped in — so adding an article is just another entry here. */
+const articles = {
+  ears: {
+    title: 'Ear infections in Golden Retrievers',
+    meta: 'Fetch Help · Reviewed by our vet team · 4 min read',
+    lede: "Goldens have heavy drop ears and a genuine love of water. Together those trap warmth and moisture in the ear canal — exactly the conditions yeast and bacteria are looking for.",
+    secs: [
+      {h:'Why Goldens get them', ps:[
+        "A dog's ear canal bends like an L, so it drains poorly at the best of times. Add an ear flap that seals it shut and a swim most weekends, and it can stay damp for hours.",
+        "Repeat infections are usually a symptom rather than the problem itself. In most Goldens, an underlying skin allergy is inflaming the canal and the infection follows it in."
+      ]},
+      {h:'What to look for', list:[
+        'Shaking his head, or holding it tilted to one side',
+        'Scratching at the ear, or rubbing it along the couch',
+        'A yeasty, sweet-sour smell',
+        'Brown or waxy discharge',
+        'Redness, heat, or flinching when you touch the base of the ear'
+      ]},
+      {h:'What helps at home', list:[
+        'Dry his ears after every swim or bath — a cotton pad, never a cotton bud',
+        'Use a cleaner your vet recommends rather than water or vinegar',
+        "Don't push anything into the canal; it packs debris further down",
+        "If he's having more than two a year, ask your vet about testing for the allergy underneath"
+      ]}
+    ],
+    flag: {h:'See a vet if', p:"He's in obvious pain, the ear smells strongly, there's blood or dark discharge, or the head tilt doesn't settle. Left alone, an outer-ear infection can reach the middle ear, and that is far harder to treat."},
+    todo: null
+  },
+
+  hips: {
+    title: 'Hip dysplasia: what Golden owners should know',
+    meta: 'Fetch Help · Reviewed by our vet team · 6 min read',
+    lede: "The hip is a ball-and-socket joint. In dysplasia the two halves don't sit together neatly, so the joint grinds where it should glide. It is largely inherited, and Goldens are one of the more affected breeds.",
+    secs: [
+      {h:'How it develops', ps:[
+        "Puppies are born with normal hips. The looseness develops over the first year as the joint grows, which is why what happens early matters so much.",
+        "Growth rate, body weight and the kind of exercise he gets all pull on that developing joint. A lean puppy on sensible exercise has a meaningfully better outlook than a heavy one doing long runs on hard ground."
+      ]},
+      {h:'Signs to watch for', list:[
+        'Bunny-hopping — both back legs moving together at a run',
+        'Stiffness after a nap that eases once he warms up',
+        'Hesitating at stairs, or in and out of the car',
+        'Standing with his back legs unusually close together',
+        'Muscle quietly disappearing from over his rump'
+      ]},
+      {h:'What actually helps', ps:[
+        "Keeping him lean is the single biggest lever you have — more than any supplement. Every extra kilo is load going through a joint that already doesn't fit well.",
+        "Beyond that: controlled, regular exercise rather than weekend sprints, swimming where you can, and a screening x-ray from about age two so you know what you're working with before symptoms show."
+      ]}
+    ],
+    flag: {h:'See a vet if', p:"He's limping, struggling to get up, or yelping when he moves. Hip dysplasia sits on a long spectrum — plenty of dogs manage well for years on weight control and medication, and surgery is only one end of it."},
+    todo: 'hips'
+  },
+
+  skin: {
+    title: 'Itchy skin and allergies in Goldens',
+    meta: 'Fetch Help · Reviewed by our vet team · 5 min read',
+    lede: "Itching is the single most common reason Goldens end up at the vet. Most of it traces back to allergy — pollen, grass, dust mites, fleas, or occasionally something in his food.",
+    secs: [
+      {h:'What it looks like', list:[
+        'Licking or chewing his paws, often at night',
+        'Rubbing his face along the carpet or furniture',
+        'Recurring ear infections — the ears are skin too',
+        'Hot spots: red, weepy patches that appear within hours',
+        'Thinning coat, or dark, thickened skin in the folds'
+      ]},
+      {h:'Working out the trigger', ps:[
+        "Seasonal itching points to something in the environment. Year-round itching, or itching that centres on his backside, is worth ruling fleas out first — one bite is enough to set off a sensitive dog.",
+        "Food allergy is less common than owners expect, and it can only really be confirmed with a proper elimination diet run past your vet. Swapping brands on your own tends to muddy the picture rather than clear it."
+      ]},
+      {h:'What helps at home', list:[
+        'Flea prevention every month, all year, even for indoor dogs',
+        'Keep a short diary of flare-ups — it makes the pattern obvious',
+        'Wash his bedding weekly and rinse him off after long grass',
+        'Ask about medicated shampoos before reaching for anything stronger'
+      ]}
+    ],
+    flag: {h:'See a vet if', p:"The skin is broken, weeping or smells, or he's keeping himself awake scratching. Skin that stays inflamed gets infected, and by then you're treating two things instead of one."},
+    todo: null
+  }
+};
+
+function openArticle(key) {
+  const a = articles[key];
+  const body = document.getElementById('article-body');
+  if(!a || !body) return;
+
+  const secs = a.secs.map(s=>`
+    <div class="art-card">
+      <div class="art-h">${s.h}</div>
+      ${(s.ps||[]).map(p=>`<div class="art-p">${p}</div>`).join('')}
+      ${s.list ? `<ul class="art-list">${s.list.map(li=>`<li>${li}</li>`).join('')}</ul>` : ''}
+    </div>`).join('');
+
+  body.innerHTML = `
+    <div class="art-hero">
+      <span class="art-eyebrow">🩺 Common in his breed</span>
+      <div class="art-title">${a.title}</div>
+      <div class="art-meta">${a.meta}</div>
+      <div class="art-lede">${a.lede}</div>
+    </div>
+    ${secs}
+    <div class="art-flag">
+      <div class="art-flag-h"><span>⚠️</span><span>${a.flag.h}</span></div>
+      <div class="art-flag-p">${a.flag.p}</div>
+    </div>
+    <div class="privacy-note">
+      <span>🔒</span>
+      <span>General information, not a diagnosis for Charlie. Nothing you read or tap here changes his plan.</span>
+    </div>
+    <div style="display:flex;gap:8px;padding:4px 12px 20px;">
+      ${a.todo ? `<button class="care-btn solid" onclick="addToCheckup('${a.todo}')">Add to his to do list</button>` : ''}
+      <button class="care-btn ghost" onclick="openAsk()">Ask FetchGPT about Charlie</button>
+    </div>`;
+
+  navigate('screen-article');
+}
+
+/* ── FetchGPT ──────────────────────────────────────────────────────
+   A pet-scoped assistant. Every answer is grounded in Charlie's own
+   record — weight history, claims, photos — and it declines anything
+   that isn't about your pets. Replies here are canned for the study. */
+function askEsc(s){ return s.replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* Opens on a greeting and nothing else. The context card above the thread
+   already carries the "it knows your pet" promise, so the thread doesn't
+   need to explain itself before you've asked anything. */
+let askMessages = [
+  {who:'ai', html:"<p>How can I help Charlie?</p>"},
+];
+
+const askChips = [
+  'Is Charlie a healthy weight?',
+  'Why does he keep getting ear infections?',
+  'What should I expect at age 3?',
+  "What's the weather tomorrow?",
+];
+
+function renderAsk(){
+  const t = document.getElementById('ask-thread');
+  if(!t) return;
+  t.innerHTML = askMessages.map((m,i)=>{
+    const avi = m.who==='me'
+      ? '<div class="ask-avi">🐕</div>'
+      : '<div class="ask-avi ai">F</div>';
+    if(m.typing) return `<div class="ask-msg ai">${avi}<div class="ask-bub"><div class="ask-typing"><span class="ask-dot"></span><span class="ask-dot"></span><span class="ask-dot"></span></div></div></div>`;
+    return `<div class="ask-msg ${m.who}${m.kind==='checkin'?' checkin':''}">
+      ${avi}
+      <div class="ask-bub">
+        ${m.kind==='checkin' ? '<span class="ask-checkin-tag">Check-in · 2 days ago</span>' : ''}
+        ${m.photo ? `<div class="ask-photo">${m.photo}</div>` : ''}
+        ${m.html}
+        ${m.cite ? `<button class="ask-cite" onclick="askCite(${i})">
+          <div class="ask-cite-k">${m.cite.k}</div>
+          <div class="ask-cite-v">${m.cite.v}</div>
+          <div class="ask-cite-m">${m.cite.m}</div>
+        </button>` : ''}
+        ${m.flag ? `<div class="ask-flagline"><span>⚠️</span><span>${m.flag}</span></div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  t.scrollTop = t.scrollHeight;
+}
+
+function renderAskChips(){
+  const c = document.getElementById('ask-chips');
+  if(!c) return;
+  c.innerHTML = askChips.map((t,i)=>`<button class="ask-chip" onclick="askChip(${i})">${t}</button>`).join('');
+}
+
+function toggleAskCtx(){
+  const b = document.getElementById('ask-ctx-body');
+  const t = document.getElementById('ask-ctx-toggle');
+  const open = b.classList.toggle('open');
+  t.textContent = open ? 'Hide' : 'See it';
+}
+
+function checkAskBtn(el){ document.getElementById('ask-send').classList.toggle('show', !!el.value.trim()); }
+
+function askChip(i){
+  askMessages.push({who:'me', html:askEsc(askChips[i])});
+  askRun(askChips[i]);
+}
+
+function askSend(){
+  const inp = document.getElementById('ask-in');
+  const q = inp.value.trim();
+  if(!q) return;
+  inp.value = ''; checkAskBtn(inp);
+  askMessages.push({who:'me', html:askEsc(q)});
+  askRun(q);
+}
+
+function askPhoto(){
+  askMessages.push({who:'me', photo:'🐕', html:'Here he is this morning.'});
+  askRun('__photo__');
+}
+
+/* Push a typing bubble, swap it for the answer a beat later. */
+function askRun(q){
+  askMessages.push({who:'ai', typing:true});
+  renderAsk();
+  setTimeout(()=>{
+    askMessages.pop();
+    askMessages.push(askReply(q));
+    renderAsk();
+  }, 950);
+}
+
+function askCite(i){
+  const go = askMessages[i] && askMessages[i].cite && askMessages[i].cite.go;
+  if(!go) return;
+  if(go.indexOf('article:') === 0) { openArticle(go.split(':')[1]); return; }
+  if(go === 'todo') { navigate('screen-todo'); return; }
+  showToast("Opening Charlie's record \u2026");
+}
+
+function askReply(q){
+  const s = q.toLowerCase();
+  const has = (...ws) => ws.some(w=>s.includes(w));
+
+  if(q === '__photo__') return {
+    who:'ai',
+    html:"<p>Thanks — that's his 13th photo.</p><p>Against the ones from last spring he's carrying a little more through the ribs, and his waist is harder to pick out from above. That lines up with the <strong>1.8kg</strong> on his record rather than contradicting it.</p><p>Nothing else jumps out: coat looks good, eyes clear, and he's standing square on both back legs.</p>",
+    cite:{k:'Compared against', v:'12 earlier photos and 2 weigh-ins', m:'Your photos stay private to you', go:'todo'},
+    flag:'A photo can flag things worth a look. It can\u2019t rule anything out.'
+  };
+
+  /* Urgent first — nothing below should ever intercept these. */
+  if(has('blood','vomit','seizure','collaps','not eating',"won't eat",'limping','lump','swollen','poison','chocolate','struggling to stand'))
+    return {who:'ai',
+      html:"<p>Stop there — that one needs a vet today, not me.</p><p>Ring your regular clinic now, and if they're closed find your nearest emergency vet. Take a photo of anything visible before you go, and don't give him human medication in the meantime.</p><p>If it turns into a claim, everything in his Fetch record is already there for them.</p>",
+      flag:'Call your vet now — don\u2019t wait on an answer here.'};
+
+  if(has('weather','recipe','football','stock','tax','code','email','flight','movie','news','who won','president','holiday'))
+    return {who:'ai',
+      html:"<p>That's outside what I do — I only answer questions about your pets.</p><p>Ask me about Charlie's health, his weight, what's in his claims history, or what tends to matter for a Golden his age.</p>"};
+
+  if(has('weight','heavy','fat','chunky','overweight','slim','kg'))
+    return {who:'ai',
+      html:"<p>He's gone from <strong>32.4kg to 34.2kg</strong> between his two weigh-ins — about 5% in six months. At two years old that's worth watching rather than worrying about.</p><p>Two things in his record matter here. He was de-sexed at five months, which drops his energy needs by roughly a quarter, and his recent photos show less waist from above than last spring.</p><p>The reason I keep raising it: weight is the biggest single lever on hip and joint problems in Goldens, and that's the most expensive thing his breed claims for.</p>",
+      cite:{k:'From his record', v:'32.4kg → 34.2kg', m:'Sep 2024 → Mar 2025 · tap to add a weigh-in', go:'todo'}};
+
+  if(has('ear','head shak','shakes his head'))
+    return {who:'ai',
+      html:"<p>He's claimed twice for ear infections — <strong>November 2024 and February 2025</strong>. Two in four months usually points at something underneath rather than bad luck.</p><p>In Goldens that's most often an allergy inflaming the canal, with the infection following it in. The February notes mention both ears, which fits an allergy better than water from one swim.</p><p>Worth asking your vet about testing for the cause before the next flare rather than treating the third one.</p>",
+      cite:{k:'From his claims', v:'2 × outer ear infection', m:'Nov 2024 and Feb 2025 · tap to read more', go:'article:ears'}};
+
+  if(has('itch','scratch','licking','paw','allerg','skin','hot spot'))
+    return {who:'ai',
+      html:"<p>Given his two ear infections, itchy skin wouldn't be a separate problem — the ears and the skin are usually the same allergy showing up in two places.</p><p>What helps me narrow it: is he itching year-round or seasonally, and is it mostly paws and face, or his back end? Paws and face lean environmental. Back end leans fleas, even on a dog who never misses a treatment.</p>",
+      cite:{k:'Related in his history', v:'Recurring ear inflammation', m:'Tap to read what usually sits underneath', go:'article:skin'}};
+
+  if(has('hip','joint','stiff','arthri','bunny'))
+    return {who:'ai',
+      html:"<p>Nothing in Charlie's record suggests hip trouble so far — no claims, and no stiffness noted at either checkup.</p><p>Worth knowing anyway: <strong>1 in 8</strong> Goldens with Fetch claim for hip dysplasia by age six, averaging around $4,900. He's the right age for a baseline screening x-ray, which tells you what you're working with before symptoms show.</p><p>His 1.8kg gain is the more pressing part of this, honestly. Lean dogs do markedly better on hips.</p>",
+      cite:{k:'Breed pattern, not a diagnosis', v:'Hip dysplasia in Goldens', m:'Tap to read the full article', go:'article:hips'}};
+
+  if(has('food','feed','eat','meal','treat','diet','portion'))
+    return {who:'ai',
+      html:"<p>I can't tell you a brand, but I can tell you what his numbers suggest.</p><p>He's de-sexed and up 1.8kg, so his actual needs are likely below what the bag recommends — those charts assume an entire, active dog. Weighing his food rather than scooping it is the change that moves the needle most.</p><p>Treats are the usual hidden third. If he's getting training treats through the day, they need to come out of his daily total, not sit on top of it.</p>",
+      cite:{k:'From his record', v:'De-sexed at 5 months · 34.2kg', m:'Tap to add a weigh-in to his list', go:'todo'}};
+
+  if(has('age 3','turns 3','turns three','next year','expect','older','future','ahead'))
+    return {who:'ai',
+      html:"<p>At three he's properly out of adolescence and into his steadiest stretch. Three things I'd have on your radar for him specifically:</p><p><strong>Weight</strong> — the 1.8kg is the one to act on, because it compounds into everything else.</p><p><strong>Hips</strong> — a baseline screen now, while he's symptom-free, is worth more than one after a limp.</p><p><strong>Ears</strong> — two infections already means a third is likely unless the cause gets found.</p><p>None of that is a prediction about Charlie. It's what his record and his breed together suggest is worth your attention.</p>",
+      cite:{k:'Built from', v:"Charlie's record and 4,180 Goldens", m:'Never another customer\u2019s pet', go:null}};
+
+  return {who:'ai',
+    html:"<p>I can look at that for Charlie specifically — I just need a bit more to go on.</p><p>Is it something you've noticed recently, or are you planning ahead? And if he's showing a symptom, roughly how long has it been going on?</p>"};
+}
+
+renderAsk();
+renderAskChips();
+
+/* Entry point from the Care screen, the article CTA and the pet profile. */
+function openAsk(prefill){
+  navigate('screen-ask');
+  if(prefill) {
+    setTimeout(()=>{
+      const inp = document.getElementById('ask-in');
+      if(inp) { inp.value = prefill; checkAskBtn(inp); inp.focus(); }
+    }, 420);
+  }
+}
 
 /* ── Care badges ─────────────────────────────────────────────── */
 const badgeCopy = {
@@ -2435,6 +3730,7 @@ function openFromHash(instant){
   el.classList.add('active');
   el.scrollTop = 0;
   navHistory = ['screen-feed', sid];
+  entryScreen = sid;
   requestAnimationFrame(()=>{ el.style.transition = ''; });
 }
 openFromHash(true);

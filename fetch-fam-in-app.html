@@ -189,6 +189,12 @@ body {
   letter-spacing: -0.2px;
 }
 .row-emoji { font-size: 19px; width: 22px; text-align: center; flex-shrink: 0; }
+.ask-mark {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--ink); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
 .chev { flex-shrink: 0; color: var(--ink); display: flex; }
 .row-value + .chev { margin-left: 10px; }
 .row-label + .chev { margin-left: auto; }
@@ -200,27 +206,6 @@ body {
   border-radius: var(--r-f); padding: 3px 8px;
   letter-spacing: 0.2px;
 }
-
-/* ── Care card ───────────────────────────────────────────────── */
-.card-head {
-  display: flex; align-items: center; gap: 8px;
-  padding: 17px 18px 13px;
-}
-.card-head-title {
-  font-size: 16px; font-weight: 700;
-  color: var(--ink); letter-spacing: -0.3px;
-}
-.card-head-meta { margin-left: auto; font-size: 13px; color: var(--muted); }
-.card-foot {
-  display: flex; align-items: center; gap: 9px;
-  width: 100%; padding: 15px 18px;
-  background: #faf9f6; border: none;
-  border-top: 1px solid var(--divider);
-  font-family: inherit; font-size: 14px; font-weight: 700;
-  color: var(--ink); cursor: pointer; text-align: left;
-  letter-spacing: -0.2px;
-}
-.card-foot:active { background: #f4f2ee; }
 
 /* ── Fetch Fam row ───────────────────────────────────────────── */
 .fam-avis { display: flex; margin-left: auto; }
@@ -295,6 +280,7 @@ body {
 
   <div class="s-item"><span class="s-dot grey"></span><span>Pet details and Add&nbsp;another&nbsp;pet are <strong>as they are today</strong></span></div>
   <div class="s-item"><span class="s-dot"></span><span><strong>Care</strong> sits directly under the pet's details — same pet-scoped mental model</span></div>
+  <div class="s-item"><span class="s-dot"></span><span><strong>Ask FetchGPT</strong> is its own row, and turns up again inside Care — two ways in, one screen</span></div>
   <div class="s-item"><span class="s-dot"></span><span><strong>Fetch Fam</strong> replaces the Insta / TikTok / share rows — sharing your pet now has one home</span></div>
   <div class="s-item"><span class="s-dot grey"></span><span>Bottom nav stays at five tabs, untouched</span></div>
 </div>
@@ -337,15 +323,21 @@ body {
       <button class="row"><span class="row-label">From</span><span class="row-value">Breeder</span><span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span></button>
     </div>
 
-    <!-- ═══ NEW: Care ═══ -->
+    <!-- ═══ NEW: Charlie's care ═══ -->
     <div class="card">
-      <div class="card-head">
-        <span class="card-head-title">Charlie's care</span>
-        <span class="new-pill">NEW</span>
-      </div>
+      <button class="row inset" onclick="openFam('screen-care')">
+        <span class="row-emoji">📅</span><span class="row-label">Charlie's care</span>
+        <span class="new-pill" style="margin-left:8px">NEW</span>
+        <span class="chev" style="margin-left:auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>
+    </div>
 
-      <button class="card-foot" onclick="openFam('screen-care')">
-        <span>📅</span><span>See all of Charlie's care</span>
+    <!-- ═══ NEW: FetchGPT — its own row here, and reachable again from
+             inside Care, because a question is the cheapest first step ═══ -->
+    <div class="card">
+      <button class="row inset" onclick="openFam('screen-ask')">
+        <span class="ask-mark">F</span><span class="row-label">Ask FetchGPT</span>
+        <span class="new-pill" style="margin-left:8px">NEW</span>
         <span class="chev" style="margin-left:auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
       </button>
     </div>
