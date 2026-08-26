@@ -1,0 +1,2165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fetch Training — Mockup</title>
+<style>
+/* ── Circular Std (Fetch brand font) ───────────────────────────── */
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Book.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Medium.otf') format('opentype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Circular Std";
+  src: url('fonts/CircularStd-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Fetch Design System tokens (matched to the live app) ──────── */
+:root {
+  --ink-1:         #1b1b1c;
+  --ink-faint:     #9a9a9c;
+  --neutral-0:     #ffffff;
+  --neutral-100:   #fbeff6;
+  --neutral-150:   #f3e3ec;
+  --neutral-200:   #e6d2dd;
+  --neutral-400:   #8a7a82;
+  --pink:          #fda9ff;
+  --pink-soft:     #fec9ff;
+  --pink-ink:      #b7468d;
+  --green:         #a0eb8d;
+  --green-soft:    #dff3da;
+  --green-ink:     #008a20;
+  --blue-soft:     #d6deff;
+  --blue-ink:      #4a5dd4;
+  --orange-soft:   #ffe7c2;
+  --orange-ink:    #c45500;
+  --pink-cta:      #fa6fd8;
+
+  --background:    #f8f6f1;
+  --surface:       #ffffff;
+  --surface-muted: #f3f1ec;
+  --foreground:    #111112;
+  --muted:         #6b6b6e;
+  --muted-strong:  #3a3a3c;
+  --border:        #e4e0d8;
+  --border-subtle: rgba(5, 5, 5, 0.07);
+  --interactive:   #111112;
+
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: 0 4px 12px -4px rgba(5,5,5,.10), 0 1px 3px rgba(5,5,5,.05);
+  --shadow-lg: 0 20px 48px -20px rgba(5,5,5,.16);
+
+  --r-sm:  0.5rem;
+  --r-md:  0.625rem;
+  --r-lg:  0.875rem;
+  --r-xl:  1.25rem;
+  --r-2xl: 1.5rem;
+  --r-f:   9999px;
+
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --fast:  120ms;
+  --base:  200ms;
+  --slow:  400ms;
+}
+
+body {
+  font-family: "Circular Std", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: #ddd8d0;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 36px 16px;
+  gap: 40px;
+}
+
+/* ── Embed mode: the file rendered as just a phone, for the rail ── */
+body.embed { padding: 12px; gap: 0; min-height: 0; background: #ddd8d0; }
+body.embed .notes, body.embed .rail { display: none; }
+
+/* ── Demo rail ───────────────────────────────────────────────── */
+.rail { width: 440px; flex-shrink: 0; }
+.rail-cap { padding: 0 6px 14px; }
+.rail-badge {
+  display: inline-block; background: #111112; color: #fff;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px;
+  padding: 5px 11px; border-radius: 9999px; margin-bottom: 10px;
+}
+.rail-h { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: #1b1b1c; }
+.rail-s { font-size: 12.5px; color: #4b4741; line-height: 1.55; margin-top: 6px; }
+.rail-frame {
+  width: 440px; height: 900px; border: 0; display: block;
+  border-radius: 24px; background: #ddd8d0;
+}
+.rail-foot { display: flex; gap: 8px; padding: 12px 6px 0; }
+.rail-foot button {
+  border: 1px solid rgba(0,0,0,0.14); background: rgba(255,255,255,0.7);
+  border-radius: 9999px; padding: 8px 15px;
+  font-family: inherit; font-size: 12px; font-weight: 700; color: #1b1b1c;
+  cursor: pointer;
+}
+.rail-foot button:hover { background: #fff; }
+
+/* ── Phone frame ─────────────────────────────────────────────── */
+.phone {
+  position: relative;
+  width: 390px; height: 844px;
+  background: var(--background);
+  border-radius: 50px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 0 0 9px #111,
+    0 0 0 11px #2a2a2a,
+    0 40px 100px rgba(0,0,0,0.5),
+    0 20px 40px rgba(0,0,0,0.25);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 34px;
+  background: #111; border-radius: 20px;
+  z-index: 100;
+}
+.phone::after {
+  content: '';
+  position: absolute;
+  right: -12px; top: 140px;
+  width: 4px; height: 64px;
+  background: #222; border-radius: 2px;
+  box-shadow: 0 80px 0 #222, 0 144px 0 #222;
+}
+
+.status-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 28px 6px;
+  font-size: 13px; font-weight: 700;
+  color: var(--foreground);
+  position: relative; z-index: 50;
+  letter-spacing: -0.2px;
+  background: var(--background);
+}
+.status-icons { display: flex; align-items: center; gap: 6px; }
+
+/* ── Screen system ───────────────────────────────────────────── */
+.screen {
+  position: absolute; inset: 0;
+  background: var(--background);
+  transform: translateX(105%);
+  transition: transform var(--slow) var(--ease-out);
+  overflow-y: auto; overflow-x: hidden;
+  padding-top: 42px; padding-bottom: 96px;
+  scrollbar-width: none;
+  overflow-anchor: none;
+}
+.screen::-webkit-scrollbar { display: none; }
+.screen.active   { transform: translateX(0); }
+.screen.slide-out { transform: translateX(-28%); }
+#screen-today { transform: translateX(0); }
+
+/* ── Headers ─────────────────────────────────────────────────── */
+.app-header {
+  background: var(--background);
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 16px 12px;
+}
+.app-header h1 {
+  font-size: 24px; font-weight: 700;
+  letter-spacing: -0.6px; color: var(--foreground);
+}
+.header-pet {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 7px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-f);
+  padding: 4px 12px 4px 5px;
+  cursor: pointer; font-family: inherit;
+}
+.header-pet-avi {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--pink-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.header-pet-name { font-size: 13px; font-weight: 700; color: var(--foreground); }
+
+.sub-header {
+  background: var(--background);
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 16px 16px;
+}
+.sub-header h1 {
+  font-size: 20px; font-weight: 700;
+  letter-spacing: -0.4px; color: var(--foreground);
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.back-btn {
+  width: 34px; height: 34px; flex-shrink: 0;
+  background: var(--surface); border: 1px solid rgba(5,5,5,0.06);
+  cursor: pointer; color: var(--foreground);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--r-f);
+  transition: background var(--fast);
+}
+.back-btn:hover { background: #f2f0ec; }
+
+/* ── Segmented sub-nav (the training surface's own tabs) ──────── */
+.seg {
+  display: flex; gap: 4px;
+  padding: 4px; margin: 0 16px 16px;
+  background: var(--surface-muted);
+  border-radius: var(--r-f);
+}
+.seg button {
+  flex: 1; border: none; background: none;
+  font-family: inherit; font-size: 12.5px; font-weight: 700;
+  color: var(--muted); padding: 8px 4px;
+  border-radius: var(--r-f); cursor: pointer;
+  transition: background var(--fast), color var(--fast);
+  white-space: nowrap;
+}
+.seg button.on { background: var(--surface); color: var(--foreground); }
+
+/* ── Section heads ───────────────────────────────────────────── */
+.sec-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 18px 20px 8px;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.3px; text-transform: uppercase;
+  color: var(--muted);
+}
+.sec-head span:last-child { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--ink-faint); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  margin: 0 12px 12px;
+  overflow: hidden;
+}
+
+/* ── Today: the bond header ──────────────────────────────────── */
+.bond {
+  margin: 0 12px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-2xl);
+  padding: 18px 18px 16px;
+}
+.bond-top { display: flex; align-items: center; gap: 13px; margin-bottom: 15px; }
+.bond-avi {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--pink-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 27px; flex-shrink: 0;
+}
+.bond-pair {
+  position: relative; width: 76px; height: 52px; flex-shrink: 0;
+}
+.bond-pair .a1, .bond-pair .a2 {
+  position: absolute; top: 0;
+  width: 50px; height: 50px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 25px; border: 2.5px solid var(--surface);
+}
+.bond-pair .a1 { left: 0; background: var(--pink-soft); z-index: 2; }
+.bond-pair .a2 { left: 28px; background: var(--blue-soft); font-size: 22px; }
+.bond-title { font-size: 17px; font-weight: 700; letter-spacing: -0.35px; line-height: 1.25; }
+.bond-sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+
+.track { margin-bottom: 11px; }
+.track:last-child { margin-bottom: 0; }
+.track-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.track-label { font-size: 12.5px; font-weight: 700; color: var(--foreground); }
+.track-val { font-size: 11.5px; color: var(--muted); font-weight: 500; }
+.bar { height: 7px; background: var(--surface-muted); border-radius: var(--r-f); overflow: hidden; }
+.bar > i {
+  display: block; height: 100%; border-radius: var(--r-f);
+  transition: width var(--slow) var(--ease-out);
+}
+.bar.him > i { background: var(--pink-cta); }
+.bar.you > i { background: var(--blue-ink); }
+
+/* ── Today's session — the one daily thing ───────────────────── */
+.today {
+  margin: 0 12px 12px;
+  background: var(--foreground);
+  border-radius: var(--r-2xl);
+  padding: 20px 18px 18px;
+  color: #fff;
+  position: relative; overflow: hidden;
+}
+.today::after {
+  content: ''; position: absolute;
+  right: -46px; top: -46px;
+  width: 150px; height: 150px; border-radius: 50%;
+  background: rgba(253,169,255,0.16);
+}
+.today-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+  text-transform: uppercase; color: var(--pink-soft);
+  display: flex; align-items: center; gap: 7px;
+  margin-bottom: 9px; position: relative; z-index: 1;
+}
+.today-title {
+  font-size: 21px; font-weight: 700; letter-spacing: -0.5px;
+  line-height: 1.2; margin-bottom: 7px; position: relative; z-index: 1;
+}
+.today-text {
+  font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,0.72);
+  margin-bottom: 15px; position: relative; z-index: 1;
+}
+.today-meta {
+  display: flex; gap: 7px; margin-bottom: 16px;
+  position: relative; z-index: 1; flex-wrap: wrap;
+}
+.chip {
+  background: rgba(255,255,255,0.13);
+  border-radius: var(--r-f);
+  padding: 5px 11px;
+  font-size: 11.5px; font-weight: 500;
+  display: flex; align-items: center; gap: 5px;
+}
+.btn-start {
+  width: 100%; border: none;
+  background: var(--pink-cta); color: #fff;
+  font-family: inherit; font-size: 15px; font-weight: 700;
+  padding: 15px; border-radius: var(--r-f);
+  cursor: pointer; position: relative; z-index: 1;
+  transition: transform var(--fast) var(--ease-spring), opacity var(--fast);
+}
+.btn-start:active { transform: scale(0.975); }
+.today-skip {
+  width: 100%; background: none; border: none;
+  color: rgba(255,255,255,0.5); font-family: inherit;
+  font-size: 12.5px; font-weight: 500; padding: 11px 0 0;
+  cursor: pointer; position: relative; z-index: 1;
+}
+
+/* done state */
+.today.done { background: var(--green-soft); color: var(--ink-1); }
+.today.done::after { background: rgba(0,138,32,0.08); }
+.today.done .today-eyebrow { color: var(--green-ink); }
+.today.done .today-text { color: var(--muted-strong); }
+.today.done .chip { background: rgba(0,138,32,0.10); }
+
+/* ── Streak strip ────────────────────────────────────────────── */
+.streak {
+  margin: 0 12px 12px; padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+}
+.streak-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.streak-n { font-size: 13.5px; font-weight: 700; }
+.streak-n em { font-style: normal; color: var(--orange-ink); }
+.streak-note { font-size: 11.5px; color: var(--muted); }
+.dots { display: flex; justify-content: space-between; gap: 5px; }
+.dot { flex: 1; text-align: center; }
+.dot i {
+  display: block; width: 100%; aspect-ratio: 1;
+  max-width: 30px; margin: 0 auto 5px;
+  border-radius: 50%;
+  background: var(--surface-muted);
+  border: 1.5px solid transparent;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-style: normal;
+}
+.dot.hit i { background: var(--green-soft); color: var(--green-ink); }
+.dot.cur i { background: var(--surface); border-color: var(--foreground); }
+.dot span { font-size: 10px; color: var(--ink-faint); font-weight: 500; }
+
+/* ── Tools row (Woofz's signature) ───────────────────────────── */
+.tools { display: flex; gap: 8px; padding: 0 12px 12px; }
+.tool {
+  flex: 1; background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: 13px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: pointer; font-family: inherit;
+  transition: transform var(--fast) var(--ease-spring);
+}
+.tool:active { transform: scale(0.95); }
+.tool-ico { font-size: 20px; }
+.tool-lbl { font-size: 11.5px; font-weight: 700; color: var(--foreground); }
+
+/* ── List rows ───────────────────────────────────────────────── */
+.row {
+  width: 100%; background: none; border: none;
+  font-family: inherit; text-align: left;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--fast);
+}
+.row:last-child { border-bottom: none; }
+.row:hover { background: #fafaf8; }
+.row-ico {
+  width: 38px; height: 38px; border-radius: var(--r-md);
+  background: var(--surface-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.row-body { flex: 1; min-width: 0; display: block; }
+.row-title { display: block; font-size: 14.5px; font-weight: 700; letter-spacing: -0.2px; }
+.row-sub { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.row-chev { color: var(--ink-faint); flex-shrink: 0; }
+
+/* ── Trust ladder ────────────────────────────────────────────── */
+.ladder-hero {
+  margin: 0 12px 12px; padding: 20px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-2xl);
+}
+.ladder-goal {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+}
+.ladder-line {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.6px;
+  line-height: 1.22; margin-bottom: 12px;
+}
+.ladder-line em { font-style: normal; color: var(--ink-faint); }
+.ladder-note { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+
+.lad { padding: 0 12px; }
+.lad-item {
+  display: flex; gap: 13px;
+  position: relative; padding-bottom: 4px;
+}
+.lad-spine { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 34px; }
+.lad-disc {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0;
+  background: var(--surface-muted); color: var(--ink-faint);
+  border: 1.5px solid transparent;
+}
+.lad-item.done .lad-disc { background: var(--green-soft); color: var(--green-ink); }
+.lad-item.now  .lad-disc { background: var(--foreground); color: #fff; }
+.lad-rail { width: 2px; flex: 1; background: var(--border); margin: 4px 0; min-height: 14px; }
+.lad-item.done .lad-rail { background: var(--green); }
+.lad-item:last-child .lad-rail { display: none; }
+.lad-card {
+  flex: 1; min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: 13px 14px; margin-bottom: 10px;
+  cursor: pointer; font-family: inherit; text-align: left;
+  transition: background var(--fast);
+  width: 100%; display: block;
+}
+.lad-card:hover { background: #fafaf8; }
+.lad-item.now .lad-card { border-color: var(--foreground); border-width: 1.5px; }
+.lad-item.locked .lad-card { background: transparent; border-style: dashed; cursor: default; }
+.lad-free {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+}
+.lad-item.now .lad-free { color: var(--pink-ink); }
+.lad-title { font-size: 15px; font-weight: 700; letter-spacing: -0.25px; }
+.lad-item.locked .lad-title { color: var(--ink-faint); }
+.lad-sub { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+.lad-prog { display: flex; align-items: center; gap: 9px; margin-top: 10px; }
+.lad-prog .bar { flex: 1; height: 6px; }
+.lad-prog span { font-size: 11px; font-weight: 700; color: var(--muted); flex-shrink: 0; }
+
+/* ── Skill rows inside a level ───────────────────────────────── */
+.skill {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  width: 100%; background: none; border-left: none; border-right: none; border-top: none;
+  font-family: inherit; text-align: left; cursor: pointer;
+}
+.skill:last-child { border-bottom: none; }
+.skill-check {
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 1.8px solid var(--border); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: transparent; font-size: 12px;
+}
+.skill.got .skill-check { background: var(--green-ink); border-color: var(--green-ink); color: #fff; }
+.skill-body { flex: 1; min-width: 0; display: block; }
+.skill-name { display: block; font-size: 14px; font-weight: 700; letter-spacing: -0.2px; }
+.skill.got .skill-name { color: var(--muted); }
+.skill-sub { display: block; font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.skill-reps { font-size: 11px; font-weight: 700; color: var(--ink-faint); flex-shrink: 0; }
+
+/* ── Session player ──────────────────────────────────────────── */
+.player { padding: 0 12px; }
+.demo {
+  border-radius: var(--r-xl);
+  aspect-ratio: 16/10;
+  background: linear-gradient(140deg, #2a2733 0%, #4a3f52 50%, #6d5468 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; margin-bottom: 14px;
+}
+.demo-play {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  display: flex; align-items: center; justify-content: center;
+  color: #111; cursor: pointer; border: none;
+  transition: transform var(--fast) var(--ease-spring);
+}
+.demo-play:active { transform: scale(0.92); }
+.demo-tag {
+  position: absolute; left: 12px; bottom: 12px;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(6px);
+  color: #fff; font-size: 11px; font-weight: 700;
+  padding: 5px 10px; border-radius: var(--r-f);
+}
+.step-pips { display: flex; gap: 5px; margin-bottom: 16px; }
+.pip { flex: 1; height: 4px; border-radius: var(--r-f); background: var(--border); }
+.pip.on { background: var(--foreground); }
+.step-n {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+}
+.step-title {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.6px;
+  line-height: 1.22; margin-bottom: 9px;
+}
+.step-text { font-size: 14.5px; line-height: 1.55; color: var(--muted-strong); }
+.step-tip {
+  margin-top: 14px; padding: 13px 14px;
+  background: var(--blue-soft); border-radius: var(--r-lg);
+  font-size: 12.5px; line-height: 1.5; color: #2c3a9c;
+}
+.step-tip b { display: block; margin-bottom: 3px; color: var(--blue-ink); }
+/* Session screen lays out as a column so the footer sits above the nav
+   rather than behind it — the screen is a scroll container, so an
+   absolutely positioned footer would anchor to the content, not the viewport. */
+#screen-session { display: flex; flex-direction: column; }
+#screen-session .player { flex: 1 0 auto; }
+.player-foot {
+  flex-shrink: 0;
+  padding: 20px 16px 0;
+  display: flex; gap: 10px; align-items: center;
+}
+.btn-ghost {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--foreground); font-family: inherit;
+  font-size: 14px; font-weight: 700; padding: 14px 20px;
+  border-radius: var(--r-f); cursor: pointer;
+}
+.btn-primary {
+  flex: 1; background: var(--foreground); color: #fff;
+  border: none; font-family: inherit;
+  font-size: 15px; font-weight: 700; padding: 15px;
+  border-radius: var(--r-f); cursor: pointer;
+  transition: transform var(--fast) var(--ease-spring);
+}
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary.pink { background: var(--pink-cta); }
+
+/* ── Verdict (did he get it) ─────────────────────────────────── */
+.verdict { padding: 0 12px; }
+.verdict-q {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.6px;
+  line-height: 1.22; margin: 8px 0 6px;
+}
+.verdict-sub { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-bottom: 18px; }
+.vbtn {
+  width: 100%; text-align: left; font-family: inherit;
+  background: var(--surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg); padding: 15px 16px;
+  margin-bottom: 9px; cursor: pointer;
+  display: flex; align-items: center; gap: 13px;
+  transition: border-color var(--fast), background var(--fast);
+}
+.vbtn:hover { border-color: var(--neutral-400); }
+.vbtn-ico { font-size: 21px; flex-shrink: 0; }
+.vbtn > span:last-child { min-width: 0; }
+.vbtn-title { display: block; font-size: 14.5px; font-weight: 700; }
+.vbtn-sub { display: block; font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+/* ── Session result ──────────────────────────────────────────── */
+.result { padding: 24px 12px 0; text-align: center; }
+.result-disc {
+  width: 82px; height: 82px; border-radius: 50%;
+  background: var(--green-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; margin: 0 auto 18px;
+  animation: pop var(--slow) var(--ease-spring);
+}
+@keyframes pop { from { transform: scale(0.4); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+.result-title {
+  font-size: 24px; font-weight: 700; letter-spacing: -0.7px;
+  line-height: 1.2; margin-bottom: 8px;
+}
+.result-sub { font-size: 14px; color: var(--muted); line-height: 1.55; margin-bottom: 20px; padding: 0 8px; }
+.result-stats {
+  display: flex; background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl); overflow: hidden; margin-bottom: 12px;
+}
+.rstat { flex: 1; padding: 15px 8px; text-align: center; border-right: 1px solid var(--border-subtle); }
+.rstat:last-child { border-right: none; }
+.rstat-n { font-size: 19px; font-weight: 700; letter-spacing: -0.5px; }
+.rstat-l { font-size: 10.5px; color: var(--muted); margin-top: 3px; font-weight: 500; }
+
+/* ── Programme cards ─────────────────────────────────────────── */
+.prog-card {
+  margin: 0 12px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  overflow: hidden; cursor: pointer;
+  width: calc(100% - 24px);
+  font-family: inherit; text-align: left; display: block;
+  transition: border-color var(--fast);
+}
+.prog-card:hover { border-color: var(--neutral-400); }
+.prog-banner {
+  height: 106px; position: relative;
+  display: flex; align-items: flex-end; padding: 13px;
+}
+.prog-banner.a { background: linear-gradient(135deg, #3d3350 0%, #7a5570 55%, #c98fa8 100%); }
+.prog-banner.b { background: linear-gradient(135deg, #223b3a 0%, #3f6b58 55%, #8fb98c 100%); }
+.prog-banner.c { background: linear-gradient(135deg, #3a3324 0%, #7a6238 55%, #d0a86a 100%); }
+.prog-face {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.prog-banner-txt { margin-left: 11px; color: #fff; min-width: 0; }
+.prog-expert { font-size: 14.5px; font-weight: 700; letter-spacing: -0.2px; }
+.prog-cred { font-size: 11px; color: rgba(255,255,255,0.78); margin-top: 1px; }
+.prog-powered {
+  position: absolute; top: 11px; right: 11px;
+  background: rgba(255,255,255,0.16); backdrop-filter: blur(6px);
+  color: #fff; font-size: 9.5px; font-weight: 700;
+  letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 4px 9px; border-radius: var(--r-f);
+}
+.prog-body { padding: 14px 15px 15px; }
+.prog-title { font-size: 16.5px; font-weight: 700; letter-spacing: -0.35px; line-height: 1.25; }
+.prog-text { font-size: 12.5px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+.prog-meta { display: flex; gap: 7px; margin-top: 12px; flex-wrap: wrap; }
+.mchip {
+  background: var(--surface-muted); border-radius: var(--r-f);
+  padding: 5px 10px; font-size: 11px; font-weight: 500; color: var(--muted-strong);
+}
+.mchip.free { background: var(--green-soft); color: var(--green-ink); font-weight: 700; }
+.mchip.soon { background: var(--orange-soft); color: var(--orange-ink); font-weight: 700; }
+
+/* ── Programme detail ────────────────────────────────────────── */
+.pd-hero {
+  height: 190px; position: relative;
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: flex-end;
+  padding: 18px; margin-bottom: 14px;
+}
+.pd-hero .prog-powered { top: 18px; bottom: auto; right: 18px; }
+.pd-expert { color: #fff; font-size: 13px; font-weight: 700; opacity: 0.85; }
+.pd-title {
+  color: #fff; font-size: 25px; font-weight: 700;
+  letter-spacing: -0.7px; line-height: 1.15; margin-top: 5px; max-width: 82%;
+}
+.pd-start {
+  margin: 0 12px 12px; padding: 15px 16px;
+  background: var(--foreground); color: #fff;
+  border-radius: var(--r-xl);
+  display: flex; align-items: center; gap: 13px;
+}
+.pd-start-ico { font-size: 21px; }
+.pd-start-t { font-size: 14px; font-weight: 700; }
+.pd-start-s { font-size: 12px; color: rgba(255,255,255,0.68); margin-top: 2px; line-height: 1.4; }
+.wk {
+  display: flex; gap: 12px; padding: 13px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.wk:last-child { border-bottom: none; }
+.wk-n {
+  width: 30px; height: 30px; border-radius: var(--r-sm);
+  background: var(--surface-muted); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--muted);
+}
+.wk-t { font-size: 14px; font-weight: 700; letter-spacing: -0.2px; }
+.wk-s { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
+.pd-buy { padding: 6px 12px 20px; }
+.pd-price {
+  display: flex; align-items: baseline; gap: 8px;
+  justify-content: center; margin-bottom: 12px;
+}
+.pd-price s { color: var(--ink-faint); font-size: 14px; }
+.pd-price b { font-size: 17px; color: var(--green-ink); }
+
+/* ── Progress / passport ─────────────────────────────────────── */
+.pass {
+  margin: 0 12px 12px; padding: 20px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-2xl);
+  text-align: center;
+}
+.pass-line {
+  font-size: 20px; font-weight: 700; letter-spacing: -0.55px;
+  line-height: 1.28; margin-bottom: 6px;
+}
+.pass-sub { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 12px 12px; }
+.stat {
+  background: var(--surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg); padding: 15px 14px;
+}
+.stat-n { font-size: 23px; font-weight: 700; letter-spacing: -0.7px; }
+.stat-l { font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
+
+.mile { display: flex; gap: 13px; padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); }
+.mile:last-child { border-bottom: none; }
+.mile-ico {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--surface-muted); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.mile-t { font-size: 14px; font-weight: 700; letter-spacing: -0.2px; }
+.mile-d { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+.thenow { display: flex; gap: 10px; padding: 0 12px 12px; }
+.tn { flex: 1; }
+.tn-frame {
+  aspect-ratio: 3/4; border-radius: var(--r-lg);
+  display: flex; align-items: flex-end; padding: 10px;
+  position: relative; overflow: hidden;
+}
+.tn-frame.then { background: linear-gradient(160deg, #55505c, #8b8090); }
+.tn-frame.now  { background: linear-gradient(160deg, #3f5a4a, #86ad8b); }
+.tn-lbl {
+  color: #fff; font-size: 11px; font-weight: 700;
+  background: rgba(0,0,0,0.42); backdrop-filter: blur(4px);
+  padding: 4px 9px; border-radius: var(--r-f);
+}
+.tn-cap { font-size: 11.5px; color: var(--muted); margin-top: 7px; line-height: 1.4; }
+
+.note {
+  display: flex; gap: 9px; align-items: flex-start;
+  margin: 4px 20px 20px;
+  font-size: 11.5px; color: var(--muted); line-height: 1.5;
+}
+
+/* ── Setup: the file read ────────────────────────────────────── */
+.file-hero { padding: 6px 20px 16px; }
+.file-eyebrow {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--ink-faint); margin-bottom: 7px;
+}
+.file-line {
+  font-size: 21px; font-weight: 700; letter-spacing: -0.55px;
+  line-height: 1.25; margin-bottom: 8px;
+}
+.file-note { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.finding { display: flex; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); }
+.finding:last-child { border-bottom: none; }
+.finding-ico {
+  width: 34px; height: 34px; border-radius: var(--r-f); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+  background: var(--surface-muted);
+}
+.finding-body { flex: 1; min-width: 0; }
+.finding-t { display: block; font-size: 14px; font-weight: 700; letter-spacing: -0.2px; }
+.finding-d { display: block; font-size: 11.5px; color: var(--ink-faint); margin-top: 2px; }
+.finding-m {
+  display: block; font-size: 12px; color: var(--muted-strong); margin-top: 7px;
+  line-height: 1.45; padding-left: 10px; border-left: 2px solid var(--border);
+}
+.gap-box {
+  margin: 4px 12px 14px; padding: 15px 16px;
+  background: var(--orange-soft); border-radius: var(--r-lg);
+}
+.gap-t { font-size: 13.5px; font-weight: 700; color: var(--orange-ink); margin-bottom: 5px; }
+.gap-d { font-size: 12.5px; color: #6a4a1e; line-height: 1.5; }
+.setup-foot { padding: 4px 12px 22px; }
+.link-btn {
+  width: 100%; background: none; border: none; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  color: var(--muted); padding: 13px 0 0;
+}
+.demo-toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin: 0 12px 14px; padding: 11px 14px;
+  background: var(--surface-muted); border-radius: var(--r-lg);
+  font-size: 11.5px; color: var(--muted); line-height: 1.4;
+}
+.demo-toggle button {
+  flex-shrink: 0; border: 1px solid var(--border); background: var(--surface);
+  border-radius: var(--r-f); padding: 6px 13px;
+  font-family: inherit; font-size: 11.5px; font-weight: 700; color: var(--foreground);
+  cursor: pointer;
+}
+
+/* ── Quiz ────────────────────────────────────────────────────── */
+#screen-quiz { display: flex; flex-direction: column; }
+.qz { flex: 1 0 auto; padding: 0 12px; }
+.qz-bar { display: flex; gap: 4px; padding: 2px 12px 18px; }
+.qz-bar i { flex: 1; height: 4px; border-radius: var(--r-f); background: var(--border); }
+.qz-bar i.on { background: var(--foreground); }
+.qz-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--blue-soft); color: var(--blue-ink);
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 5px 10px; border-radius: var(--r-f); margin-bottom: 11px;
+}
+.qz-tag.blind { background: var(--orange-soft); color: var(--orange-ink); }
+.qz-q {
+  font-size: 20px; font-weight: 700; letter-spacing: -0.5px;
+  line-height: 1.3; margin-bottom: 7px;
+}
+.qz-sub { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 18px; }
+.qz-opt {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  background: var(--surface); border: 1.5px solid transparent;
+  border-radius: var(--r-lg); padding: 14px 15px; margin-bottom: 8px;
+  font-family: inherit; cursor: pointer; transition: border-color var(--fast), background var(--fast);
+}
+.qz-opt.sel { border-color: var(--foreground); }
+.qz-tick {
+  width: 21px; height: 21px; border-radius: var(--r-f); flex-shrink: 0;
+  border: 1.5px solid var(--border); background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: #fff;
+}
+.qz-opt.sel .qz-tick { background: var(--foreground); border-color: var(--foreground); }
+.qz-opt.multi .qz-tick { border-radius: var(--r-sm); }
+.qz-otxt { flex: 1; min-width: 0; }
+.qz-ot { display: block; font-size: 14.5px; font-weight: 700; letter-spacing: -0.2px; }
+.qz-os { display: block; font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.qz-guess {
+  font-size: 10.5px; font-weight: 700; color: var(--green-ink);
+  background: var(--green-soft); padding: 3px 8px; border-radius: var(--r-f);
+  flex-shrink: 0;
+}
+.qz-foot { display: flex; gap: 10px; padding: 14px 12px 22px; }
+
+/* ── Draft plan ──────────────────────────────────────────────── */
+.draft-hero { padding: 20px 20px 16px; text-align: center; }
+.draft-eyebrow {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--ink-faint); margin-bottom: 8px;
+}
+.draft-line { font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.25; }
+.draft-line em { font-style: normal; color: var(--ink-faint); }
+.draft-note { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin-top: 9px; }
+.because { display: flex; gap: 11px; padding: 13px 16px; border-bottom: 1px solid var(--border-subtle); }
+.because:last-child { border-bottom: none; }
+.because-ico { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.because-body { flex: 1; min-width: 0; }
+.because-t { display: block; font-size: 13.5px; font-weight: 700; letter-spacing: -0.2px; }
+.because-d { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+.because-src {
+  display: inline-block; font-size: 10px; font-weight: 700; margin-top: 6px;
+  padding: 3px 7px; border-radius: var(--r-f);
+  background: var(--blue-soft); color: var(--blue-ink);
+}
+.because-src.you { background: var(--orange-soft); color: var(--orange-ink); }
+
+/* ── Bottom nav — the live app's five icons, paw lit ──────────── */
+.bottom-nav {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: var(--background);
+  display: flex; align-items: center; justify-content: space-around;
+  padding: 14px 0 26px; z-index: 30;
+}
+.nav-tab {
+  background: none; border: none; cursor: pointer; padding: 6px 14px;
+  color: #c9c6c0;
+  display: flex; align-items: center; justify-content: center;
+  transition: color var(--fast);
+}
+.nav-tab.active { color: var(--foreground); }
+
+/* ── Sheet + toast ───────────────────────────────────────────── */
+.sheet {
+  position: absolute; inset: 0; z-index: 80;
+  background: rgba(5,5,5,0.34);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--base);
+  display: flex; align-items: flex-end;
+}
+.sheet.open { opacity: 1; pointer-events: auto; }
+.sheet-inner {
+  width: 100%; background: var(--surface);
+  border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+  padding: 10px 16px 30px;
+  transform: translateY(100%);
+  transition: transform var(--base) var(--ease-out);
+}
+.sheet.open .sheet-inner { transform: translateY(0); }
+.sheet-handle {
+  width: 38px; height: 4px; border-radius: var(--r-f);
+  background: var(--border); margin: 0 auto 16px;
+}
+.sheet-title { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 6px; }
+.sheet-text { font-size: 13.5px; color: var(--muted); line-height: 1.55; margin-bottom: 16px; }
+
+.clicker {
+  width: 130px; height: 130px; border-radius: 50%;
+  background: var(--pink-cta); border: none; cursor: pointer;
+  color: #fff; font-family: inherit; font-size: 15px; font-weight: 700;
+  margin: 4px auto 18px; display: flex; align-items: center; justify-content: center;
+  transition: transform 90ms var(--ease-spring);
+  box-shadow: 0 8px 0 #d4499f;
+}
+.clicker:active { transform: translateY(6px); box-shadow: 0 2px 0 #d4499f; }
+
+.toast {
+  position: absolute; bottom: 88px; left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(27,27,28,0.92); backdrop-filter: blur(8px);
+  color: #fff; padding: 10px 18px; border-radius: var(--r-f);
+  font-size: 12.5px; font-weight: 500;
+  opacity: 0; transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none; z-index: 90;
+  max-width: 300px; text-align: center; line-height: 1.45;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Side annotation panel ───────────────────────────────────── */
+.notes {
+  width: 300px; color: #33302c; padding-top: 10px;
+  font-size: 13px; line-height: 1.6;
+}
+.notes h2 { font-size: 17px; letter-spacing: -0.4px; margin-bottom: 4px; }
+.notes .lede { font-size: 12.5px; color: #6b6660; margin-bottom: 18px; }
+.notes h3 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px;
+  color: #857f77; margin: 18px 0 7px;
+}
+.notes p { font-size: 12.5px; color: #4b4741; margin-bottom: 9px; }
+.notes ul { margin: 0 0 9px 15px; font-size: 12.5px; color: #4b4741; }
+.notes li { margin-bottom: 5px; }
+.notes b { color: #1b1b1c; }
+.jump {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px;
+}
+.jump button {
+  background: #fff; border: 1px solid #cfc9c0;
+  border-radius: var(--r-f); padding: 6px 12px;
+  font-family: inherit; font-size: 11.5px; font-weight: 700;
+  color: #33302c; cursor: pointer;
+}
+.jump button:hover { background: #f4f1ec; }
+@media (max-width: 860px) { .notes { display: none } }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <svg width="17" height="11" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8 5a6 6 0 0 1 4.2 1.7l1.4-1.4A8 8 0 0 0 8 3a8 8 0 0 0-5.6 2.3l1.4 1.4A6 6 0 0 1 8 5z"/></svg>
+      <svg width="24" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="16" height="8" rx="1.6" fill="currentColor"/><path d="M23 4v4a2 2 0 0 0 0-4z" fill="currentColor" opacity="0.4"/></svg>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TODAY — the daily habit. One thing, five minutes, outdoors.
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="screen active" id="screen-today">
+    <div class="app-header">
+      <button class="back-btn" onclick="toast('Back to Charlie\u2019s profile')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Training</h1>
+      <button class="header-pet" onclick="toast('Switch pet — Charlie, Mango')">
+        <span class="header-pet-avi">🐕</span>
+        <span class="header-pet-name">Charlie</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-faint)"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="seg" id="seg-today"></div>
+
+    <!-- The pair. Two tracks, because the owner is training too. -->
+    <div class="bond">
+      <div class="bond-top">
+        <div class="bond-pair">
+          <div class="a1">🐕</div>
+          <div class="a2">🧍</div>
+        </div>
+        <div style="min-width:0">
+          <div class="bond-title">You and Charlie</div>
+          <div class="bond-sub">Level 4 of 7 · working toward off lead</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-row"><span class="track-label">What he can do</span><span class="track-val">14 of 26 skills</span></div>
+        <div class="bar him"><i style="width:54%"></i></div>
+      </div>
+      <div class="track">
+        <div class="track-row"><span class="track-label">What you've got better at</span><span class="track-val">Timing, patience</span></div>
+        <div class="bar you"><i style="width:71%"></i></div>
+      </div>
+    </div>
+
+    <!-- Today's one thing -->
+    <div class="today" id="today-card">
+      <div class="today-eyebrow"><span>●</span> Today with Charlie</div>
+      <div class="today-title">Recall past a distraction</div>
+      <div class="today-text">On your afternoon walk, wait until he's sniffing something interesting — then call him once. Once only. That's the whole thing.</div>
+      <div class="today-meta">
+        <span class="chip">⏱ 5 min</span>
+        <span class="chip">🌳 On a walk</span>
+        <span class="chip">🦴 Bring treats</span>
+      </div>
+      <button class="btn-start" onclick="startSession()">Start today's session</button>
+      <button class="today-skip" onclick="toast('No worries — we\u2019ll try again tomorrow')">Not today</button>
+    </div>
+
+    <!-- Streak -->
+    <div class="streak">
+      <div class="streak-top">
+        <div class="streak-n">🔥 <em id="streak-count">18 days</em> in a row</div>
+        <div class="streak-note">Best: 24 days</div>
+      </div>
+      <div class="dots" id="streak-dots"></div>
+    </div>
+
+    <!-- Woofz's signature: tools that live in the app -->
+    <div class="sec-head"><span>Tools</span></div>
+    <div class="tools">
+      <button class="tool" onclick="openClicker()"><span class="tool-ico">👆</span><span class="tool-lbl">Clicker</span></button>
+      <button class="tool" onclick="toast('Whistle — 3 pitches, for recall at distance')"><span class="tool-ico">📣</span><span class="tool-lbl">Whistle</span></button>
+      <button class="tool" onclick="toast('Session timer — keeps it short, which is the point')"><span class="tool-ico">⏱</span><span class="tool-lbl">Timer</span></button>
+      <button class="tool" onclick="toast('Ask a Fetch vet nurse — free with cover')"><span class="tool-ico">💬</span><span class="tool-lbl">Ask</span></button>
+    </div>
+
+    <!-- Struggling? routes to the expert -->
+    <div class="sec-head"><span>Stuck on something</span></div>
+    <div class="card">
+      <button class="row" onclick="go('screen-programme')">
+        <span class="row-ico">😰</span>
+        <span class="row-body">
+          <span class="row-title">He panics when you leave</span>
+          <span class="row-sub">Isabella Rich has a 6-week programme for exactly this</span>
+        </span>
+        <span class="row-chev"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>
+      <button class="row" onclick="go('screen-programmes')">
+        <span class="row-ico">🎓</span>
+        <span class="row-body">
+          <span class="row-title">Something else</span>
+          <span class="row-sub">Programmes from trainers and behaviourists</span>
+        </span>
+        <span class="row-chev"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>
+    </div>
+
+    <div class="note">
+      <span>🔒</span>
+      <span>Charlie's training is private to you. Nothing here is shared, ranked or compared with anyone else's dog.</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PLAN — the trust ladder. Progress measured in freedom.
+  ═══════════════════════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════════════════════
+       SETUP 1 — THE FILE READ. Fetch shows what it already holds
+       before it asks for anything. Earns the right to the quiz.
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-setup">
+    <div class="sub-header">
+      <button class="back-btn" onclick="back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Charlie's plan</h1>
+    </div>
+
+    <div class="file-hero">
+      <div class="file-eyebrow">Before we ask you anything</div>
+      <div class="file-line" id="file-line">We read Charlie's file.</div>
+      <div class="file-note" id="file-note">Four years of claims, his breed and his age. Here's what stood out — and what it might mean for training.</div>
+    </div>
+
+    <div class="card" id="file-findings"></div>
+
+    <div class="gap-box">
+      <div class="gap-t" id="gap-t">What his file can't tell us</div>
+      <div class="gap-d" id="gap-d">Pulling, barking, jumping up, coping alone — none of it ever generates a claim. And his file can't tell us what <b>you</b> want out of this. Six questions and we're done.</div>
+    </div>
+
+    <div class="demo-toggle">
+      <span id="demo-toggle-txt">Mockup control: see the same flow for a dog with a clean file.</span>
+      <button onclick="toggleFile()" id="demo-toggle-btn">Switch</button>
+    </div>
+
+    <div class="setup-foot">
+      <button class="btn-primary" style="width:100%" onclick="startQuiz()">Start</button>
+    </div>
+
+    <div class="note">
+      <span>🔒</span>
+      <span>Claims data is used here to shape training only. It is never a diagnosis, and nothing you answer changes your premium or your cover.</span>
+    </div>
+  </div>
+
+  <!-- ══ SETUP 2 — THE QUIZ ══ -->
+  <div class="screen" id="screen-quiz">
+    <div class="sub-header">
+      <button class="back-btn" onclick="quizBack()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1 id="quiz-h">Question 1</h1>
+    </div>
+    <div class="qz-bar" id="quiz-bar"></div>
+    <div class="qz" id="quiz-body"></div>
+    <div class="qz-foot">
+      <button class="btn-primary" style="width:100%" id="quiz-next" onclick="quizNext()">Next</button>
+    </div>
+  </div>
+
+  <!-- ══ SETUP 3 — THE DRAFT ══ -->
+  <div class="screen" id="screen-draft">
+    <div class="sub-header">
+      <button class="back-btn" onclick="back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>His plan</h1>
+    </div>
+
+    <div class="draft-hero">
+      <div class="draft-eyebrow">Here's what we'd do</div>
+      <div class="draft-line" id="draft-line">Seven levels, ending with a dog you can trust <em>off lead.</em></div>
+      <div class="draft-note" id="draft-note">Starting at level 4, because that's where you told us he is.</div>
+    </div>
+
+    <div class="sec-head"><span>Why it looks like this</span></div>
+    <div class="card" id="draft-because"></div>
+
+    <div class="sec-head"><span>What we changed for him</span></div>
+    <div class="card" id="draft-tweaks"></div>
+
+    <div class="setup-foot">
+      <button class="btn-primary" style="width:100%" onclick="acceptPlan()">Start with this plan</button>
+      <button class="link-btn" onclick="startQuiz()">Change an answer</button>
+    </div>
+
+    <div class="note">
+      <span>🐾</span>
+      <span>Nothing here is locked. If he surprises you in either direction, the plan moves — you'll never have to start again.</span>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-plan">
+    <div class="app-header">
+      <button class="back-btn" onclick="go('screen-today')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>His plan</h1>
+    </div>
+    <div class="seg" id="seg-plan"></div>
+
+    <div class="ladder-hero">
+      <div class="ladder-goal">Where this is going</div>
+      <div class="ladder-line">Charlie is a dog you can trust <em>off lead.</em></div>
+      <div class="ladder-note">Seven levels, and each one is a real thing you get to do together — not a trick. You're on level 4.</div>
+    </div>
+
+    <div class="lad" id="ladder"></div>
+
+    <div class="sec-head"><span>How this plan was built</span></div>
+    <div class="card">
+      <button class="row" onclick="go('screen-setup')">
+        <span class="row-ico">📄</span>
+        <span class="row-body">
+          <span class="row-title">Three claims and six answers</span>
+          <span class="row-sub">What we read, what we asked, and why level 4 is where you started</span>
+        </span>
+        <span class="row-chev">›</span>
+      </button>
+      <button class="row" onclick="startQuiz()">
+        <span class="row-ico">🔄</span>
+        <span class="row-body">
+          <span class="row-title">Something's changed</span>
+          <span class="row-sub">Redo the questions — the plan moves, your record doesn't</span>
+        </span>
+        <span class="row-chev">›</span>
+      </button>
+    </div>
+
+    <div class="note">
+      <span>🐾</span>
+      <span>Half of this came from Charlie's file, so setup was six questions instead of fifteen. None of your answers touch your premium or your cover.</span>
+    </div>
+  </div>
+
+  <!-- ══ LEVEL DETAIL ══ -->
+  <div class="screen" id="screen-level">
+    <div class="sub-header">
+      <button class="back-btn" onclick="back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1 id="level-h">Level 4</h1>
+    </div>
+    <div class="ladder-hero">
+      <div class="ladder-goal" id="level-free">Level 4 · the freedom</div>
+      <div class="ladder-line" id="level-title">He comes back with something better on offer</div>
+      <div class="ladder-note" id="level-note"></div>
+      <div class="lad-prog" style="margin-top:14px">
+        <div class="bar him"><i style="width:60%"></i></div>
+        <span>3 / 5</span>
+      </div>
+    </div>
+
+    <div class="sec-head"><span>What he's learning</span><span>3 of 5</span></div>
+    <div class="card" id="level-skills"></div>
+
+    <div class="sec-head"><span>What you're learning</span></div>
+    <div class="card" id="level-you"></div>
+
+    <div class="note">
+      <span>💡</span>
+      <span>The level only counts as done when he does it somewhere new — a different park, a different day. That's the difference between a trick and trust.</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SESSION PLAYER — Woofz-style stepped lesson.
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-session">
+    <div class="sub-header">
+      <button class="back-btn" onclick="go('screen-today')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <h1>Recall past a distraction</h1>
+    </div>
+    <div class="player">
+      <div class="demo">
+        <button class="demo-play" onclick="toast('20-second demo — what it looks like when it works')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>
+        </button>
+        <div class="demo-tag">Isabella shows you · 0:20</div>
+      </div>
+      <div class="step-pips" id="pips"></div>
+      <div class="step-n" id="step-n">Step 1 of 4</div>
+      <div class="step-title" id="step-title"></div>
+      <div class="step-text" id="step-text"></div>
+      <div class="step-tip" id="step-tip"></div>
+    </div>
+    <div class="player-foot">
+      <button class="btn-ghost" onclick="prevStep()">Back</button>
+      <button class="btn-primary" id="step-next" onclick="nextStep()">Next</button>
+    </div>
+  </div>
+
+  <!-- ══ VERDICT ══ -->
+  <div class="screen" id="screen-verdict">
+    <div class="sub-header">
+      <button class="back-btn" onclick="back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>How did it go?</h1>
+    </div>
+    <div class="verdict">
+      <div class="verdict-q">Did he come back?</div>
+      <div class="verdict-sub">Be honest — this is what decides whether tomorrow gets easier or stays the same. Nobody else sees it.</div>
+      <button class="vbtn" onclick="finish('nailed')">
+        <span class="vbtn-ico">🎯</span>
+        <span><span class="vbtn-title">First call, straight back</span><span class="vbtn-sub">He's ready for somewhere harder</span></span>
+      </button>
+      <button class="vbtn" onclick="finish('nearly')">
+        <span class="vbtn-ico">🌤</span>
+        <span><span class="vbtn-title">Took a second, but he came</span><span class="vbtn-sub">Same again tomorrow, same spot</span></span>
+      </button>
+      <button class="vbtn" onclick="finish('no')">
+        <span class="vbtn-ico">🙃</span>
+        <span><span class="vbtn-title">Ignored me completely</span><span class="vbtn-sub">We'll make it easier — that's on the plan, not him</span></span>
+      </button>
+      <div class="note" style="margin:14px 4px 0">
+        <span>📹</span>
+        <span>Add a 10-second clip if you want one for his record. Optional, private, and genuinely worth it in twenty weeks.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RESULT ══ -->
+  <div class="screen" id="screen-result">
+    <div class="result">
+      <div class="result-disc" id="res-disc">🎯</div>
+      <div class="result-title" id="res-title">That's 18 days straight</div>
+      <div class="result-sub" id="res-sub">Six weeks ago he wouldn't look up from a sniff. Today he left it and came to you.</div>
+      <div class="result-stats">
+        <div class="rstat"><div class="rstat-n">5:12</div><div class="rstat-l">Time together</div></div>
+        <div class="rstat"><div class="rstat-n">6</div><div class="rstat-l">Good reps</div></div>
+        <div class="rstat"><div class="rstat-n">18</div><div class="rstat-l">Day streak</div></div>
+      </div>
+      <div class="card" style="margin:0 0 12px">
+        <div class="mile">
+          <div class="mile-ico">🪜</div>
+          <div style="flex:1;min-width:0;text-align:left">
+            <div class="mile-t">Level 4 is 3 of 5 done</div>
+            <div class="mile-d">Two more and he's off lead at the park</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:0 0 8px">
+        <button class="btn-primary" style="width:100%" onclick="go('screen-today')">Done for today</button>
+      </div>
+      <div class="note" style="justify-content:center;margin:6px 4px 20px">
+        <span>💰</span>
+        <span>Finishing level 4 also takes $15 off Charlie's next claim contribution.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PROGRAMMES — expert-branded, powered by Fetch.
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-programmes">
+    <div class="app-header">
+      <button class="back-btn" onclick="go('screen-today')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Programmes</h1>
+    </div>
+    <div class="seg" id="seg-programmes"></div>
+
+    <div class="note" style="margin:0 20px 14px">
+      <span>🎓</span>
+      <span>For the things a daily five minutes won't fix. Built with people who do this for a living — free with Charlie's cover.</span>
+    </div>
+
+    <button class="prog-card" onclick="go('screen-programme')">
+      <div class="prog-banner a">
+        <div class="prog-powered">Powered by Fetch</div>
+        <div class="prog-face">👩</div>
+        <div class="prog-banner-txt">
+          <div class="prog-expert">Isabella Rich</div>
+          <div class="prog-cred">Separation anxiety specialist · Melbourne</div>
+        </div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-title">Home alone, calmly</div>
+        <div class="prog-text">Six weeks to a dog who doesn't fall apart when the door closes. Ten minutes a day, and a check-in from Isabella every Sunday.</div>
+        <div class="prog-meta">
+          <span class="mchip">6 weeks</span>
+          <span class="mchip soon">Starts 1 Sept</span>
+          <span class="mchip free">Free with cover</span>
+        </div>
+      </div>
+    </button>
+
+    <button class="prog-card" onclick="toast('Marcus Webb — Loose lead, 4 weeks. Starts 15 Sept.')">
+      <div class="prog-banner b">
+        <div class="prog-powered">Powered by Fetch</div>
+        <div class="prog-face">🧔</div>
+        <div class="prog-banner-txt">
+          <div class="prog-expert">Marcus Webb</div>
+          <div class="prog-cred">Reactivity &amp; lead work · Sydney</div>
+        </div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-title">Walking past other dogs</div>
+        <div class="prog-text">For the dog who's fine everywhere except the footpath. Four weeks of very small, very boring wins.</div>
+        <div class="prog-meta">
+          <span class="mchip">4 weeks</span>
+          <span class="mchip soon">Starts 15 Sept</span>
+          <span class="mchip free">Free with cover</span>
+        </div>
+      </div>
+    </button>
+
+    <button class="prog-card" onclick="toast('Dr Nadia Fontaine — Puppy foundations, 8 weeks.')">
+      <div class="prog-banner c">
+        <div class="prog-powered">Powered by Fetch</div>
+        <div class="prog-face">👩‍⚕️</div>
+        <div class="prog-banner-txt">
+          <div class="prog-expert">Dr Nadia Fontaine</div>
+          <div class="prog-cred">Veterinary behaviourist · Brisbane</div>
+        </div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-title">The first sixteen weeks</div>
+        <div class="prog-text">Everything that's easy to get right now and very hard to fix later. For puppies only.</div>
+        <div class="prog-meta">
+          <span class="mchip">8 weeks</span>
+          <span class="mchip">Start anytime</span>
+          <span class="mchip free">Free with cover</span>
+        </div>
+      </div>
+    </button>
+
+    <div class="note">
+      <span>🩺</span>
+      <span>Training advice only. Anything that looks medical goes straight to a Fetch vet nurse instead.</span>
+    </div>
+  </div>
+
+  <!-- ══ PROGRAMME DETAIL ══ -->
+  <div class="screen" id="screen-programme">
+    <div class="sub-header">
+      <button class="back-btn" onclick="back()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Home alone, calmly</h1>
+    </div>
+
+    <div class="pd-hero prog-banner a" style="height:190px">
+      <div class="prog-powered">Powered by Fetch</div>
+      <div class="pd-expert">Isabella Rich</div>
+      <div class="pd-title">Home alone, calmly</div>
+    </div>
+
+    <div class="pd-start">
+      <span class="pd-start-ico">📅</span>
+      <div style="flex:1;min-width:0">
+        <div class="pd-start-t">Your six weeks start Monday 1 September</div>
+        <div class="pd-start-s">A real start date, because "sometime soon" is how this never happens.</div>
+      </div>
+    </div>
+
+    <div class="sec-head"><span>What Isabella does with you</span><span>6 weeks</span></div>
+    <div class="card">
+      <div class="wk"><div class="wk-n">1</div><div><div class="wk-t">Find his actual number</div><div class="wk-s">Not four hours. Probably eleven seconds. You need to know the real one before anything works.</div></div></div>
+      <div class="wk"><div class="wk-n">2</div><div><div class="wk-t">The door stops meaning anything</div><div class="wk-s">Picking up keys, putting on shoes — unhooking the whole routine from you leaving.</div></div></div>
+      <div class="wk"><div class="wk-n">3</div><div><div class="wk-t">Seconds into minutes</div><div class="wk-s">The slow bit. This is the week most people quit, so Isabella calls it early.</div></div></div>
+      <div class="wk"><div class="wk-n">4</div><div><div class="wk-t">Leaving properly</div><div class="wk-s">Out the door, down the street, back before he notices.</div></div></div>
+      <div class="wk"><div class="wk-n">5</div><div><div class="wk-t">An hour</div><div class="wk-s">And what to do on the day it goes backwards, because it will.</div></div></div>
+      <div class="wk"><div class="wk-n">6</div><div><div class="wk-t">Keeping it</div><div class="wk-s">What a normal week looks like from here.</div></div></div>
+    </div>
+
+    <div class="sec-head"><span>How it runs</span></div>
+    <div class="card">
+      <div class="mile"><div class="mile-ico">⏱</div><div><div class="mile-t">Ten minutes a day</div><div class="mile-d">Slots into the Today card — you won't have to remember</div></div></div>
+      <div class="mile"><div class="mile-ico">📹</div><div><div class="mile-t">A check-in from Isabella every Sunday</div><div class="mile-d">She records it for the week you're actually in</div></div></div>
+      <div class="mile"><div class="mile-ico">📈</div><div><div class="mile-t">His number, tracked</div><div class="mile-d">Week 1 vs week 6, in seconds — the only proof that matters</div></div></div>
+      <div class="mile"><div class="mile-ico">🔒</div><div><div class="mile-t">Just you and Charlie</div><div class="mile-d">No group, no forum, nobody watching how you're doing</div></div></div>
+    </div>
+
+    <div class="pd-buy">
+      <div class="pd-price"><s>$129</s> <b>Free with Charlie's cover</b></div>
+      <button class="btn-primary pink" style="width:100%" onclick="toast('Saved — starts Monday 1 September 🎉')">Start 1 September</button>
+      <div class="note" style="justify-content:center;margin:12px 4px 0">
+        <span>👋</span>
+        <span>Not with Fetch? $129, and you keep it. Isabella's clients get it at cost.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PROGRESS — the record of the relationship.
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="screen" id="screen-progress">
+    <div class="app-header">
+      <button class="back-btn" onclick="go('screen-today')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+      <h1>Your record</h1>
+    </div>
+    <div class="seg" id="seg-progress"></div>
+
+    <div class="pass">
+      <div class="pass-line">You've trained together on 164 days.</div>
+      <div class="pass-sub">Since 14 March 2026. That's the part you can't take anywhere else — and neither can he.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="stat"><div class="stat-n">164</div><div class="stat-l">Days together</div></div>
+      <div class="stat"><div class="stat-n">13h</div><div class="stat-l">Time spent training</div></div>
+      <div class="stat"><div class="stat-n">14</div><div class="stat-l">Skills he's kept</div></div>
+      <div class="stat"><div class="stat-n">3</div><div class="stat-l">Levels of freedom</div></div>
+    </div>
+
+    <div class="sec-head"><span>Then and now</span><span>Same cue, 20 weeks apart</span></div>
+    <div class="thenow">
+      <div class="tn">
+        <div class="tn-frame then"><span class="tn-lbl">Week 1</span></div>
+        <div class="tn-cap">Called six times. Didn't look up.</div>
+      </div>
+      <div class="tn">
+        <div class="tn-frame now"><span class="tn-lbl">Week 20</span></div>
+        <div class="tn-cap">Called once. Left the sniff.</div>
+      </div>
+    </div>
+
+    <div class="sec-head"><span>Moments</span><span>Private to you</span></div>
+    <div class="card">
+      <div class="mile"><div class="mile-ico">🥇</div><div><div class="mile-t">First time he came back off lead</div><div class="mile-d">21 June 2026 · Princes Park</div></div></div>
+      <div class="mile"><div class="mile-ico">☕️</div><div><div class="mile-t">First café where he just went to sleep</div><div class="mile-d">3 July 2026</div></div></div>
+      <div class="mile"><div class="mile-ico">🐕</div><div><div class="mile-t">Walked past the greyhound without a sound</div><div class="mile-d">18 August 2026 · you'd been dreading that one</div></div></div>
+      <div class="mile"><div class="mile-ico">🩺</div><div><div class="mile-t">Stood still for his whole nail trim</div><div class="mile-d">22 August 2026</div></div></div>
+    </div>
+
+    <div class="note">
+      <span>🔒</span>
+      <span>Yours. Not posted, not ranked, not compared to anybody. If you ever want to show someone, you can — but the app won't ask you to.</span>
+    </div>
+  </div>
+
+  <!-- ══ Bottom nav — the live app's five tabs, paw lit ══ -->
+  <nav class="bottom-nav">
+    <button class="nav-tab" aria-label="Account" onclick="toast('Account tab — outside this mockup')">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+    </button>
+    <button class="nav-tab active" aria-label="Pets" onclick="go('screen-today')">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><ellipse cx="6" cy="9" rx="2" ry="2.6"/><ellipse cx="10.4" cy="6.2" rx="2" ry="2.7"/><ellipse cx="15.1" cy="6.4" rx="2" ry="2.7"/><ellipse cx="19" cy="9.4" rx="2" ry="2.5"/><path d="M12.5 11c2.6 0 5.2 2.3 5.2 4.9 0 2.2-1.7 3.5-3.9 3.5-1 0-1.4-.3-2.4-.3s-1.4.3-2.4.3c-2.2 0-3.7-1.3-3.7-3.5C5.3 13.3 9.9 11 12.5 11z"/></svg>
+    </button>
+    <button class="nav-tab" aria-label="Claims" onclick="toast('Claims tab — outside this mockup')">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="19" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/><path d="M12 11v5M9.5 13.5h5"/></svg>
+    </button>
+    <button class="nav-tab" aria-label="Cover" onclick="toast('Cover tab — outside this mockup')">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.6-3.1 8.2-7.5 9.4C7.6 20.2 4.5 16.6 4.5 12V6z"/><path d="m9.2 12.2 2 2 3.6-3.8"/></svg>
+    </button>
+    <button class="nav-tab" aria-label="Chat" onclick="toast('Chat tab — outside this mockup')">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12.4c0 4.2-3.8 7.6-8.5 7.6-1.2 0-2.4-.2-3.4-.6L3.5 21l1.7-4.2c-.9-1.2-1.4-2.7-1.4-4.4C3.8 8.2 7.6 4.8 12.3 4.8s8.2 3.4 8.2 7.6z"/></svg>
+    </button>
+  </nav>
+
+  <!-- Clicker sheet -->
+  <div class="sheet" id="sheet" onclick="closeSheet()">
+    <div class="sheet-inner" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">Clicker</div>
+      <div class="sheet-text">Click the instant he gets it right — not when you get the treat out. The click is the promise; the treat is just paying it.</div>
+      <button class="clicker" onclick="click_()">CLICK</button>
+      <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:4px" id="click-count">0 clicks this session</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     DEMO RAIL — the setup flow as its own presentable section.
+     Runs the same file in an iframe so it has genuinely separate
+     state: clicking through it never disturbs the prototype.
+═══════════════════════════════════════════════════════════════ -->
+<div class="rail" id="demo-rail">
+  <div class="rail-cap">
+    <div class="rail-badge">Section demo</div>
+    <div class="rail-h">First run</div>
+    <div class="rail-s">What a customer sees the first time they open Training — the quiz comes before anything else. Fully clickable, and independent of the prototype on the left.</div>
+  </div>
+  <iframe class="rail-frame" id="demo-frame" title="First-run setup flow"></iframe>
+  <div class="rail-foot">
+    <button onclick="resetDemo()">Restart</button>
+    <button onclick="demoClean()">Clean-file version</button>
+  </div>
+</div>
+
+<!-- ── Side notes ─────────────────────────────────────────────── -->
+<div class="notes">
+  <h2>Fetch Training</h2>
+  <div class="lede">Woofz's structure, Fetch's job. Built around the pair, not the pet.</div>
+
+  <div class="jump">
+    <button onclick="firstRun()">↻ First run</button>
+    <button onclick="go('screen-today')">Today</button>
+    <button onclick="go('screen-setup')">Setup: file</button>
+    <button onclick="startQuiz()">Setup: quiz</button>
+    <button onclick="buildDraft(); go('screen-draft')">Setup: draft</button>
+    <button onclick="go('screen-plan')">Plan</button>
+    <button onclick="go('screen-session')">Session</button>
+    <button onclick="go('screen-programmes')">Programmes</button>
+    <button onclick="go('screen-progress')">Record</button>
+  </div>
+
+  <h3>Where setup sits</h3>
+  <p>The quiz is the <b>first thing a customer meets</b> when they tap into Training — not a settings screen they have to find. The middle phone is that first run, standing on its own so it can be shown as its own section. It's the same build in an iframe, so clicking through it never disturbs the prototype on the left.</p>
+  <p>The left phone is the <b>returning</b> state: setup already done, landing on Today. <i>↻ First run</i> below replays the cold open.</p>
+
+  <h3>What's borrowed from Woofz</h3>
+  <ul>
+    <li>A single <b>Today</b> card as the whole home screen</li>
+    <li>Stepped lessons with a demo video and a did-it-work verdict</li>
+    <li><b>Tools that live in the app</b> — clicker, whistle, timer</li>
+    <li>Streak dots and a training passport</li>
+    <li>Programmes as the depth layer behind the daily habit</li>
+  </ul>
+
+  <h3>What's deliberately different</h3>
+  <p><b>The file is read before the quiz is asked.</b> Woofz opens cold with 10–15 questions. Fetch opens by showing what it already holds — three claims, a breed, an age — and what each one means for training. The quiz still happens, because claims data is blind to behaviour, but three of the six questions are confirmations rather than interrogation.</p>
+  <p><b>The blind spot is stated out loud.</b> Pulling, barking, jumping up and separation distress never generate a claim, so the app says so and asks. Use the <i>Switch</i> control on the file screen to see the same flow for a dog with no claims — the seeded questions disappear and the quiz gets longer.</p>
+  <p><b>Two progress bars.</b> His skills and yours. The bond is the product, so the owner is on the chart.</p>
+  <p><b>Levels are freedoms, not tricks.</b> Off lead at the park, asleep under a café table — things you do together, not commands he performs.</p>
+  <p><b>The record is a keepsake.</b> Private moments with dates. Nothing posted, ranked or compared.</p>
+  <p><b>Experts are named and dated.</b> A real person, a real start date, a Sunday check-in — no cohort chat, no leaderboard.</p>
+
+  <h3>Fitting the live app</h3>
+  <p>Sits inside the existing paw tab with the five-tab nav untouched. Cream ground, flat white cards, Circular Std, pink reserved for the one primary action.</p>
+</div>
+
+<script>
+/* ── Navigation ─────────────────────────────────────────────── */
+const TABS = [
+  ['screen-today','Today'],
+  ['screen-plan','Plan'],
+  ['screen-programmes','Programmes'],
+  ['screen-progress','Record'],
+];
+let hist = ['screen-today'];
+
+function go(id) {
+  const cur = hist[hist.length-1];
+  if (id === cur) { document.getElementById(id).scrollTop = 0; return; }
+  const curEl = document.getElementById(cur);
+  const newEl = document.getElementById(id);
+  if (!newEl) return;
+  curEl?.classList.add('slide-out');
+  newEl.classList.remove('slide-out');
+  newEl.classList.add('active');
+  setTimeout(() => curEl?.classList.remove('active','slide-out'), 380);
+  /* Top-level tabs reset the stack; detail screens push onto it. */
+  if (TABS.some(t => t[0] === id)) hist = [id]; else hist.push(id);
+  newEl.scrollTop = 0;
+  document.activeElement?.blur();
+  syncSeg();
+}
+
+function back() {
+  if (hist.length <= 1) return;
+  const cur = hist.pop();
+  const prev = hist[hist.length-1];
+  const curEl = document.getElementById(cur);
+  const prevEl = document.getElementById(prev);
+  curEl?.classList.remove('active'); curEl?.classList.add('slide-out');
+  prevEl?.classList.add('active');   prevEl?.classList.remove('slide-out');
+  setTimeout(() => curEl?.classList.remove('slide-out'), 380);
+  syncSeg();
+}
+
+/* Segmented sub-nav, rendered into each top-level screen */
+function syncSeg() {
+  const active = hist[0];
+  TABS.forEach(([id]) => {
+    const host = document.getElementById('seg-' + id.replace('screen-',''));
+    if (!host) return;
+    host.innerHTML = TABS.map(([tid, label]) =>
+      `<button class="${tid === active ? 'on' : ''}" onclick="go('${tid}')">${label}</button>`
+    ).join('');
+  });
+}
+
+/* ── Streak dots ────────────────────────────────────────────── */
+const DAYS = ['M','T','W','T','F','S','S'];
+document.getElementById('streak-dots').innerHTML = DAYS.map((d, i) => {
+  const cls = i < 4 ? 'hit' : i === 4 ? 'cur' : '';
+  const mark = i < 4 ? '✓' : i === 4 ? '·' : '';
+  return `<div class="dot ${cls}"><i>${mark}</i><span>${d}</span></div>`;
+}).join('');
+
+/* ── The trust ladder ───────────────────────────────────────── */
+const LEVELS = [
+  { free:'In the kitchen',   title:'He hears you',                  sub:'His name, eyes on you, sit — with nothing else going on.', state:'done' },
+  { free:'On the footpath',  title:'He walks with you',             sub:'A loose lead the whole way, without you thinking about it.', state:'done' },
+  { free:'In the yard',      title:'He comes back',                 sub:'Called once, from anywhere in the garden, every time.', state:'done' },
+  { free:'At the park, long lead', title:'He comes back with something better on offer',
+    sub:'A sniff, a stick, another dog — and he still turns around.', state:'now', prog:60, reps:'3 of 5' },
+  { free:'Anywhere',         title:'He\u2019s easy around others',  sub:'Dogs, kids, bikes, the postman. Nothing is an event any more.', state:'locked' },
+  { free:'Off lead',         title:'He comes back at the park',     sub:'No lead, real distractions. The one you\u2019ve been working toward.', state:'locked' },
+  { free:'Without you',      title:'He\u2019s fine on his own',     sub:'The house, the café, the car. Calm when you\u2019re not there.', state:'locked' },
+];
+
+document.getElementById('ladder').innerHTML = LEVELS.map((l, i) => `
+  <div class="lad-item ${l.state}">
+    <div class="lad-spine">
+      <div class="lad-disc">${l.state === 'done' ? '✓' : (i+1)}</div>
+      <div class="lad-rail"></div>
+    </div>
+    <button class="lad-card" onclick="${l.state === 'locked' ? `toast(&quot;Level ${i+1} opens once he\u2019s solid on level ${i}&quot;)` : `openLevel(${i})`}">
+      <div class="lad-free">Level ${i+1} · ${l.free}</div>
+      <div class="lad-title">${l.title}</div>
+      <div class="lad-sub">${l.sub}</div>
+      ${l.prog ? `<div class="lad-prog"><div class="bar him"><i style="width:${l.prog}%"></i></div><span>${l.reps}</span></div>` : ''}
+    </button>
+  </div>
+`).join('');
+
+/* ── Level detail ───────────────────────────────────────────── */
+const SKILLS = {
+  3: {
+    note: 'This is the level that decides whether he ever comes off the lead. Everything before it was practice with nothing at stake.',
+    him: [
+      ['Turns his head on his name', 'Mid-sniff, not between sniffs', true, '18 reps'],
+      ['Comes 5 metres past a stick', 'On a long lead, low distraction', true, '22 reps'],
+      ['Comes past another dog at distance', '20 metres away, calm dog', true, '11 reps'],
+      ['Comes past food on the ground', 'The one everybody skips', false, '4 reps'],
+      ['Does it all in a park he doesn\u2019t know', 'The proof, not the practice', false, '0 reps'],
+    ],
+    you: [
+      ['Calling once, not five times', 'Every extra call teaches him the first one is optional', true],
+      ['Marking the instant he turns', 'Not when he arrives — when he decides', true],
+      ['Paying properly when it\u2019s hard', 'A better treat for a harder turn', false],
+    ],
+  },
+};
+
+function openLevel(i) {
+  const l = LEVELS[i];
+  const d = SKILLS[i] || { note:'', him:[], you:[] };
+  document.getElementById('level-h').textContent = 'Level ' + (i+1);
+  document.getElementById('level-free').textContent = `Level ${i+1} · ${l.free}`;
+  document.getElementById('level-title').textContent = l.title;
+  document.getElementById('level-note').textContent = d.note;
+  const GOT = 'He\u2019s got this one';
+  const YET = 'Keep going — this one takes a few weeks';
+  const MINE = 'This one\u2019s about you, not him';
+  document.getElementById('level-skills').innerHTML = d.him.map(([n, s, got, reps]) => `
+    <button class="skill ${got ? 'got' : ''}" onclick="toast(&quot;${got ? GOT : YET}&quot;)">
+      <span class="skill-check">✓</span>
+      <span class="skill-body"><span class="skill-name">${n}</span><span class="skill-sub">${s}</span></span>
+      <span class="skill-reps">${reps}</span>
+    </button>`).join('');
+  document.getElementById('level-you').innerHTML = d.you.map(([n, s, got]) => `
+    <button class="skill ${got ? 'got' : ''}" onclick="toast(&quot;${MINE}&quot;)">
+      <span class="skill-check">✓</span>
+      <span class="skill-body"><span class="skill-name">${n}</span><span class="skill-sub">${s}</span></span>
+    </button>`).join('');
+  go('screen-level');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SETUP FLOW — file read → seeded quiz → draft plan.
+
+   The file gives us three things a cold-start app can't have: a
+   reason to believe, a shortcut past the boring questions, and a
+   risk-weighted starting point. It cannot give us behaviour that
+   never cost anyone money, so the quiz stays — it just gets to
+   open with confirmations instead of interrogation.
+═══════════════════════════════════════════════════════════════ */
+
+/* Charlie's actual file. Each finding carries the training read. */
+const FILE_CHARLIE = [
+  { ico:'🧦', t:'Foreign body removal', d:'14 March 2025 · $3,410 · surgical',
+    m:'He swallowed something he shouldn\u2019t have. Scavenging is the single most claimed-for behaviour we see — so "leave it" moves to the front of his plan.',
+    q:'scav' },
+  { ico:'👂', t:'Ear infection, twice', d:'June 2025 and November 2025 · $290',
+    m:'Recurring ears mean regular checking, and dogs who won\u2019t be handled don\u2019t get checked. We\u2019ll build handling into the daily minute.',
+    q:'handling' },
+  { ico:'🩹', t:'Laceration, left flank', d:'8 January 2026 · $620 · dog park',
+    m:'We don\u2019t know how this happened and we\u2019re not going to assume. But it\u2019s worth one question.',
+    q:'dogs' },
+  { ico:'🦴', t:'Golden Retriever, 2 years old', d:'From his policy, not a claim',
+    m:'Adolescent, and a breed we pay a lot of cruciate claims on. Everything we build avoids repetitive jumping and hard turns.',
+    q:null },
+];
+
+const FILE_CLEAN = [
+  { ico:'✅', t:'No claims on file', d:'Since cover started, 14 March 2024',
+    m:'Good news, and not much to go on. Nothing here tells us what Charlie finds hard.', q:null },
+  { ico:'🦴', t:'Golden Retriever, 2 years old', d:'From his policy',
+    m:'Adolescent, and a breed prone to cruciate injury. It shapes how we build the sessions — but not what we work on.',
+    q:null },
+];
+
+/* Questions. `seed` ones only appear when the matching claim exists. */
+const QUESTIONS = [
+  { id:'scav', seed:'scav', tag:'From his file',
+    q:'Does he still pick up things he shouldn\u2019t?',
+    sub:'In March he swallowed a sock. We want to know whether that was a one-off or a habit.',
+    opts:[
+      ['Constantly','I watch him the entire walk'],
+      ['Sometimes','If I\u2019m not paying attention'],
+      ['Not any more','That was a one-off'],
+    ] },
+  { id:'handling', seed:'handling', tag:'From his file',
+    q:'How is he about being handled?',
+    sub:'Ears, paws, nails. His ears have needed treating twice, so this one matters more for him than for most dogs.',
+    opts:[
+      ['He hates it','It\u2019s a two-person job'],
+      ['He tolerates it','Doesn\u2019t love it, doesn\u2019t fight'],
+      ['Completely fine','I can do anything'],
+    ] },
+  { id:'dogs', seed:'dogs', tag:'From his file',
+    q:'What\u2019s he like around other dogs?',
+    sub:'There was a laceration claim from the dog park last January. No judgement either way — it changes what we\u2019d work on.',
+    opts:[
+      ['He goes in too hard','Boisterous, doesn\u2019t read the room'],
+      ['He\u2019s wary','He\u2019d rather keep his distance'],
+      ['He\u2019s fine','It was bad luck, nothing more'],
+    ] },
+  { id:'hard', tag:'His file can\u2019t see this', blind:true, multi:true,
+    q:'What\u2019s actually hard right now?',
+    sub:'None of this ever shows up in a claim, so we have to ask. Pick as many as you like.',
+    opts:[
+      ['He pulls','The whole walk, both arms'],
+      ['He barks','The door, the window, noises'],
+      ['He jumps on people','Especially visitors'],
+      ['He can\u2019t be left','Pacing, howling, destruction'],
+      ['He won\u2019t come back','Not once he\u2019s off lead'],
+      ['Honestly, nothing','I just want to do more with him'],
+    ] },
+  { id:'goal', tag:'His file can\u2019t see this', blind:true,
+    q:'What would make the biggest difference?',
+    sub:'This is the only answer that changes the shape of the plan. Everything else changes the order.',
+    opts:[
+      ['Trust him off lead','The park, the beach, no lead'],
+      ['Calm around other dogs','Walks stop being stressful'],
+      ['Be able to leave him','The house, the café, the car'],
+      ['Just easier day to day','Less noise, less pulling, less chaos'],
+    ] },
+  { id:'start', tag:'His file can\u2019t see this', blind:true,
+    q:'Where would you say you\u2019re up to?',
+    sub:'Be honest rather than generous — a plan pitched too high is the main reason people stop.',
+    opts:[
+      ['We\u2019ve done nothing','Starting from scratch'],
+      ['Basics at home','Falls apart the moment we\u2019re outside', 'Our guess'],
+      ['He\u2019s pretty good','We\u2019re polishing, not building'],
+    ] },
+];
+
+/* The four destinations, and the ladder each one produces. */
+const GOALS = [
+  ['Seven levels, ending with a dog you can trust <em>off lead.</em>', 'off lead at the park'],
+  ['Six levels, ending with walks you don\u2019t <em>brace for.</em>', 'calm around other dogs'],
+  ['Six levels, ending with a dog who\u2019s <em>fine without you.</em>', 'settled when left alone'],
+  ['Five levels, ending with a house that\u2019s <em>quieter.</em>', 'easier day to day'],
+];
+
+let cleanFile = false;
+let qIdx = 0;
+let answers = {};
+let quizList = [];
+
+function activeFile() { return cleanFile ? FILE_CLEAN : FILE_CHARLIE; }
+
+function renderFile() {
+  const f = activeFile();
+  document.getElementById('file-findings').innerHTML = f.map(x => `
+    <div class="finding">
+      <div class="finding-ico">${x.ico}</div>
+      <div class="finding-body">
+        <span class="finding-t">${x.t}</span>
+        <span class="finding-d">${x.d}</span>
+        <span class="finding-m">${x.m}</span>
+      </div>
+    </div>`).join('');
+
+  const seeded = f.filter(x => x.q).length;
+  /* A clean file drops the 3 seeded questions and gains 2 generic screeners. */
+  const total = cleanFile
+    ? QUESTIONS.filter(q => !q.seed).length + 2
+    : QUESTIONS.length;
+
+  document.getElementById('file-line').textContent = cleanFile
+    ? 'Charlie\u2019s file is clean.'
+    : 'We read Charlie\u2019s file.';
+  document.getElementById('file-note').textContent = cleanFile
+    ? 'No claims in two years. That\u2019s the outcome we want — and it means we\u2019re starting almost from scratch.'
+    : 'Four claims, his breed and his age. Here\u2019s what stood out, and what it might mean for training.';
+  document.getElementById('gap-t').textContent = cleanFile
+    ? 'So we have to ask more'
+    : 'What his file can\u2019t tell us';
+  document.getElementById('gap-d').innerHTML = cleanFile
+    ? `A clean file is silent on behaviour. Pulling, barking, scavenging, coping alone — a dog can do all of it and never cost a cent. So it\u2019s still <b>${total} questions</b>, but they\u2019re generic screening rather than anything about Charlie, and the first fortnight has to do the work his history would have done.`
+    : `Pulling, barking, jumping up, coping alone — none of it ever generates a claim. And nothing in here tells us what <b>you</b> want. <b>${total} questions</b>, ${seeded} of them just confirming what we think we already know.`;
+  document.getElementById('demo-toggle-txt').textContent = cleanFile
+    ? 'Mockup control: switch back to Charlie\u2019s real claims history.'
+    : 'Mockup control: see the same flow for a dog with a clean file.';
+}
+
+function toggleFile() {
+  cleanFile = !cleanFile;
+  answers = {};
+  renderFile();
+  document.getElementById('screen-setup').scrollTop = 0;
+  if (window.scrollTo) window.scrollTo(0, 0);
+  toast(cleanFile ? 'Clean file — the quiz has to do all the work' : 'Four claims — three questions get pre-filled');
+}
+
+function startQuiz() {
+  const f = activeFile();
+  quizList = QUESTIONS.filter(q => !q.seed || f.some(x => x.q === q.seed));
+  /* A clean file gets two extra questions to cover what claims would have. */
+  if (cleanFile) {
+    quizList = [
+      { id:'scav2', tag:'His file can\u2019t see this', blind:true,
+        q:'Does he pick up things he shouldn\u2019t?',
+        sub:'We ask everyone this. It\u2019s the behaviour behind more emergency claims than anything else.',
+        opts:[['Constantly','I watch him the whole walk'],['Sometimes','If I\u2019m not watching'],['Never','He\u2019s not interested']] },
+      { id:'handling2', tag:'His file can\u2019t see this', blind:true,
+        q:'How is he about being handled?',
+        sub:'Ears, paws, nails, teeth. Dogs who won\u2019t be handled don\u2019t get checked, and things get missed.',
+        opts:[['He hates it','A two-person job'],['He tolerates it','Doesn\u2019t love it'],['Completely fine','I can do anything']] },
+      ...quizList,
+    ];
+  }
+  qIdx = 0;
+  renderQ();
+  go('screen-quiz');
+}
+
+function renderQ() {
+  const q = quizList[qIdx];
+  document.getElementById('quiz-h').textContent = `Question ${qIdx+1} of ${quizList.length}`;
+  document.getElementById('quiz-bar').innerHTML =
+    quizList.map((_, i) => `<i class="${i <= qIdx ? 'on' : ''}"></i>`).join('');
+
+  const cur = answers[q.id];
+  const opts = q.opts.map((o, i) => {
+    const sel = q.multi ? (cur || []).includes(i) : cur === i;
+    return `
+      <button class="qz-opt ${q.multi ? 'multi' : ''} ${sel ? 'sel' : ''}" onclick="pick(${i})">
+        <span class="qz-tick">✓</span>
+        <span class="qz-otxt"><span class="qz-ot">${o[0]}</span><span class="qz-os">${o[1]}</span></span>
+        ${o[2] ? `<span class="qz-guess">${o[2]}</span>` : ''}
+      </button>`;
+  }).join('');
+
+  document.getElementById('quiz-body').innerHTML = `
+    <div class="qz-tag ${q.blind ? 'blind' : ''}">${q.blind ? '🔍' : '📄'} ${q.tag}</div>
+    <div class="qz-q">${q.q}</div>
+    <div class="qz-sub">${q.sub}</div>
+    ${opts}`;
+
+  const answered = q.multi ? (cur || []).length > 0 : cur !== undefined;
+  const btn = document.getElementById('quiz-next');
+  btn.textContent = qIdx === quizList.length - 1 ? 'See his plan' : (answered ? 'Next' : 'Skip');
+  document.getElementById('screen-quiz').scrollTop = 0;
+}
+
+function pick(i) {
+  const q = quizList[qIdx];
+  if (q.multi) {
+    const cur = answers[q.id] || [];
+    answers[q.id] = cur.includes(i) ? cur.filter(x => x !== i) : [...cur, i];
+    renderQ();
+  } else {
+    answers[q.id] = i;
+    renderQ();
+    setTimeout(quizNext, 220);
+  }
+}
+
+function quizNext() {
+  if (qIdx < quizList.length - 1) { qIdx++; renderQ(); }
+  else { buildDraft(); go('screen-draft'); }
+}
+
+function quizBack() {
+  if (qIdx > 0) { qIdx--; renderQ(); } else back();
+}
+
+/* The payoff: the plan cites its sources back to the owner. */
+function buildDraft() {
+  const goal = answers.goal ?? 0;
+  const start = answers.start ?? 1;
+  const [line, short] = GOALS[goal];
+  document.getElementById('draft-line').innerHTML = line;
+  document.getElementById('draft-note').textContent =
+    ['Starting at level 1 — nothing assumed, and no harm done if we\u2019re wrong.',
+     'Starting at level 4, because home is solid and outside isn\u2019t.',
+     'Starting at level 5 — and we\u2019ll test that claim in the first week.'][start];
+
+  const because = [];
+  const hard = answers.hard || [];
+  const HARD_TXT = ['pulling','barking','jumping up','being left alone','recall','nothing in particular'];
+
+  because.push(['🎯', 'You want ' + short,
+    'That\u2019s the destination, so every level is a step toward it rather than a trick worth having.', 'you']);
+
+  if (!cleanFile) {
+    if (answers.scav !== undefined && answers.scav < 2)
+      because.push(['🧦', 'He still scavenges',
+        'His foreign body claim in March said this was possible. You\u2019ve confirmed it, so "leave it" is week one — not week nine.', 'file']);
+    if (answers.handling !== undefined && answers.handling < 2)
+      because.push(['👂', 'He won\u2019t sit still to be handled',
+        'With two ear infections on file, that\u2019s the difference between catching the next one early and paying for it. Sixty seconds of handling goes into the daily card.', 'file']);
+    if (answers.dogs === 0)
+      because.push(['🐕', 'He goes in too hard with other dogs',
+        'Which is a likelier explanation for January\u2019s laceration than bad luck. We\u2019ll work distance before we work greetings.', 'file']);
+    if (answers.dogs === 1)
+      because.push(['🐕', 'He\u2019s wary of other dogs',
+        'That reframes January entirely — he was on the receiving end. The plan gives him space instead of exposure.', 'file']);
+  } else {
+    because.push(['📄', 'Nothing in his history to go on',
+      'A clean file means we\u2019re building from your answers alone. We\u2019ll adjust faster than usual in the first fortnight.', 'file']);
+  }
+
+  if (hard.length && !hard.includes(5))
+    because.push(['🔍', 'You told us about ' + hard.map(i => HARD_TXT[i]).join(', '),
+      'None of it would ever have reached us any other way. It sets the order of the first three weeks.', 'you']);
+
+  because.push(['🦴', 'He\u2019s a two-year-old Golden',
+    'Adolescent, and a breed we see a lot of cruciate claims on. Sessions stay low-impact — no repeated jumping, no hard turns on hard ground.', 'file']);
+
+  document.getElementById('draft-because').innerHTML = because.map(([i, t, d, src]) => `
+    <div class="because">
+      <div class="because-ico">${i}</div>
+      <div class="because-body">
+        <span class="because-t">${t}</span>
+        <span class="because-d">${d}</span>
+        <span class="because-src ${src === 'you' ? 'you' : ''}">${src === 'you' ? 'You told us' : 'From his file'}</span>
+      </div>
+    </div>`).join('');
+
+  const tweaks = [
+    ['⏱', 'Ten minutes, once a day', 'Split into a session and a sixty-second handling check.'],
+    ['🚫', 'No jump work, no weave drills', 'Breed and age. It\u2019s the one thing we won\u2019t let you opt into.'],
+    ['📉', 'Level 5 stays shut for now', 'It only opens once he\u2019s done level 4 somewhere he\u2019s never been.'],
+  ];
+  document.getElementById('draft-tweaks').innerHTML = tweaks.map(([i, t, d]) => `
+    <div class="because">
+      <div class="because-ico">${i}</div>
+      <div class="because-body"><span class="because-t">${t}</span><span class="because-d">${d}</span></div>
+    </div>`).join('');
+}
+
+function acceptPlan() {
+  go('screen-plan');
+  setTimeout(() => toast('Plan saved — first session is on the Today card'), 260);
+}
+
+renderFile();
+
+/* ══════════════════════════════════════════════════════════════
+   BOOT — first run vs returning, and the embedded demo rail.
+
+   ?embed=1   strips the page back to the phone alone (used by the
+              rail iframe, which points at this same file).
+   ?start=... opens on a given screen instead of Today.
+═══════════════════════════════════════════════════════════════ */
+const PARAMS = new URLSearchParams(location.search);
+const EMBED = PARAMS.get('embed') === '1';
+
+/* Land on the setup flow instead of Today. This is the real answer
+   to "what happens when they first tap into Training". */
+function firstRun() {
+  cleanFile = false;
+  answers = {};
+  qIdx = 0;
+  renderFile();
+  document.querySelectorAll('.screen.active, .screen.slide-out')
+    .forEach(el => el.classList.remove('active','slide-out'));
+  const el = document.getElementById('screen-setup');
+  el.classList.add('active');
+  hist = ['screen-today','screen-setup'];
+  syncSeg();
+  /* The screen is absolutely positioned, so a scrollTop set before
+     layout settles gets discarded. Reset once more after paint. */
+  el.scrollTop = 0;
+  requestAnimationFrame(() => { el.scrollTop = 0; });
+  window.addEventListener('load', () => { el.scrollTop = 0; }, { once: true });
+}
+
+if (EMBED) {
+  document.body.classList.add('embed');
+  if (PARAMS.get('start') === 'setup') firstRun();
+  if (PARAMS.get('clean') === '1') { firstRun(); toggleFile(); }
+} else {
+  /* The rail points back at this same file, so only wire it up
+     outside embed mode — otherwise it would nest forever. */
+  const frame = document.getElementById('demo-frame');
+  if (frame) frame.src = location.pathname + '?embed=1&start=setup';
+}
+
+function resetDemo() {
+  document.getElementById('demo-frame').src = location.pathname + '?embed=1&start=setup';
+}
+function demoClean() {
+  document.getElementById('demo-frame').src = location.pathname + '?embed=1&start=setup&clean=1';
+}
+
+/* ── Session player ─────────────────────────────────────────── */
+const STEPS = [
+  { t:'Let him get interested', x:'Walk until he finds something genuinely good — a smell he stops for, a patch of grass he won\u2019t leave. Don\u2019t interrupt him. You want him properly committed.',
+    tip:['Why the wait matters','A recall he wasn\u2019t distracted from doesn\u2019t teach him anything.'] },
+  { t:'Say it once', x:'His name, then "come". Normal voice. Bright, not stern. Then stop talking — this is the hard part.',
+    tip:['If nothing happens','Count to three, then walk backwards away from him. Don\u2019t call again.'] },
+  { t:'Mark the turn', x:'The second his head swings toward you, click or say "yes". Not when he arrives — when he chooses. That moment is the thing you\u2019re actually training.',
+    tip:['Timing is your skill, not his','This is the single thing that separates dogs who come back from dogs who consider it.'] },
+  { t:'Pay him properly', x:'Something better than whatever he walked away from. Then release him back to it if you can — coming to you shouldn\u2019t mean the fun stops.',
+    tip:['The release is the trick','Dogs who learn that recall ends the walk stop coming back.'] },
+];
+let step = 0;
+
+function startSession() { step = 0; renderStep(); go('screen-session'); }
+
+function renderStep() {
+  const s = STEPS[step];
+  document.getElementById('pips').innerHTML = STEPS.map((_, i) => `<div class="pip ${i <= step ? 'on' : ''}"></div>`).join('');
+  document.getElementById('step-n').textContent = `Step ${step+1} of ${STEPS.length}`;
+  document.getElementById('step-title').textContent = s.t;
+  document.getElementById('step-text').textContent = s.x;
+  document.getElementById('step-tip').innerHTML = `<b>${s.tip[0]}</b>${s.tip[1]}`;
+  document.getElementById('step-next').textContent = step === STEPS.length-1 ? 'Done — how did it go?' : 'Next';
+}
+function nextStep() {
+  if (step < STEPS.length-1) { step++; renderStep(); }
+  else go('screen-verdict');
+}
+function prevStep() {
+  if (step > 0) { step--; renderStep(); } else go('screen-today');
+}
+
+/* ── Verdict → result ───────────────────────────────────────── */
+const RESULTS = {
+  nailed: ['🎯','That\u2019s 18 days straight','Six weeks ago he wouldn\u2019t look up from a sniff. Today he left it and came to you.'],
+  nearly: ['🌤','Still counts','He thought about it and chose you anyway. Same spot tomorrow — the hesitation gets shorter.'],
+  no:     ['🤝','That\u2019s useful to know','We\u2019ve made tomorrow easier — shorter distance, duller distraction. He isn\u2019t being stubborn, the step was too big.'],
+};
+function finish(kind) {
+  const [ico, title, sub] = RESULTS[kind];
+  document.getElementById('res-disc').textContent = ico;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-sub').textContent = sub;
+  markTodayDone();
+  go('screen-result');
+}
+
+function markTodayDone() {
+  const cur = document.querySelector('.dot.cur');
+  if (cur) { cur.classList.remove('cur'); cur.classList.add('hit'); cur.querySelector('i').textContent = '✓'; }
+  document.getElementById('streak-count').textContent = '19 days';
+
+  const c = document.getElementById('today-card');
+  c.classList.add('done');
+  c.innerHTML = `
+    <div class="today-eyebrow"><span>✓</span> Done today</div>
+    <div class="today-title">Recall past a distraction</div>
+    <div class="today-text">Five minutes, six good reps. Tomorrow you'll do the same thing somewhere slightly harder.</div>
+    <div class="today-meta">
+      <span class="chip">🔥 19 day streak</span>
+      <span class="chip">🪜 Level 4 · 3 of 5</span>
+    </div>`;
+}
+
+/* ── Clicker (a real one) ───────────────────────────────────── */
+let clicks = 0, actx;
+function openClicker() { clicks = 0; document.getElementById('click-count').textContent = '0 clicks this session'; document.getElementById('sheet').classList.add('open'); }
+function closeSheet() { document.getElementById('sheet').classList.remove('open'); }
+function click_() {
+  clicks++;
+  document.getElementById('click-count').textContent = clicks + (clicks === 1 ? ' click this session' : ' clicks this session');
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'square'; o.frequency.value = 2600;
+    g.gain.setValueAtTime(0.16, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.035);
+    o.connect(g); g.connect(actx.destination);
+    o.start(); o.stop(actx.currentTime + 0.04);
+  } catch (e) { /* no audio, the button still works */ }
+}
+
+/* ── Toast ──────────────────────────────────────────────────── */
+let tTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(tTimer);
+  tTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+/* ── Init ───────────────────────────────────────────────────── */
+/* Focusing a control below the fold can scroll the phone shell itself,
+   which drags the whole frame out of alignment. Screens do the scrolling. */
+const phoneEl = document.querySelector('.phone');
+phoneEl.addEventListener('scroll', () => { phoneEl.scrollTop = 0; phoneEl.scrollLeft = 0; });
+
+renderStep();
+syncSeg();
+</script>
+</body>
+</html>
